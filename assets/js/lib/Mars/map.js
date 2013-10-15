@@ -25,28 +25,66 @@ Map.prototype.FLOOR_TYPE = [
 		coeff: {
 			0: 0.8,
 			1: 0.2
-		}
+		},
+		probability: 0.35
 	},
 	{
-		name: 'other',
-		material: 'unknow.jpg',
+		name: 'sand',
+		material: 'sand.jpg',
 		coeff: {
 			0: 0.2,
 			1: 0.8
-		}
+		},
+		probability: 0.1
+	},
+	{
+		name: 'ice',
+		material: 'ice.jpg',
+		coeff: {
+			0: 0.8,
+			1: 0.2
+		},
+		probability: 0.08
+	},
+	{
+		name: 'iron',
+		material: 'iron.jpg',
+		coeff: {
+			0: 0.8,
+			1: 0.2
+		},
+		probability: 0.2
+	},
+	{
+		name: 'ore',
+		material: 'ore.jpg',
+		coeff: {
+			0: 0.8,
+			1: 0.2
+		},
+		probability: 0.25
+	},
+	{
+		name: 'other',
+		material: 'other.jpg',
+		coeff: {
+			0: 0.8,
+			1: 0.2
+		},
+		probability: 0.02
 	}
 ];
 
 Map.prototype.initialize = function() {
 	var dfd = $.Deferred();
 
-	for (var i = 0; i <= this.getWidth(); i++) {
+	for (var i = 0; i < this.getWidth(); i++) {
 		this.map[i] = new Array();
 
-		for (var j = 0; j <= this.getHeight(); j++) {
+		for (var j = 0; j < this.getHeight(); j++) {
 			this.map[i][j] = {
 				z: (this.getElevationMin() + this.getElevationMax()) /2,
-				nature: 0
+				nature: this.generateFloorType()
 			};
 		}
 	}
@@ -94,6 +132,31 @@ Map.prototype.generate = function() {
 };
 
 Map.prototype.generateFloorType = function() {
+	var nb = Math.floor((Math.random()*100)+1);
+	if (nb <= this.FLOOR_TYPE[0].probability) { 
+		
+		return this.FLOOR_TYPE[0]; 
+	} 
+	if (nb <= this.FLOOR_TYPE[0].probability + this.FLOOR_TYPE[1].probability) {
+		
+		return this.FLOOR_TYPE[1];
+	} 
+	if (nb <= this.FLOOR_TYPE[0].probability + this.FLOOR_TYPE[1].probability + this.FLOOR_TYPE[2].probability) {
+		
+		return this.FLOOR_TYPE[2];
+	}
+	if (nb <= this.FLOOR_TYPE[0].probability + this.FLOOR_TYPE[1].probability + this.FLOOR_TYPE[2].probability + this.FLOOR_TYPE[3].probability) {
+		
+		return this.FLOOR_TYPE[3];
+	}
+	if (nb <= this.FLOOR_TYPE[0].probability + this.FLOOR_TYPE[1].probability + this.FLOOR_TYPE[2].probability + this.FLOOR_TYPE[3].probability + this.FLOOR_TYPE[4].probability) {
+		
+		return this.FLOOR_TYPE[4];
+	}
+	if (nb <= this.FLOOR_TYPE[0].probability + this.FLOOR_TYPE[1].probability + this.FLOOR_TYPE[2].probability + this.FLOOR_TYPE[3].probability + this.FLOOR_TYPE[4].probability + this.FLOOR_TYPE[5].probability ) {
+		
+		return this.FLOOR_TYPE[0];
+	}
 };
 
 Map.prototype.generateFloorElevation = function() {
@@ -101,8 +164,8 @@ Map.prototype.generateFloorElevation = function() {
 	var nbSquareTop = 0;
 
 	while (nbSquareTop < this.getSquareMax()) {
-		var squareX     = Math.floor(Math.random() * this.getWidth());
-		var squareY     = Math.floor(Math.random() * this.getHeight());
+		var squareX     = Math.floor(Math.random() * (this.getWidth()-1));
+		var squareY     = Math.floor(Math.random() * (this.getHeight()-1));
 
 		if (squareX == 0) {
 			squareX++;
@@ -163,8 +226,8 @@ Map.prototype.smoothFloorElevation = function() {
 	var nbPassage = 2;
 
 	while (count < this.getSquareMax()) {
-		var squareX     = Math.floor(Math.random() * this.getWidth());
-		var squareY     = Math.floor(Math.random() * this.getHeight());
+		var squareX     = Math.floor(Math.random() * (this.getWidth()-1));
+		var squareY     = Math.floor(Math.random() * (this.getHeight()-1));
 
 		if (squareX == 0) {
 			squareX++;

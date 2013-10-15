@@ -62,8 +62,8 @@ viewer.prototype.load = function(map) {
 	);
 
 	var index = 0;
-	for (var i = 0; i <= this.map.getWidth(); i++) {
-		for (var j = 0; j <= this.map.getHeight(); j++) {
+	for (var i = 0; i < this.map.getWidth(); i++) {
+		for (var j = 0; j < this.map.getHeight(); j++) {
 			this.geometry.vertices[index].z = this.map.map[i][j].z;
 			index++;
 		}
