@@ -160,61 +160,68 @@ Map.prototype.generateFloorType = function() {
 };
 
 Map.prototype.generateFloorElevation = function() {
+	
 	var dfd = $.Deferred();
-	var nbSquareTop = 0;
+	//Generer un carte aleatoir avec un max et un min X y
+	var count = 0;
+	var count2 =0;
+	var count3 = 0;
+	var randomMap;
+	var initialeZ;
+	var maxWidth, maxHeight, minWidth, minHeight;
 
-	while (nbSquareTop < this.getSquareMax()) {
-		var squareX     = Math.floor(Math.random() * (this.getWidth()-1));
-		var squareY     = Math.floor(Math.random() * (this.getHeight()-1));
+	while(count<35){
 
-		if (squareX == 0) {
-			squareX++;
+		var width = getRandomInt(0, this.getWidth());
+		var height = getRandomInt(0, this.getHeight());
+
+		var start = getRandomInt(0, this.getHeight());
+
+		while(count2<50){
+
+			maxWidth = getRandomInt(start, width);
+			minWidth = getRandomInt(start, width);
+
+			minHeight = getRandomInt(start, height);
+			maxHeight = getRandomInt(start, height);
+
+			for (var i = minWidth; i < maxWidth; i++) {
+				for (var j = minHeight; j < maxHeight; j++) {
+
+					initialileZ = this.map[i][j].z;
+					this.map[i][j].z = initialileZ-0.1;
+
+					while(count3<50){
+
+						maxWidth = getRandomInt(start, width);
+						minWidth = getRandomInt(start, width);
+
+						minHeight = getRandomInt(start, height);
+						maxHeight = getRandomInt(start, height);
+
+						for (var i = minWidth; i < maxWidth; i++) {
+							for (var j = minHeight; j < maxHeight; j++) {
+
+								initialileZ = this.map[i][j].z;
+								this.map[i][j].z = initialileZ+0.1;
+
+							}
+						}
+
+						count3++;
+					}
+				count3 = 0;
+
+				}
+			}
+
+			count2++;
 		}
-		if (squareY == 0) {
-			squareY++;
-		}
+		count2 = 0;
 
-		var lastSquareX = squareX -1;
-		var nextSquareX = squareX +1;
-		var lastSquareY = squareY -1;
-		var nextSquareY = squareY +1;
+		count++;
 
-		var z = getRandomInt(
-			this.getElevationMin(),
-			(this.getElevationMax())
-		);
-
-		var square1 = this.map[lastSquareX][lastSquareY];
-		var square2 = this.map[squareX][lastSquareY];
-		var square3 = this.map[lastSquareX][lastSquareY];
-		var square4 = this.map[lastSquareX][squareY];
-		var square5 = this.map[squareX][squareY];
-		var square6 = this.map[nextSquareX][squareY];
-		var square7 = this.map[lastSquareX][nextSquareY];
-		var square8 = this.map[squareX][nextSquareY];
-		var square9 = this.map[nextSquareX][nextSquareY];
-
-		if ((square5 == this.getElevationMax()) && ((square3 == square5) || (square1 == square5) || (square7 == square5) || (square9 == square5))) {
-			this.map[squareX][lastSquareY].z = this.getElevationMax();
-			this.map[lastSquareX][squareY].z = this.getElevationMax();
-			this.map[nextSquareX][squareY].z = this.getElevationMax();
-			this.map[squareX][nextSquareY].z = this.getElevationMax();
-		}
-		else {
-			this.map[lastSquareX][lastSquareY].z = z;
-			this.map[squareX][lastSquareY].z     = z;
-			this.map[lastSquareX][lastSquareY].z = z;
-			this.map[lastSquareX][squareY].z     = z;
-			this.map[squareX][squareY].z         = z;
-			this.map[nextSquareX][squareY].z     = z;
-			this.map[lastSquareX][nextSquareY].z = z;
-			this.map[squareX][nextSquareY].z     = z;
-			this.map[nextSquareX][nextSquareY].z = z;
-		}
-
-		nbSquareTop++;
 	}
-
 	dfd.resolve();
 
 	return dfd.promise();
@@ -222,8 +229,9 @@ Map.prototype.generateFloorElevation = function() {
 
 Map.prototype.smoothFloorElevation = function() {
 	var dfd = $.Deferred();
+	var countPassages = 0;
 	var count = 0;
-	var nbPassage = 2;
+	var nbPassage = 10;
 
 	while (count < this.getSquareMax()) {
 		var squareX     = Math.floor(Math.random() * (this.getWidth()-1));
@@ -257,9 +265,9 @@ Map.prototype.smoothFloorElevation = function() {
 		this.map[nextSquareX][squareY].z = Math.round((square5+square3+square9)/3);
 
 		// Gestion du nombre de passage
-		if(count == this.getSquareMax()-1 && nbPassage != nbPassage){
+		if((count == this.getSquareMax()-1) && (countPassages != nbPassage)){
 			count = 0;
-			nbPassage++;
+			countPassages++;
 		}
 
 		count++;
