@@ -1,3 +1,28 @@
+requirejs.config({
+    baseUrl: 'assets/js',
+    shim: {
+    	'lib/three/three': {
+    		deps: [],
+    		exports: 'THREE'
+    	},
+    	'lib/mars/viewer': {
+
+    	},
+    	'lib/mars/editor': {
+    		deps: ['viewer']
+    	}
+    }
+});
+
+require([
+			"helper/utils",
+			"helper/requestAnimationFrame",
+			"lib/three/three"
+		],
+		function(util, requestAnimationFrame, three) {
+			console.log(arguments);
+		}
+);
 // Animate function
 function animate() {
 	requestAnimationFrame(animate);
