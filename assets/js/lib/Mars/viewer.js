@@ -69,13 +69,30 @@ viewer.prototype.load = function(map) {
 		}
 	}
 
-	var texture = 'assets/img/textures/grass.jpg';
+	/*var texture = 'assets/img/textures/grass.jpg';
 	var material = new THREE.MeshLambertMaterial({
 		wireframe: false,
 		map: THREE.ImageUtils.loadTexture(texture)
+	});*/
+
+	var material = new THREE.ShaderMaterial({
+		uniforms: {
+			texture_grass: {
+				type: "t",
+				value: 0,
+				texture: THREE.ImageUtils.loadTexture('assets/img/textures/grass.jpg')
+			},
+			texture_rock: {
+				type: "t",
+				value: 1,
+				texture: THREE.ImageUtils.loadTexture('assets/img/textures/rock.jpg')
+			},
+		},
+		vertexShader: document.getElementById( 'groundVertexShader' ).textContent,
+		fragmentShader: document.getElementById( 'groundFragmentShader' ).textContent
 	});
 
-	this.mesh = new THREE.Mesh(this.geometry, material);
+	this.mesh = new THREE.Mesh(this.geometry, material); 
 	this.mesh.rotation.x = Math.PI / 180 * (-90);
 	this.scene.add(this.mesh);
 /*

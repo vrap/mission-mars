@@ -10,7 +10,7 @@ var mapManager = new MapManager();
 var viewer     = new viewer(renderDiv);
 
 // Add new generated map to the map manager.
-var map = new Map({ width: 10, height: 10 });
+var map = new Map({ width: 100, height: 100 });
 map.generate().done(function() {
 	mapManager.add(map);
 
