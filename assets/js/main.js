@@ -1,47 +1,23 @@
-requirejs.config({
-    baseUrl: 'assets/js',
-    shim: {
-    	'lib/three/three': {
-    		deps: [],
-    		exports: 'THREE'
-    	},
-    	'lib/mars/viewer': {
+(function() {
+	/* Loading namespaces. */
+	var nsCommon = using('mars.common');
+	var nsViewer = using('mars.viewer');
+	var nsEditor = using('mars.editor');
+	var nsMaterial = using('mars.common.material');
 
-    	},
-    	'lib/mars/editor': {
-    		deps: ['viewer']
-    	}
-    }
-});
+	/* Loading materials. */
+	var materialRock = new nsMaterial.Rock();
 
-require([
-			"helper/utils",
-			"helper/requestAnimationFrame",
-			"lib/three/three"
-		],
-		function(util, requestAnimationFrame, three) {
-			console.log(arguments);
-		}
-);
-// Animate function
-function animate() {
-	requestAnimationFrame(animate);
-	viewer.render();
-}
+	console.log(materialRock);
 
-// Initialize render.
-var renderDiv  = document.querySelector('#render');
-var mapManager = new MapManager();
-var viewer     = new viewer(renderDiv);
+	/* Define viewer container. */
+	var renderDiv  = document.querySelector('#render');
 
-// Add new generated map to the map manager.
-var map = new Map({ width: 10, height: 10 });
-map.generate().done(function() {
-	mapManager.add(map);
+	/* Generate a map. */
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock], [], 200, 200, -10, 10);
+	var map = new nsCommon.Map(terrain);
 
-	// Load the map in the viewer and render it.
-	viewer.load(mapManager.mapList[0]);
-	viewer.render();
-
-	animate();
-});
+	/* Load map in 3d viewer. */
+	var viewer = new nsViewer.Viewer(map);
+	viewer.load3D(renderDiv);
+})();

@@ -1,8 +1,10 @@
+var nsCommon = using('mars.common');
+
 /**
  * The MapManager, contains maps.
  * @return {[type]} [description]
  */
-function MapManager() {
+nsCommon.MapManager = function() {
 	// Contain the map list.
 	this.mapList = new Array();
 
@@ -21,7 +23,7 @@ function MapManager() {
  * @param  {[type]} add  [description]
  * @return {[type]}      [description]
  */
-MapManager.prototype.load = function(map, add) {
+nsCommon.MapManager.prototype.load = function(map, add) {
 };
 
 /**
@@ -29,14 +31,14 @@ MapManager.prototype.load = function(map, add) {
  * @param  {[type]} map [description]
  * @return {[type]}     [description]
  */
-MapManager.prototype.add = function(map) {
+nsCommon.MapManager.prototype.add = function(map) {
 	return this.mapList[this.mapList.push(map)];
 };
 
 /**
  * Remove a map to the MapManager.
  */
-MapManager.prototype.remove = function(map) {
+nsCommon.MapManager.prototype.remove = function(map) {
 	var existingMap = this.mapList.filter(function(data) {
 		return map == data;
 	});
