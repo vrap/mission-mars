@@ -1,24 +1,22 @@
-// Animate function
-function animate() {
-	requestAnimationFrame(animate);
-	viewer.render();
-}
+(function() {
+	/* Loading namespaces. */
+	var nsCommon = using('mars.common');
+	var nsViewer = using('mars.viewer');
+	var nsEditor = using('mars.editor');
+	var nsMaterial = using('mars.common.material');
 
-// Initialize render.
-var renderDiv  = document.querySelector('#render');
-var mapManager = new MapManager();
-var viewer     = new viewer(renderDiv);
+	/* Loading materials. */
+	var materialRock = new nsMaterial.Rock();
+	console.log(materialRock);
 
-// Add new generated map to the map manager.
+	/* Define viewer container. */
+	var renderDiv  = document.querySelector('#render');
 
-var map = new Map({ width: 100, height: 100 });
+	/* Generate a map. */
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock], [], 200, 200, -10, 10);
+	var map = new nsCommon.Map(terrain);
 
-map.generate().done(function() {
-	mapManager.add(map);
-
-	// Load the map in the viewer and render it.
-	viewer.load(mapManager.mapList[0]);
-	viewer.render();
-
-	animate();
-});
+	/* Load map in 3d viewer. */
+	var viewer = new nsViewer.Viewer(map);
+	viewer.load3D(renderDiv);
+})();
