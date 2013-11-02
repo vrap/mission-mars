@@ -24,7 +24,16 @@
 	 * @return {[type]} [description]
 	 */
 	nsEditor.TerrainGenerator._createBase = function() {
+		for (var i = 0; i < this._width; i++) {
+			this._map[i] = new Array();
 
+			for (var j = 0; j <= this._height; j++) {
+				this._map[i][j] = {
+					z: (this._zMin + this._zMax) /2,
+					nature: 0
+				};
+			}
+		}
 	};
 
 	/**
@@ -48,7 +57,7 @@
 	 * @return {[type]} [description]
 	 */
 	nsEditor.TerrainGenerator._toJSON = function() {
-
+		return JSON.stringify(this._map);
 	};
 
 	/**
@@ -69,5 +78,11 @@
 		this._height    = height;
 		this._zMin      = zMin;
 		this._zMax      = zMax;
+
+		this._map       = new Array();
+
+		this._createBase();
+
+		return this._toJSON();
 	};
 })();
