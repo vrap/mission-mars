@@ -2,14 +2,14 @@
 	var nsMaterials = using('mars.common.material');
 
 	/**
-	 * Class Rock
-	 * Represent the material rock with its color and its id in JSon file.
+	 * Class Sand
+	 * Represent the material sand with its color and its id in JSon file.
 	 */
-	nsMaterials.Rock = function() {
-		this.id = 5;
-		this.name = 'Rock';
-		this.textureColor = "#6a6867";
-		this.texture = 'rock.jpg';
+	nsMaterials.Sand = function() {
+		this.id = 1;
+		this.name = 'Sand';
+		this.textureColor = "#E7D3C5";
+		this.texture = 'sand.jpg';
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {
