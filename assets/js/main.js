@@ -13,7 +13,7 @@
 	var renderDiv  = document.querySelector('#render');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock], [], 200, 200, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock], [], 10, 10, -10, 10);
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
