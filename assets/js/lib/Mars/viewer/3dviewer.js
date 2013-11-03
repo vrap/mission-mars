@@ -20,6 +20,7 @@
 		this._loadLight();
 		this._loadCamera();
 		this._loadRenderer();
+		this._loadMap();
 
 		// Add fog to the map.
 		this.scene.fog = new THREE.FogExp2( 0xd3cfbe, 0.03 );
@@ -57,5 +58,37 @@
 		this.camera.position.z = 14;
 		this.camera.setLens( 1, 2 );
 		this.scene.add(this.camera);
+	};
+
+	nsViewer.Viewer3D.prototype._loadMap = function() {
+		this.geometry = new THREE.PlaneGeometry(
+			this.viewer.map.getWidth(),
+			this.viewer.map.getHeight(),
+			this.viewer.map.getWidth(),
+			this.viewer.map.getHeight()
+		);
+
+		var index = 0;
+		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
+			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
+				this.geometry.vertices[index].z = this.viewer.map._terrain[i][j].z;
+				index++;
+			}
+		}
+
+		var texture = 'assets/img/textures/rock3.png';
+		var material = new THREE.MeshLambertMaterial({
+			wireframe: false,
+			map: THREE.ImageUtils.loadTexture(texture)
+		});
+
+		this.mesh = new THREE.Mesh(this.geometry, material); 
+		this.mesh.rotation.x = Math.PI / 180 * (-90);
+		this.scene.add(this.mesh);
+	};
+
+	nsViewer.Viewer3D.prototype.render = function() {
+		this.controls.update(1);
+		this.renderer.render(this.scene, this.camera);
 	};
 })();
