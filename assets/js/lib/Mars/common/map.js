@@ -25,11 +25,21 @@
 		this._terrain = JSON.parse(terrain);
 	};
 
+	/**
+	 * Return the width of the terrain, assume that it's equal to the number of
+	 * propertie of the terrain object as each is a column.
+	 */
 	nsCommon.Map.prototype.getWidth = function() {
-		return 10;
+		return this._terrain.length;
 	};
 
+	/**
+	 * Return the height of the terrain, assume that it's equal to the
+	 * number of propertie of the first line of the terrain. Each line
+	 * need to be equals. We are substracting the result by one because
+	 * of the properties begin to 0.
+	 */
 	nsCommon.Map.prototype.getHeight = function() {
-		return 10;
+		return this._terrain[0].length -1;
 	};
 })();
