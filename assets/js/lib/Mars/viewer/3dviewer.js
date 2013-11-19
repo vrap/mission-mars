@@ -16,14 +16,17 @@
 		// Initialize the scene.
 		this.scene = new THREE.Scene();
 
-		this._loadControls();
 		this._loadLight();
 		this._loadCamera();
 		this._loadRenderer();
 		this._loadMap();
+		this._loadControls();
 
 		// Add fog to the map.
 		this.scene.fog = new THREE.FogExp2( 0xd3cfbe, 0.03 );
+
+		// Run the refresh animation while.
+		this.animate();
 	};
 
 	nsViewer.Viewer3D.prototype._loadRenderer = function() {
@@ -90,5 +93,10 @@
 	nsViewer.Viewer3D.prototype.render = function() {
 		this.controls.update(1);
 		this.renderer.render(this.scene, this.camera);
+	};
+
+	nsViewer.Viewer3D.prototype.animate = function() {
+		requestAnimationFrame(function() { this.animate(); }.bind(this));
+		this.render();
 	};
 })();
