@@ -55,10 +55,9 @@
 			this._map[i] = new Array();
 
 			for (var j = 0; j <= this._height; j++) {
-				this._map[i][j] = {
-					z: (this._zMin + this._zMax) /2,
-					nature: this._getFloorType()
-				};
+				this._map[i][j] = { z: (this._zMin + this._zMax) /2,
+									nature: this._getFloorType()
+								};
 			}
 		}
 	};
@@ -67,8 +66,8 @@
 	 * [ description]
 	 * @return {Integer} Id of the material
 	 */
-	nsEditor.TerrainGenerator._getFloorType = function() {
-		var nb = Math.floor((Math.random()*100)+1);
+	nsEditor.TerrainGenerator._getFloorType = function () {
+		var nb = (Math.floor((Math.random()*100)+1)) / 100;
 		if (nb <= FLOOR_TYPES[0].probability) { 
 			
 			return FLOOR_TYPES[0].id; 
