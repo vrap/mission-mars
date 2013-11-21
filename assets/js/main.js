@@ -8,7 +8,11 @@
 
 	/* Loading materials. */
 	var materialRock = new nsMaterial.Rock();
-	console.log(materialRock);
+	var materialIce = new nsMaterial.Ice();
+	var materialIron = new nsMaterial.Iron();
+	var materialOre = new nsMaterial.Ore();
+	var materialSand = new nsMaterial.Sand();
+	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
 	var elementCrater = new nsElements.CraterModel([materialRock], -20, 20);
@@ -17,7 +21,7 @@
 	var renderDiv  = document.querySelector('#render');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock], [elementCrater], 100, 100, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [], 100, 300, -10, 10);
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */

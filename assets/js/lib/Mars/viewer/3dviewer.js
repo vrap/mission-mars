@@ -73,20 +73,40 @@
 			this.viewer.map.getWidth(),
 			this.viewer.map.getHeight()
 		);
-
+		
+		// assign z to each case
 		var index = 0;
+		var natures = [];
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
 			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
 				this.geometry.vertices[index].z = this.viewer.map._terrain[i][j].z;
+				// Stock the nature map attribute in an array. Two times because each case is devided in two triangles
+				natures.push(this.viewer.map._terrain[i][j].nature-1);
+				natures.push(this.viewer.map._terrain[i][j].nature-1);
 				index++;
 			}
 		}
 
-		var texture = 'assets/img/textures/rock3.png';
+		// materials
+		var materials = []; 
+		materials.push( new THREE.MeshBasicMaterial( { color: "#6A6867" }) ); // Rock color
+		materials.push( new THREE.MeshBasicMaterial( { color: "#E7D3C5" }) ); // Sand color
+		materials.push( new THREE.MeshBasicMaterial( { color: "#ADF0F0" }) ); // Ice color
+		materials.push( new THREE.MeshBasicMaterial( { color: "#C9A78E" }) ); // Iron color
+		materials.push( new THREE.MeshBasicMaterial( { color: "#d2ab92" }) ); // Ore color
+		materials.push( new THREE.MeshBasicMaterial( { color: "#3A3E41" }) ); // Other color
+
+		// assign a material to each face
+		for( var i = 0; i < this.geometry.faces.length; i ++ ) {
+			this.geometry.faces[ i ].materialIndex = natures[i];
+		}
+
+		var material = new THREE.MeshFaceMaterial( materials );
+		/*var texture = 'assets/img/textures/rock3.png';
 		var material = new THREE.MeshLambertMaterial({
 			wireframe: true,
 			map: THREE.ImageUtils.loadTexture(texture)
-		});
+		});*/
 
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = Math.PI / 180 * (-90);
