@@ -5,9 +5,10 @@
 	 * [ description]
 	 * @return {[type]}         [description]
 	 */
-	nsViewer.Viewer3D = function(viewer, element) {
+	nsViewer.Viewer3D = function(viewer, element, options) {
 		this.viewer = viewer;
 		this.element = element;
+		this.options = (options) ? options : {};
 
 		this.init();
 	};

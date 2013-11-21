@@ -22,13 +22,13 @@
 		return false;
 	};
 
-	nsViewer.Viewer.prototype.load = function(type, element) {
+	nsViewer.Viewer.prototype.load = function(type, element, options) {
 		if (this._allowedType.hasOwnProperty(type)) {
 			type = this._allowedType[type];
 
 			if (element instanceof HTMLDivElement) {
 				if (!this.hasViewer(element)) {
-					this.viewers[element] = new nsViewer[type](this, element);
+					this.viewers[element] = new nsViewer[type](this, element, options);
 
 					return this.viewers[element];
 				}
@@ -43,15 +43,15 @@
 	 * [ description]
 	 * @return {[type]} [description]
 	 */
-	nsViewer.Viewer.prototype.load2D = function(element) {
-		return this.load('2d', element);
+	nsViewer.Viewer.prototype.load2D = function(element, options) {
+		return this.load('2d', element, options);
 	};
 
 	/**
 	 * [ description]
 	 * @return {[type]} [description]
 	 */
-	nsViewer.Viewer.prototype.load3D = function(element) {
-		return this.load('3d', element);
+	nsViewer.Viewer.prototype.load3D = function(element, options) {
+		return this.load('3d', element, options);
 	};
 })();
