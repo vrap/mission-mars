@@ -84,7 +84,7 @@
 
 		var texture = 'assets/img/textures/rock3.png';
 		var material = new THREE.MeshLambertMaterial({
-			wireframe: false,
+			wireframe: true,
 			map: THREE.ImageUtils.loadTexture(texture)
 		});
 

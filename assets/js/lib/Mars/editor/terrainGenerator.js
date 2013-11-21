@@ -1,5 +1,6 @@
 (function() {
-	var nsEditor = using('mars.editor');
+	var nsEditor   = using('mars.editor');
+	var nsElements = using('mars.editor.elements');
 
 	/**
 	 * TerrainGenerator
@@ -44,12 +45,36 @@
 
 	};
 
+	nsEditor.TerrainGenerator._createElements = function() {
+		for (var elementKey in this._elements) {
+			var element = this._elements[elementKey];
+
+			var test = element.create(20, 20);
+			var objectTest = JSON.parse(test);
+
+			this._pushElement(objectTest, 50, 50);
+		}
+	};
+
 	/**
 	 * [ description]
 	 * @return {[type]} [description]
 	 */
-	nsEditor.TerrainGenerator._pushElement = function() {
+	nsEditor.TerrainGenerator._pushElement = function(element, x, y) {
+		var elementHeight = element[0].length -1;
+		var mapHeight = this._map[0].length -1;
 
+		for (var i = 0; i < element.length; i++) {
+			posX = i + x;
+			if (posX <= this._map.length) {
+				for (var j = 0; j < elementHeight; j++) {
+					posY = j + y;
+					if (posX <= mapHeight) {
+						this._map[posX][posY] = element[i][j];
+					}
+				}
+			}
+		}
 	};
 
 	/**
@@ -82,6 +107,7 @@
 		this._map       = new Array();
 
 		this._createBase();
+		this._createElements();
 
 		return this._toJSON();
 	};
