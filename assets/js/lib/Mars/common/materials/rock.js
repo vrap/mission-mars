@@ -6,7 +6,7 @@
 	 * Represent the material rock with its color and its id in JSon file.
 	 */
 	nsMaterials.Rock = function() {
-		this.id = 5;
+		this.id = 1;
 		this.name = 'Rock';
 		this.textureColor = "#6a6867";
 		this.texture = 'rock.jpg';

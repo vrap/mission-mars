@@ -6,7 +6,7 @@
 	 * Represent the material ice with its color and its id in JSon file.
 	 */
 	nsMaterials.Ice = function() {
-		this.id = 4;
+		this.id = 3;
 		this.name = 'Ice';
 		this.textureColor = "#ADF0F0";
 		this.texture = 'ice.jpg';

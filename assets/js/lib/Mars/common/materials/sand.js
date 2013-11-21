@@ -6,7 +6,7 @@
 	 * Represent the material sand with its color and its id in JSon file.
 	 */
 	nsMaterials.Sand = function() {
-		this.id = 1;
+		this.id = 2;
 		this.name = 'Sand';
 		this.textureColor = "#E7D3C5";
 		this.texture = 'sand.jpg';

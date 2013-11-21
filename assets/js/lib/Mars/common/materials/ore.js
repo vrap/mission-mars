@@ -6,7 +6,7 @@
 	 * Represent the material ore with its color and its id in JSon file.
 	 */
 	nsMaterials.Ore = function() {
-		this.id = 3;
+		this.id = 5;
 		this.name = 'Ore';
 		this.textureColor = "#d2ab92";
 		this.texture = 'ore.jpg';
