@@ -24,7 +24,9 @@
 		this._loadControls();
 
 		// Add fog to the map.
-		this.scene.fog = new THREE.FogExp2( 0xd3cfbe, 0.03 );
+		if (!(isNaN(parseFloat(this.options.fog)))) {
+			this.scene.fog = new THREE.FogExp2(0xd3cfbe, parseFloat(this.options.fog));
+		}
 
 		// Run the refresh animation while.
 		this.animate();
