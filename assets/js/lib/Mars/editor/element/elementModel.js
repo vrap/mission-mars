@@ -52,7 +52,7 @@
 			for (var j = 0; j <= this._height; j++) {
 				this._element[i][j] = {
 					z: (this._zMin + this._zMax) /2,
-					nature: 0
+					nature: 1
 				};
 			}
 		}
