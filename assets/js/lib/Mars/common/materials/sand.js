@@ -9,7 +9,6 @@
 		this.id = 2;
 		this.name = 'Sand';
 		this.textureColor = "#E7D3C5";
-		this.texture = 'sand.jpg';
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {
