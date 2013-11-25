@@ -1,5 +1,14 @@
 (function() {
-	var nsViewer = using('mars.viewer');
+	var nsViewer = using('mars.viewer'),
+	 	nsMaterials = using('mars.common.material');
+
+	// Init materials
+	var rock = new nsMaterials.Rock (),
+		iron = new nsMaterials.Iron (),
+		ice = new nsMaterials.Ice (),
+		ore = new nsMaterials.Ore (),
+		sand = new nsMaterials.Sand (),
+		other = new nsMaterials.Other ();
 
 	/**
 	 * [ description]
@@ -89,12 +98,12 @@
 
 		// materials
 		var materials = []; 
-		materials.push( new THREE.MeshBasicMaterial( { color: "#6A6867" }) ); // Rock color
-		materials.push( new THREE.MeshBasicMaterial( { color: "#E7D3C5" }) ); // Sand color
-		materials.push( new THREE.MeshBasicMaterial( { color: "#ADF0F0" }) ); // Ice color
-		materials.push( new THREE.MeshBasicMaterial( { color: "#C9A78E" }) ); // Iron color
-		materials.push( new THREE.MeshBasicMaterial( { color: "#d2ab92" }) ); // Ore color
-		materials.push( new THREE.MeshBasicMaterial( { color: "#3A3E41" }) ); // Other color
+		materials.push( new THREE.MeshBasicMaterial( { color: rock.textureColor }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: sand.textureColor }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: ice.textureColor }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: iron.textureColor }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: ore.textureColor }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: other.textureColor }) );
 
 		// assign a material to each face
 		for( var i = 0; i < this.geometry.faces.length; i ++ ) {
@@ -102,11 +111,6 @@
 		}
 
 		var material = new THREE.MeshFaceMaterial( materials );
-		/*var texture = 'assets/img/textures/rock3.png';
-		var material = new THREE.MeshLambertMaterial({
-			wireframe: true,
-			map: THREE.ImageUtils.loadTexture(texture)
-		});*/
 
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = Math.PI / 180 * (-90);
