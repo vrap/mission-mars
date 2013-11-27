@@ -88,10 +88,10 @@
 		var natures = [];
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
 			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
-				this.geometry.vertices[index].z = this.viewer.map._terrain[i][j].z;
+				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
 				// Stock the nature map attribute in an array. Two times because each case is devided in two triangles
-				natures.push(this.viewer.map._terrain[i][j].nature-1);
-				natures.push(this.viewer.map._terrain[i][j].nature-1);
+				natures.push(this.viewer.map._squares[i][j].nature-1);
+				natures.push(this.viewer.map._squares[i][j].nature-1);
 				index++;
 			}
 		}
