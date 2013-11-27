@@ -2,33 +2,6 @@
 	var nsEditor   = using('mars.editor');
 	var nsElements = using('mars.editor.elements');
 
-	/*var FLOOR_TYPES = [
-		{
-			id: 1, // Rock
-			probability: 0.35
-		},
-		{
-			id: 2, // Sand
-			probability: 0.1
-		},
-		{
-			id: 3, // Ice
-			probability: 0.08
-		},
-		{
-			id: 4, // Iron
-			probability: 0.2
-		},
-		{
-			id: 5, // Ore
-			probability: 0.25
-		},
-		{
-			id: 6, // Other
-			probability: 0.02
-		}
-	];*/
-
 	/**
 	 * TerrainGenerator
 	 * "Static class" to generate a terrain.
