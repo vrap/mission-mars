@@ -2,7 +2,7 @@
 	var nsEditor   = using('mars.editor');
 	var nsElements = using('mars.editor.elements');
 
-	var FLOOR_TYPES = [
+	/*var FLOOR_TYPES = [
 		{
 			id: 1, // Rock
 			probability: 0.35
@@ -27,7 +27,7 @@
 			id: 6, // Other
 			probability: 0.02
 		}
-	];
+	];*/
 
 	/**
 	 * TerrainGenerator
@@ -68,31 +68,34 @@
 	 * @return {Integer} Id of the material
 	 */
 	nsEditor.TerrainGenerator._getFloorType = function () {
-		var nb = (Math.floor((Math.random()*100)+1)) / 100;
-		if (nb <= FLOOR_TYPES[0].probability) { 
-			
-			return FLOOR_TYPES[0].id; 
-		} 
-		if (nb <= FLOOR_TYPES[0].probability + FLOOR_TYPES[1].probability) {
-			
-			return FLOOR_TYPES[1].id;
-		} 
-		if (nb <= FLOOR_TYPES[0].probability + FLOOR_TYPES[1].probability + FLOOR_TYPES[2].probability) {
-			
-			return FLOOR_TYPES[2].id;
+		var rand = (Math.floor((Math.random()*100)+this._materialsProbabilitySum())) / 100;
+
+		for (var i=0; i< this._materials.length; i++) {
+			var probaMax = 0;
+			for (var j = 0; j < i+1; j++) {
+				probaMax += this._materials[j].probability;
+			}
+
+			if (rand <= probaMax) {
+				return this._materials[i].id;
+			}
 		}
-		if (nb <= FLOOR_TYPES[0].probability + FLOOR_TYPES[1].probability + FLOOR_TYPES[2].probability + FLOOR_TYPES[3].probability) {
-			
-			return FLOOR_TYPES[3].id;
+
+		return 6; // Material 6 by default
+	};
+
+	/**
+	 * [ description]
+	 * @return { Int } The sum of materials probabilities
+	 */
+	nsEditor.TerrainGenerator._materialsProbabilitySum = function() {
+		var sum = 0;
+
+		for (var i in this._materials) {
+			sum += this._materials[i].probability;
 		}
-		if (nb <= FLOOR_TYPES[0].probability + FLOOR_TYPES[1].probability + FLOOR_TYPES[2].probability + FLOOR_TYPES[3].probability + FLOOR_TYPES[4].probability) {
-			
-			return FLOOR_TYPES[4].id;
-		}
-		if (nb <= FLOOR_TYPES[0].probability + FLOOR_TYPES[1].probability + FLOOR_TYPES[2].probability + FLOOR_TYPES[3].probability + FLOOR_TYPES[4].probability + FLOOR_TYPES[5].probability ) {
-			
-			return FLOOR_TYPES[5].id;
-		}
+
+		return sum;
 	};
 
 	/**
