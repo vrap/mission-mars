@@ -9,6 +9,7 @@
 		this.id = 4;
 		this.name = 'Iron';
 		this.textureColor = "#C9A78E";
+		this.probability = 0.2;
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {
