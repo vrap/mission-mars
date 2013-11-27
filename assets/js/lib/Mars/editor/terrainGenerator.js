@@ -114,9 +114,15 @@
 	/**
 	 * [ description]
 	 * @return {[type]} [description]
+	 * @todo Set the scale correctly.
 	 */
 	nsEditor.TerrainGenerator._toJSON = function() {
-		return JSON.stringify(this._map);
+		var map = {
+			"echelle": 100,
+			"lignes": this._map
+		};
+
+		return JSON.stringify(map);
 	};
 
 	/**
