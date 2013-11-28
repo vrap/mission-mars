@@ -77,10 +77,10 @@
 
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
-			this.viewer.map.getWidth(),
-			this.viewer.map.getHeight(),
-			this.viewer.map.getWidth(),
-			this.viewer.map.getHeight()
+			60,
+			60,
+			this.viewer.map.getWidth()-1,
+			this.viewer.map.getHeight()-1
 		);
 		
 		// assign z to each case
