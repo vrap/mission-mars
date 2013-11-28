@@ -83,7 +83,7 @@
 		for (var elementKey in this._elements) {
 			var element = this._elements[elementKey];
 
-			var test = element.create(20, 20);
+			var test = element.create(40, 40);
 			var objectTest = JSON.parse(test);
 
 			this._pushElement(objectTest, 50, 50);
@@ -95,6 +95,7 @@
 	 * @return {[type]} [description]
 	 */
 	nsEditor.TerrainGenerator._pushElement = function(element, x, y) {
+
 		var elementHeight = element[0].length -1;
 		var mapHeight = this._map[0].length -1;
 

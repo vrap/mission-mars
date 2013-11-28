@@ -75,6 +75,7 @@
 		this.scene.add(this.camera);
 	};
 
+
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
 			60,
@@ -115,6 +116,9 @@
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = Math.PI / 180 * (-90);
 		this.scene.add(this.mesh);
+
+
+
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {

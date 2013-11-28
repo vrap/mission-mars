@@ -21,7 +21,7 @@
 	var renderDiv  = document.querySelector('#render');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater], 100, 300, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater], 100, 100, -10, 10);
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
