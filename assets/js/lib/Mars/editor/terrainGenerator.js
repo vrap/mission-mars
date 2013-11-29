@@ -27,8 +27,7 @@
 	nsEditor.TerrainGenerator._createBase = function() {
 		for (var i = 0; i < this._width; i++) {
 			this._map[i] = new Array();
-
-			for (var j = 0; j <= this._height; j++) {
+			for (var j = 0; j < this._height; j++) {
 				this._map[i][j] = { z: (this._zMin + this._zMax) /2,
 									nature: this._getFloorType()
 								};
@@ -83,7 +82,7 @@
 		for (var elementKey in this._elements) {
 			var element = this._elements[elementKey];
 
-			var test = element.create(40, 40);
+			var test = element.create(50, 50);
 			var objectTest = JSON.parse(test);
 
 			this._pushElement(objectTest, 50, 50);
@@ -105,8 +104,10 @@
 				for (var j = 0; j < elementHeight; j++) {
 					posY = j + y;
 					if (posX <= mapHeight) {
-						this._map[posX][posY] = element[i][j];
+						this._map[posX][posY].z += element[i][j].z;
+						this._map[posX][posY].nature = element[i][j].nature;
 					}
+					
 				}
 			}
 		}
