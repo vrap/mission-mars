@@ -49,10 +49,10 @@
 		for (var i = 0; i < this._width; i++) {
 			this._element[i] = new Array();
 
-			for (var j = 0; j <= this._height; j++) {
+			for (var j = 0; j < this._height; j++) {
 				this._element[i][j] = {
-					z: (this._zMin + this._zMax) /2,
-					nature: 1
+					z: 0,
+					nature: 3
 				};
 			}
 		}
