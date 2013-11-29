@@ -33,11 +33,11 @@
 		this.parent.create(width, height, materials);
 
 		/* Generate a crater. */
-		for (var i = 0; i < this._element.length; i++) {
-			for (var j = 0; j < this._element[0].length; j++) {
-				this._element[i][j].z = 0;
-			}
-		}
+		// for (var i = 0; i < this._element.length; i++) {
+		// 	for (var j = 0; j < this._element[0].length; j++) {
+		// 		this._element[i][j].z = 0;
+		// 	}
+		// }
 
 		//Generer un carte aleatoir avec un max et un min X y
 		var count = 0;
@@ -69,6 +69,7 @@
 
 						initialileZ = this._element[i][j].z;
 						this._element[i][j].z = initialileZ-0.2;
+						this._element[i][j].nature = 4;
 
 					}
 				}

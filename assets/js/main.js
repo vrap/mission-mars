@@ -15,13 +15,14 @@
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialRock], -20, 20);
+	var elementCrater = new nsElements.CraterModel([materialSand], -20, 20);
 
 	/* Define viewer container. */
 	var renderDiv  = document.querySelector('#render');
 
 	/* Generate a map. */
 	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater], 100, 100, -10, 10);
+	
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
