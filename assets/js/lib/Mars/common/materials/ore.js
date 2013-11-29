@@ -6,7 +6,7 @@
 	 * Represent the material ore with its color and its id in JSon file.
 	 */
 	nsMaterials.Ore = function() {
-		this.id = 5;
+		this.id = 2;
 		this.name = 'Ore';
 		this.textureColor = "#d2ab92";
 		this.probability = 0.25;
@@ -18,5 +18,9 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+
+	nsMaterials.Ore.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();

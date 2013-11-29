@@ -88,12 +88,14 @@
 		var natures = [];
 		// materials
 		var materials = []; 
-		materials.push( new THREE.MeshBasicMaterial( { color: rock.textureColor, wireframe: true }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: sand.textureColor, wireframe: true }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: ice.textureColor, wireframe: true }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: iron.textureColor, wireframe: true }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: ore.textureColor, wireframe: true }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: other.textureColor, wireframe: true }) );
+		materials[rock.id] = rock.getColor(true);
+		materials[sand.id] = sand.getColor(true);
+		materials[ore.id] = ore.getColor(true);
+		materials[iron.id] = iron.getColor(true);
+		materials[ice.id] = ice.getColor(true);
+		materials[other.id] = other.getColor(true);
+
+		console.log(materials);
 		
 		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
@@ -103,15 +105,14 @@
 			}
 		}
 
-		// Assign color
+		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
 			for (var j = 0; j < this.viewer.map.getHeight()-1; j++) {
-				natures.push(this.viewer.map._squares[i][j].nature-1);
-				natures.push(this.viewer.map._squares[i][j].nature-1);
+				natures.push(this.viewer.map._squares[i][j].nature);
+				natures.push(this.viewer.map._squares[i][j].nature);
 			}
 		}
-		console.log(this.geometry.vertices.length);
-		console.log(this.geometry.faces.length);
+
 		// assign a material to each face
 		for( var i = 0; i <= this.geometry.faces.length-1; i ++ ) {
 			this.geometry.faces[ i ].materialIndex = natures[i];

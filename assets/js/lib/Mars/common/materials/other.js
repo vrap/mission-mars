@@ -6,7 +6,7 @@
 	 * Represent the others materials with their color and thier id in JSon file.
 	 */
 	nsMaterials.Other = function() {
-		this.id = 6;
+		this.id = 5;
 		this.name = 'Other';
 		this.textureColor = "#3A3E41";
 		this.probability = 0.02;
@@ -18,5 +18,9 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+
+	nsMaterials.Other.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();

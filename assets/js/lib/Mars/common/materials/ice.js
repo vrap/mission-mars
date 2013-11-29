@@ -6,7 +6,7 @@
 	 * Represent the material ice with its color and its id in JSon file.
 	 */
 	nsMaterials.Ice = function() {
-		this.id = 3;
+		this.id = 4;
 		this.name = 'Ice';
 		this.textureColor = "#ADF0F0";
 		this.probability = 0.08;
@@ -18,5 +18,9 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+
+	nsMaterials.Ice.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();

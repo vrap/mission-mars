@@ -6,7 +6,7 @@
 	 * Represent the material sand with its color and its id in JSon file.
 	 */
 	nsMaterials.Sand = function() {
-		this.id = 2;
+		this.id = 1;
 		this.name = 'Sand';
 		this.textureColor = "#E7D3C5";
 		this.probability = 0.1;
@@ -18,5 +18,9 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+
+	nsMaterials.Sand.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();

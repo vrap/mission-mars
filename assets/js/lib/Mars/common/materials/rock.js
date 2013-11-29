@@ -6,7 +6,7 @@
 	 * Represent the material rock with its color and its id in JSon file.
 	 */
 	nsMaterials.Rock = function() {
-		this.id = 1;
+		this.id = 0;
 		this.name = 'Rock';
 		this.textureColor = "#6a6867";
 		this.probability = 0.35;
@@ -18,5 +18,9 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+
+	nsMaterials.Rock.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();
