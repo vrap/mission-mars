@@ -8,8 +8,8 @@
 	nsMaterials.Ice = function() {
 		this.id = 4;
 		this.name = 'Ice';
-		this.textureColor = "#ADF0F0";
-		this.probability = 0.08;
+		this.textureColor = "#e6e2df";
+		this.probability = 0.01;
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {

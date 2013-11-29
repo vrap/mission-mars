@@ -8,8 +8,8 @@
 	nsMaterials.Iron = function() {
 		this.id = 3;
 		this.name = 'Iron';
-		this.textureColor = "#C9A78E";
-		this.probability = 0.2;
+		this.textureColor = "#43371f";
+		this.probability = 0.02;
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {

@@ -8,8 +8,8 @@
 	nsMaterials.Rock = function() {
 		this.id = 0;
 		this.name = 'Rock';
-		this.textureColor = "#6a6867";
-		this.probability = 0.35;
+		this.textureColor = "#5c442c";
+		this.probability = 0.3;
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {
