@@ -20,6 +20,10 @@
 		}
 	};
 
+	/**
+	 * @param {boolean}
+	 * @return {THREE.MeshBasicMaterial} Instance of THREE.MeshBasicMaterial with the texture color and wireframe
+	 */
 	nsMaterials.Other.prototype.getColor = function(wireframe) {
 		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
