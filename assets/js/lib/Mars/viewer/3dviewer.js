@@ -84,30 +84,36 @@
 			this.viewer.map.getHeight()-1
 		);
 		
-		// assign z to each case
 		var index = 0;
 		var natures = [];
+		// materials
+		var materials = []; 
+		materials.push( new THREE.MeshBasicMaterial( { color: rock.textureColor, wireframe: true }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: sand.textureColor, wireframe: true }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: ice.textureColor, wireframe: true }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: iron.textureColor, wireframe: true }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: ore.textureColor, wireframe: true }) );
+		materials.push( new THREE.MeshBasicMaterial( { color: other.textureColor, wireframe: true }) );
+		
+		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
 			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
 				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
-				// Stock the nature map attribute in an array. Two times because each case is devided in two triangles
-				natures.push(this.viewer.map._squares[i][j].nature-1);
-				natures.push(this.viewer.map._squares[i][j].nature-1);
 				index++;
 			}
 		}
 
-		// materials
-		var materials = []; 
-		materials.push( new THREE.MeshBasicMaterial( { color: rock.textureColor }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: sand.textureColor }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: ice.textureColor }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: iron.textureColor }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: ore.textureColor }) );
-		materials.push( new THREE.MeshBasicMaterial( { color: other.textureColor }) );
-
+		// Assign color
+		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
+			for (var j = 0; j < this.viewer.map.getHeight()-1; j++) {
+				natures.push(this.viewer.map._squares[i][j].nature-1);
+				natures.push(this.viewer.map._squares[i][j].nature-1);
+			}
+		}
+		console.log(this.geometry.vertices.length);
+		console.log(this.geometry.faces.length);
 		// assign a material to each face
-		for( var i = 0; i < this.geometry.faces.length; i ++ ) {
+		for( var i = 0; i <= this.geometry.faces.length-1; i ++ ) {
 			this.geometry.faces[ i ].materialIndex = natures[i];
 		}
 
@@ -122,6 +128,7 @@
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {
+		//this.renderer.setSize( 650, 650 );
 		this.controls.update(1);
 		this.renderer.render(this.scene, this.camera);
 	};

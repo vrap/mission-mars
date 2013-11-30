@@ -32,13 +32,6 @@
 		/* Initialize the creation of the element. */
 		this.parent.create(width, height, materials);
 
-		/* Generate a crater. */
-		// for (var i = 0; i < this._element.length; i++) {
-		// 	for (var j = 0; j < this._element[0].length; j++) {
-		// 		this._element[i][j].z = 0;
-		// 	}
-		// }
-
 		//Generer un carte aleatoir avec un max et un min X y
 		var count = 0;
 		var count2 =0;
@@ -49,14 +42,11 @@
 
 		while(count<150){
 
-			var pWidth = getRandomInt(0, width);
-			var pHeight = getRandomInt(0, height);
-
-			var start = getRandomInt(0, height);
-
-			var conteur = getRandomInt(0, 100);
-
 			while(count2<150){
+
+				var pWidth = getRandomInt(0, width);
+				var pHeight = getRandomInt(0, height);
+				var start = getRandomInt(0, height);
 
 				maxWidth = getRandomInt(0, pWidth);
 				minWidth = getRandomInt(start, width);
@@ -66,7 +56,6 @@
 
 				for (var i = minWidth; i < maxWidth; i++) {
 					for (var j = minHeight; j < maxHeight; j++) {
-
 						initialileZ = this._element[i][j].z;
 						this._element[i][j].z = initialileZ-0.2;
 						this._element[i][j].nature = 4;
@@ -76,24 +65,8 @@
 
 				count2++;
 			}
+
 			count2 = 0;
-
-
-			maxWidth = getRandomInt(0, pWidth);
-			minWidth = getRandomInt(0, pWidth);
-
-			minHeight = getRandomInt(0, height);
-			maxHeight = getRandomInt(0, height);
-
-			for (var i = minWidth; i < maxWidth; i++) {
-				for (var j = minHeight; j < maxHeight; j++) {
-
-					initialileZ = this._element[i][j].z;
-					this._element[i][j].z = initialileZ-0.1;
-
-				}
-			}
-
 			count++;
 
 		}

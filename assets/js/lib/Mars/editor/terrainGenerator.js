@@ -27,11 +27,10 @@
 	nsEditor.TerrainGenerator._createBase = function() {
 		for (var i = 0; i < this._width; i++) {
 			this._map[i] = new Array();
-
-			for (var j = 0; j <= this._height; j++) {
+			for (var j = 0; j < this._height; j++) {
 				this._map[i][j] = { z: (this._zMin + this._zMax) /2,
-									nature: this._getFloorType()
-								};
+					nature: this._getFloorType()
+				};
 			}
 		}
 	};
@@ -80,14 +79,35 @@
 	};
 
 	nsEditor.TerrainGenerator._createElements = function() {
+
 		for (var elementKey in this._elements) {
 			var element = this._elements[elementKey];
 
-			var test = element.create(40, 40);
+			var sizeX = getRandomInt(10, 100);
+			var sizeY = getRandomInt(10, 100);
+
+			var test = element.create(sizeX, sizeY);
 			var objectTest = JSON.parse(test);
 
-			this._pushElement(objectTest, 50, 50);
+			var posX = getRandomInt(0,100);
+			var posY = getRandomInt(0,100);
+
+			this._pushElement(objectTest, 10, 10);
+
+			// var sizeX = getRandomInt(0, 50);
+			// var sizeY = getRandomInt(0, 50);
+
+			// var test = element.create(sizeX, sizeY);
+			// var objectTest = JSON.parse(test);
+
+			// var posX = getRandomInt(0,100);
+			// var posY = getRandomInt(0,100);
+
+			// this._pushElement(objectTest, posX, posY);
+
+
 		}
+
 	};
 
 	/**
@@ -105,8 +125,10 @@
 				for (var j = 0; j < elementHeight; j++) {
 					posY = j + y;
 					if (posX <= mapHeight) {
-						this._map[posX][posY] = element[i][j];
+						this._map[posX][posY].z += element[i][j].z;
+						this._map[posX][posY].nature = element[i][j].nature;
 					}
+					
 				}
 			}
 		}

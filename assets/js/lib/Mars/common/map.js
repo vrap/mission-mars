@@ -41,6 +41,6 @@
 	 * of the properties begin to 0.
 	 */
 	nsCommon.Map.prototype.getHeight = function() {
-		return this._squares[0].length -1;
+		return this._squares[0].length;
 	};
 })();

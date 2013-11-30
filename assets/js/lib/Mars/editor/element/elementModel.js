@@ -51,7 +51,7 @@
 			this._element[i] = new Array();
 			for (var j = 0; j < this._height; j++) {
 				this._element[i][j] = {
-					z: 10,
+					z: 0,
 					nature: 1
 				};
 			}
