@@ -6,10 +6,10 @@
 	 * Represent the material rock with its color and its id in JSon file.
 	 */
 	nsMaterials.Rock = function() {
-		this.id = 1;
+		this.id = 0;
 		this.name = 'Rock';
-		this.textureColor = "#6a6867";
-		this.probability = 0.35;
+		this.textureColor = "#5c442c";
+		this.probability = 0.3;
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {
@@ -18,5 +18,13 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+	
+	/**
+	 * @param {boolean}
+	 * @return {THREE.MeshBasicMaterial} Instance of THREE.MeshBasicMaterial with the texture color and wireframe
+	 */
+	nsMaterials.Rock.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();

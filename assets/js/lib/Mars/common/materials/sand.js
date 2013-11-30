@@ -6,10 +6,10 @@
 	 * Represent the material sand with its color and its id in JSon file.
 	 */
 	nsMaterials.Sand = function() {
-		this.id = 2;
+		this.id = 1;
 		this.name = 'Sand';
-		this.textureColor = "#E7D3C5";
-		this.probability = 0.1;
+		this.textureColor = "#825c38";
+		this.probability = 0.4;
 
 		/* If already instancied, return instance (Singleton) */
 		if (arguments.callee.instance) {
@@ -18,5 +18,13 @@
 		else {
 			arguments.callee.instance = this;
 		}
+	};
+
+	/**
+	 * @param {boolean}
+	 * @return {THREE.MeshBasicMaterial} Instance of THREE.MeshBasicMaterial with the texture color and wireframe
+	 */
+	nsMaterials.Sand.prototype.getColor = function(wireframe) {
+		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
 	};
 })();
