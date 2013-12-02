@@ -25,14 +25,159 @@
 	 * @return {[type]} [description]
 	 */
 	nsEditor.TerrainGenerator._createBase = function() {
+
+		/* Base */
 		for (var i = 0; i < this._width; i++) {
 			this._map[i] = new Array();
 			for (var j = 0; j < this._height; j++) {
-				this._map[i][j] = { z: (this._zMin + this._zMax) /2,
+				this._map[i][j] = { z: 0,
 					nature: this._getFloorType()
 				};
 			}
 		}
+
+		/*--------------------*
+		|	Elevation du z    |
+		*--------------------*/
+
+		/* Boucle général */
+		var count = 0;
+		while(count < 800 ){
+
+			/* Tous les 2 tours inverser la map
+			à l'aide d'un clone de la map */
+			if(count % 2){
+				for (var i = 0; i < this._width; i++) {
+					for (var j = 0; j < this._height; j++) {
+						this._map[i][j].z = reversMap[i][j].z;
+					}
+				}
+			}else{
+				for (var i = 0; i < this._width-1; i++) {
+					if(i+1 >= this._width){
+						for (var j = 0; j < this._height-1; j++) {
+							if(j+1 >= this._height){
+								this._map[j+1][j+1].z = reversMap[i][j].z;
+							}
+							
+						}
+					}
+					
+				}
+			}
+
+			/* Random des points à éléver sur la map */
+			var width = getRandomInt(0, this._width );
+			var height = getRandomInt(0, this._height);
+			var startWidth = getRandomInt(0, this._width);
+			var startHeight = getRandomInt(0, this._height);
+
+			/* Élévation des points */
+			for (var i = startWidth; i < width; i++) {
+				for (var j = startHeight; j < height; j++) {
+					this._map[i][j].z += 0.2;
+				}
+				height--; // <= pour avoir des dessins en diagonale
+			}
+
+			/* Random des points à diminuer sur la map */
+			var width = getRandomInt(0, this._width );
+			var height = getRandomInt(0, this._height);
+			var startWidth = getRandomInt(0, this._width);
+			var startHeight = getRandomInt(0, this._height);
+
+			/* Diminution des points */
+			for (var i = startWidth; i < width; i++) {
+				for (var j = startHeight; j < height; j++) {
+					this._map[i][j].z -= 0.2;
+				}
+				height--;
+
+			}
+			count++;
+
+			/* Création du clone de la map */
+			var reversMap = new Array();
+			for (var i = 0; i < this._width; i++) {
+				reversMap[i] = new Array();
+				for (var j = 0; j < this._height; j++) {
+					reversMap[i][j] = {z: this._map[j][i].z }
+				}
+			}
+		}
+
+
+		/*--------------------*
+		|	Smoothing         |
+		*--------------------*/
+
+		var countPassages = 0;
+		var nbPassage = 1;
+		// Inisialisation des variables :
+		var square1, square2, square3, square4, square5, square6, square7, square8, square9;
+		var squareX, squareY;
+
+		var count = 0;
+		var squareMax = this._width * this._height;
+
+		// Boucle pour parcourir le tableau
+		while(count < squareMax){
+
+			// Récupération d'un case au hazard dans la grille
+			squareX = getRandomInt(3, this._width-3);
+			squareY = getRandomInt(3, this._height-3);
+
+			// Si la case est au bord de la map, la décalé.
+			if(squareX <= 2){ squareX++; }
+			if(squareY <= 2){ squareY++; }
+
+			// Récupéation des coordonnée les 9 cases situé autour de la case séléctionnés
+			// (la case selectionné c'est la 5)
+			square1 = this._map[squareX-1][squareY-1].z;
+			square2 = this._map[squareX][squareY-1].z;
+			square3 = this._map[squareX-1][squareY-1].z;
+			square4 = this._map[squareX-1][squareY].z;
+
+			square5 = this._map[squareX][squareY].z;
+
+			square6 = this._map[squareX+1][squareY].z;
+			square7 = this._map[squareX-1][squareY+1].z;
+			square8 = this._map[squareX][squareY+1].z;
+			square9 = this._map[squareX+1][squareY+1].z;
+
+			/***************************
+			 	----- ----- -----
+				|     |     |     |
+				|   1 |   2 |   3 |
+				 ----- ----- -----
+				|     |     |     |
+				|   4 |   5 |   6 |
+				 ----- ----- -----
+				|     |     |     |
+				|   7 |   8 |   9 |
+				 ----- ----- -----
+			***************************/
+
+			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
+			// square 2
+			this._map[squareX][squareY-1].z = (square1+square5+square3)/3;
+			// square 4
+			this._map[squareX-1][squareY].z = (square1+square5+square7)/3;
+			// square 8
+			this._map[squareX][squareY+1].z = (square5+square7+square9)/3;
+			// square 6
+			this._map[squareX+1][squareY].z = (square5+square3+square9)/3;
+
+			// Gestion du nombre de passage
+			if((count == squareMax-1) && (countPassages != nbPassage)){
+				count = 0;
+				countPassages++;
+			}
+
+
+			count++;
+		}
+
 	};
 
 	/**
