@@ -26,6 +26,9 @@
 		this.tankSize = (parseInt(tankSize) >= 0) ? parseInt(tankSize) : 0;
 		this.tank = this.tankSize;
 
+		/* Define the default direction of the Rover to North. */
+		this.direction = nsRover.Rover.DIRECTION.NORTH;
+
 		/* Retrieve an instance of the Observable. */
 		this.observer = new nsCommon.Observable();
 
@@ -76,6 +79,17 @@
 	 * @return {[type]}           [description]
 	 */
 	nsRover.Rover.prototype.setDirection = function(direction) {
+		for (var directionName in this.constructor.DIRECTION) {
+			var directionCode = this.constructor.DIRECTION[directionName];
+
+			if (directionCode == direction) {
+				var lastDirection = this.direction;
+				this.direction = directionCode;
+
+				this.publishEvent('direction', {lastDirection: lastDirection});
+				break;
+			}
+		}
 	};
 
 	/**
@@ -87,14 +101,16 @@
 	 */
 	nsRover.Rover.prototype.publishEvent = function(channel, options) {
 		/* Initialize default options. */
-		options = (options.lenght > 0) ? options : {};
+		options = (Object.keys(options).length > 0) ? options : {};
 		channel = 'rover.' + channel;
 
 		/* Add rover instance to the options. */
 		options.rover = this;
-
 		/* Publish the event. */
-		this.observer.publish(event, [options]);
+		this.observer.publish(channel, [options]);
+
+		/* Debug. */
+		console.debug('Publish event : ', channel, options);
 	};
 
 	nsRover.Rover.prototype.move = function(direction, distance) {
