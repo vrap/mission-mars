@@ -76,7 +76,25 @@
 	 * @return {[type]}           [description]
 	 */
 	nsRover.Rover.prototype.setDirection = function(direction) {
+	};
 
+	/**
+	 * Publish an event.
+	 * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
+	 *
+	 * @param  {string} channel Subchannel where the event need to be published. (The channel will be prefixed by "rover.").
+	 * @param  {object} options An object containing the params to sends when publishing the event.
+	 */
+	nsRover.Rover.prototype.publishEvent = function(channel, options) {
+		/* Initialize default options. */
+		options = (options.lenght > 0) ? options : {};
+		channel = 'rover.' + channel;
+
+		/* Add rover instance to the options. */
+		options.rover = this;
+
+		/* Publish the event. */
+		this.observer.publish(event, [options]);
 	};
 
 	nsRover.Rover.prototype.move = function(direction, distance) {
@@ -127,41 +145,38 @@
 			throw new Error('The map is undiscovered here.');
 		}
 
-		this.observer.publish(
-			'rover.move',
-			[{
-				rover: this,
+		this.publishEvent(
+			'move',
+			{
 				direction: direction,
 				distance: distance,
 				lastX: lastX,
 				lastY: lastY,
 				newX: nextX,
 				newY: nextY
-			}]
+			}
 		);
 	};
 
 	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
-		this.observer.publish(
+		this.publishEvent(
 			'rover.scanElevation',
-			[{
-				rover: this,
+			{
 				direction: direction,
 				distance: distance,
 				elevation: elevation
-			}]
+			}
 		);
 	};
 
 	nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
-		this.observer.publish(
+		this.publishEvent(
 			'rover.scanMaterial',
-			[{
-				rover: this,
+			{
 				direction: direction,
 				distance: distance,
 				material: material
-			}]
+			}
 		);
 	};
 })();
