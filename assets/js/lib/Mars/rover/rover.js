@@ -106,7 +106,7 @@
 
 		/* Add rover instance to the options. */
 		options.rover = this;
-		
+
 		/* Publish the event. */
 		this.observer.publish(channel, [options]);
 
@@ -177,7 +177,7 @@
 
 	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
 		this.publishEvent(
-			'rover.scanElevation',
+			'scanElevation',
 			{
 				direction: direction,
 				distance: distance,
@@ -188,7 +188,7 @@
 
 	nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
 		this.publishEvent(
-			'rover.scanMaterial',
+			'scanMaterial',
 			{
 				direction: direction,
 				distance: distance,
