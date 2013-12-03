@@ -31,8 +31,6 @@
 
 		/* Retrieve an instance of the Observable. */
 		this.observer = new nsCommon.Observable();
-
-		console.log(nsRover.Rover.DIRECTION.NORTH);
 	};
 
 	/* Constant that represent the list of possible directions. */
