@@ -46,13 +46,13 @@
 	 * @this {Model}
 	 */
 	nsElements.Model.prototype._init = function() {
+
 		for (var i = 0; i < this._width; i++) {
 			this._element[i] = new Array();
-
 			for (var j = 0; j < this._height; j++) {
 				this._element[i][j] = {
 					z: 0,
-					nature: 3
+					nature: 1
 				};
 			}
 		}

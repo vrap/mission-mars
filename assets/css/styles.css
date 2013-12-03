@@ -1,4 +1,12 @@
 body {
 	margin: 0;
 	padding: 0;
+	position: relative;
+}
+
+#mini-map{
+	position: absolute;
+	z-index: 1000;
+	top: 0;
+	right: 0;
 }

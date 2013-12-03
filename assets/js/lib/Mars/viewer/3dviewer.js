@@ -129,6 +129,7 @@
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {
+		//this.renderer.setSize( 650, 650 );
 		this.controls.update(1);
 		this.renderer.render(this.scene, this.camera);
 	};

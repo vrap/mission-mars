@@ -23,19 +23,20 @@
 	};
 
 	nsViewer.Viewer.prototype.load = function(type, element, options) {
+
 		if (this._allowedType.hasOwnProperty(type)) {
 			type = this._allowedType[type];
 
-			if (element instanceof HTMLDivElement) {
+			// if (element instanceof HTMLDivElement) {
 				if (!this.hasViewer(element)) {
 					this.viewers[element] = new nsViewer[type](this, element, options);
 
 					return this.viewers[element];
 				}
-			}
-			else {
-				throw new TypeError('DOM Element "' + element + '" does not exist');
-			}
+			//}
+			// else { 
+			// 	throw new TypeError('DOM Element "' + element + '" does not exist');
+			// }
 		}
 	};
 
@@ -45,6 +46,7 @@
 	 */
 	nsViewer.Viewer.prototype.load2D = function(element, options) {
 		return this.load('2d', element, options);
+		console.log('lolo');
 	};
 
 	/**
