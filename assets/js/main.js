@@ -53,21 +53,4 @@
 	rover.move(rover.constructor.DIRECTION.NORTH, 2);
 	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
-
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	
-	// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	// function onDocumentMouseMove(event) {
-	// 	var projector = new THREE.Projector();
-	// 	var camera = viewer.viewers[renderDiv].camera;
-	// 	var vector = new THREE.Vector3(( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5);
-
-	// 	projector.unprojectVector(vector, camera);
-
-	// 	var dir = vector.sub(camera.position).normalize();
-	// 	var distance = - camera.position.z / dir.z;
-	// 	var pos = camera.position.clone().add(dir.multiplyScalar(distance));
-
-	// 	console.log(pos);
-	// }
 })();
