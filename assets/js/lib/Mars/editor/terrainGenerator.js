@@ -1,6 +1,14 @@
 (function() {
-	var nsEditor   = using('mars.editor');
-	var nsElements = using('mars.editor.elements');
+	var nsEditor   = using('mars.editor'),
+		nsMaterials = using('mars.common.material'),
+		nsElements = using('mars.editor.elements');
+
+	var rock = new nsMaterials.Rock (),
+		iron = new nsMaterials.Iron (),
+		ice = new nsMaterials.Ice (),
+		ore = new nsMaterials.Ore (),
+		sand = new nsMaterials.Sand (),
+		other = new nsMaterials.Other ();
 
 	/**
 	 * TerrainGenerator
@@ -120,6 +128,12 @@
 		var count = 0;
 		var squareMax = this._width * this._height;
 
+		var initIceZoneX = 5,
+			initIceZoneY = 1,
+			temp,
+			iceZoneX = initIceZoneX,
+			iceZoneY = initIceZoneY;
+
 		// Boucle pour parcourir le tableau
 		while(count < squareMax){
 
@@ -133,17 +147,44 @@
 
 			// Récupéation des coordonnée les 9 cases situé autour de la case séléctionnés
 			// (la case selectionné c'est la 5)
-			square1 = this._map[squareX-1][squareY-1].z;
-			square2 = this._map[squareX][squareY-1].z;
-			square3 = this._map[squareX-1][squareY-1].z;
-			square4 = this._map[squareX-1][squareY].z;
+			square1 = {
+				z: this._map[squareX-1][squareY-1].z,
+				nature: this._map[squareX-1][squareY-1].nature
+			};
+			square2 = {
+				z: this._map[squareX][squareY-1].z,
+				nature: this._map[squareX][squareY-1].nature
+			};
+			square3 = {
+				z: this._map[squareX+1][squareY-1].z,
+				nature: this._map[squareX+1][squareY-1].nature
+			};
+			square4 = {
+				z: this._map[squareX-1][squareY].z,
+				nature: this._map[squareX-1][squareY].nature
+			};
 
-			square5 = this._map[squareX][squareY].z;
+			square5 = {
+				z: this._map[squareX][squareY].z,
+				nature: this._map[squareX][squareY].nature
+			};
 
-			square6 = this._map[squareX+1][squareY].z;
-			square7 = this._map[squareX-1][squareY+1].z;
-			square8 = this._map[squareX][squareY+1].z;
-			square9 = this._map[squareX+1][squareY+1].z;
+			square6 = {
+				z: this._map[squareX+1][squareY].z,
+				nature: this._map[squareX+1][squareY].nature
+			};
+			square7 = {
+				z: this._map[squareX-1][squareY+1].z,
+				nature: this._map[squareX-1][squareY+1].nature
+			};
+			square8 = {
+				z: this._map[squareX][squareY+1].z,
+				nature: this._map[squareX][squareY+1].nature
+			};
+			square9 = {
+				z: this._map[squareX+1][squareY+1].z,
+				nature: this._map[squareX+1][squareY+1].nature
+			};
 
 			/***************************
 			 	----- ----- -----
@@ -160,13 +201,36 @@
 
 			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
 			// square 2
-			this._map[squareX][squareY-1].z = (square1+square5+square3)/3;
+			this._map[squareX][squareY-1].z = (square1.z+square5.z+square3.z)/3;
 			// square 4
-			this._map[squareX-1][squareY].z = (square1+square5+square7)/3;
+			this._map[squareX-1][squareY].z = (square1.z+square5.z+square7.z)/3;
 			// square 8
-			this._map[squareX][squareY+1].z = (square5+square7+square9)/3;
+			this._map[squareX][squareY+1].z = (square5.z+square7.z+square9.z)/3;
 			// square 6
-			this._map[squareX+1][squareY].z = (square5+square3+square9)/3;
+			this._map[squareX+1][squareY].z = (square5.z+square3.z+square9.z)/3;
+
+			/**
+			* Materials smothing
+			*/
+
+
+			if (square5.nature != iron.id) { // The iron doesn't move
+				if (square5.nature == ice.id) {
+					// Switch the nature present in the actual iceblok with the tracker
+					temp = this._map[iceZoneX][iceZoneY].nature;
+					this._map[iceZoneX][iceZoneY].nature = this._map[squareX][squareY].nature;
+					this._map[squareX][squareY].nature = temp;
+
+					if (iceZoneX >= initIceZoneX && iceZoneX <= this._map.length-5) {
+						iceZoneX++;
+					} else {
+						iceZoneX = initIceZoneX;
+						iceZoneY++;
+					}
+				} else { // for all others
+					//this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
+				}
+			}
 
 			// Gestion du nombre de passage
 			if((count == squareMax-1) && (countPassages != nbPassage)){
@@ -198,7 +262,7 @@
 			}
 		}
 
-		return 6; // Material 6 by default
+		return 5; // Material 5 by default
 	};
 
 	/**
@@ -214,6 +278,91 @@
 
 		return sum;
 	};
+
+	/**
+	 * [ description]
+	 * @return { Int } The sum of materials probabilities
+	 */
+	nsEditor.TerrainGenerator._getAroundMajorMaterial = function(x, y) {
+		var arrayCounters = new Array(0, 0, 0, 0, 0, 0);
+
+		square1 = this._map[x-1][y-1].nature;
+		switch (square1) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square2 = this._map[x][y-1].nature;
+		switch (square2) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square3 = this._map[x+1][y-1].nature;
+		switch (square3) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square4 = this._map[x-1][y].nature;
+		switch (square4) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square6 = this._map[x+1][y].nature;
+		switch (square6) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square7 = this._map[x-1][y+1].nature;
+		switch (square7) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square8 = this._map[x][y+1].nature;
+		switch (square8) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+		square9 = this._map[x+1][y+1].nature;
+		switch (square9) {
+			case 0 : arrayCounters[rock.id]++; break;
+			case 1 : arrayCounters[sand.id]++; break;
+			case 2 : arrayCounters[ore.id]++; break;
+			case 3 : arrayCounters[iron.id]++; break;
+			case 4 : arrayCounters[ice.id]++; break;
+			case 5 : arrayCounters[other.id]++; break;
+		}
+
+		arrayCounters.sort();
+
+		return arrayCounters[arrayCounters.length-1];
+	}
 
 	/**
 	 * [ description]
@@ -271,7 +420,6 @@
 					posY = j + y;
 					if (posX <= mapHeight) {
 						this._map[posX][posY].z += element[i][j].z;
-						this._map[posX][posY].nature = element[i][j].nature;
 					}
 					
 				}
