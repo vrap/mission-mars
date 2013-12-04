@@ -128,11 +128,13 @@
 		var count = 0;
 		var squareMax = this._width * this._height;
 
-		var initIceZoneX = 5,
-			initIceZoneY = 1,
+		var beginIceZoneX = parseInt(0.25*this._width),
+			beginIceZoneY = 0,
+			endIceZoneX = parseInt(0.75*this._width),
 			temp,
-			iceZoneX = initIceZoneX,
-			iceZoneY = initIceZoneY;
+			maxIce = ice.probability*squareMax,
+			iceZoneCurrentX = beginIceZoneX,
+			iceZoneCurrentY = beginIceZoneY;
 
 		// Boucle pour parcourir le tableau
 		while(count < squareMax){
@@ -215,15 +217,17 @@
 			if (square5.nature != iron.id) { // The iron doesn't move
 				if (square5.nature == ice.id) {
 					// Switch the nature present in the actual iceblok with the tracker
-					temp = this._map[iceZoneX][iceZoneY].nature;
-					this._map[iceZoneX][iceZoneY].nature = this._map[squareX][squareY].nature;
+					temp = this._map[iceZoneCurrentX][iceZoneCurrentY].nature;
+					this._map[iceZoneCurrentX][iceZoneCurrentY].nature = this._map[squareX][squareY].nature;
 					this._map[squareX][squareY].nature = temp;
 
-					if (iceZoneX >= initIceZoneX && iceZoneX <= this._map.length-5) {
-						iceZoneX++;
+					if (iceZoneCurrentX < endIceZoneX) {
+						iceZoneCurrentX++;
 					} else {
-						iceZoneX = initIceZoneX;
-						iceZoneY++;
+						beginIceZoneX++;
+						endIceZoneX--;
+						iceZoneCurrentX = beginIceZoneX;
+						iceZoneCurrentY++;
 					}
 				} else { // for all others
 					this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
@@ -358,10 +362,10 @@
 
 		// Return the id of the material the most present
 		switch (valueMax) {
-			case nbRock : return rock.id; break;
-			case nbSand : return sand.id; break;
-			case nbOre : return ore.id; break;
-			case nbOther : return other.id; break;
+			case nbRock : return rock.id;
+			case nbSand : return sand.id;
+			case nbOre : return ore.id;
+			case nbOther : return other.id;
 		}
 	}
 
