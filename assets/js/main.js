@@ -23,7 +23,7 @@
 	var render2dDiv  = document.querySelector('#mini-map');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater], 100, 100, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [], 400, 400, -10, 10);
 	
 	var map = new nsCommon.Map(terrain);
 

@@ -48,11 +48,10 @@
 		|	Random elevation  |
 		*--------------------*/
 
-
-		console.log(this._width * this._height/12);
+		console.log(Math.round(this._width/2));
 		/* Boucle général */
 		var count = 0;
-		while(count < Math.round(this._width * this._height/12) ){
+		while(count < Math.round(this._width/2)){
 
 			/* Tous les 2 tours inverser la map
 			à l'aide d'un clone de la map */
@@ -61,18 +60,6 @@
 					for (var j = 0; j < this._height; j++) {
 						this._map[i][j].z = reversMap[i][j].z;
 					}
-				}
-			}else{
-				for (var i = 0; i < this._width-1; i++) {
-					if(i+1 >= this._width){
-						for (var j = 0; j < this._height-1; j++) {
-							if(j+1 >= this._height){
-								this._map[j+1][j+1].z = reversMap[i][j].z;
-							}
-							
-						}
-					}
-					
 				}
 			}
 
@@ -139,7 +126,7 @@
 			iceZoneCurrentY = beginIceZoneY;
 
 		// Boucle pour parcourir le tableau
-		while(count < squareMax){
+		while(count < squareMax*2){
 
 			// Récupération d'un case au hazard dans la grille
 			squareX = getRandomInt(3, this._width-3);
