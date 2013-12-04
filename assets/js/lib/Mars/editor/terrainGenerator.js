@@ -34,7 +34,7 @@
 	 */
 	nsEditor.TerrainGenerator._createBase = function() {
 
-		/* Base */
+		// Create map base
 		for (var i = 0; i < this._width; i++) {
 			this._map[i] = new Array();
 			for (var j = 0; j < this._height; j++) {
@@ -45,7 +45,7 @@
 		}
 
 		/*--------------------*
-		|	Elevation du z    |
+		|	Random elevation  |
 		*--------------------*/
 
 		/* Boucle général */
@@ -212,8 +212,6 @@
 			/**
 			* Materials smothing
 			*/
-
-
 			if (square5.nature != iron.id) { // The iron doesn't move
 				if (square5.nature == ice.id) {
 					// Switch the nature present in the actual iceblok with the tracker
@@ -228,7 +226,7 @@
 						iceZoneY++;
 					}
 				} else { // for all others
-					//this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
+					this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
 				}
 			}
 
@@ -237,11 +235,8 @@
 				count = 0;
 				countPassages++;
 			}
-
-
 			count++;
 		}
-
 	};
 
 	/**
@@ -284,84 +279,87 @@
 	 * @return { Int } The sum of materials probabilities
 	 */
 	nsEditor.TerrainGenerator._getAroundMajorMaterial = function(x, y) {
-		var arrayCounters = new Array(0, 0, 0, 0, 0, 0);
+		var arrayCounters = [],
+			nbRock = 0,
+			nbSand = 0,
+			nbOre = 0,
+			nbOther = 0;
 
 		square1 = this._map[x-1][y-1].nature;
 		switch (square1) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
+
 		square2 = this._map[x][y-1].nature;
 		switch (square2) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
+
 		square3 = this._map[x+1][y-1].nature;
 		switch (square3) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
+
 		square4 = this._map[x-1][y].nature;
 		switch (square4) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
+
 		square6 = this._map[x+1][y].nature;
 		switch (square6) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
+
 		square7 = this._map[x-1][y+1].nature;
 		switch (square7) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
+
 		square8 = this._map[x][y+1].nature;
 		switch (square8) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;		
 		}
+
 		square9 = this._map[x+1][y+1].nature;
 		switch (square9) {
-			case 0 : arrayCounters[rock.id]++; break;
-			case 1 : arrayCounters[sand.id]++; break;
-			case 2 : arrayCounters[ore.id]++; break;
-			case 3 : arrayCounters[iron.id]++; break;
-			case 4 : arrayCounters[ice.id]++; break;
-			case 5 : arrayCounters[other.id]++; break;
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
 		}
 
-		arrayCounters.sort();
+		arrayCounters.push(nbRock);
+		arrayCounters.push(nbSand);
+		arrayCounters.push(nbOre);
+		arrayCounters.push(nbOther);
 
-		return arrayCounters[arrayCounters.length-1];
+		switch (Math.max.apply( Math, arrayCounters )) {
+			case nbRock : return rock.id; break;
+			case nbSand : return sand.id; break;
+			case nbOre : return ore.id; break;
+			case nbOther : return other.id; break;
+		}
 	}
 
 	/**
