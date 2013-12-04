@@ -1,6 +1,14 @@
 (function() {
-	var nsEditor   = using('mars.editor');
-	var nsElements = using('mars.editor.elements');
+	var nsEditor   = using('mars.editor'),
+		nsMaterials = using('mars.common.material'),
+		nsElements = using('mars.editor.elements');
+
+	var rock = new nsMaterials.Rock (),
+		iron = new nsMaterials.Iron (),
+		ice = new nsMaterials.Ice (),
+		ore = new nsMaterials.Ore (),
+		sand = new nsMaterials.Sand (),
+		other = new nsMaterials.Other ();
 
 	/**
 	 * TerrainGenerator
@@ -26,7 +34,7 @@
 	 */
 	nsEditor.TerrainGenerator._createBase = function() {
 
-		/* Base */
+		// Create map base
 		for (var i = 0; i < this._width; i++) {
 			this._map[i] = new Array();
 			for (var j = 0; j < this._height; j++) {
@@ -37,7 +45,7 @@
 		}
 
 		/*--------------------*
-		|	Elevation du z    |
+		|	Random elevation  |
 		*--------------------*/
 
 
@@ -122,6 +130,14 @@
 		var count = 0;
 		var squareMax = this._width * this._height;
 
+		var beginIceZoneX = parseInt(0.25*this._width),
+			beginIceZoneY = 0,
+			endIceZoneX = parseInt(0.75*this._width),
+			temp,
+			maxIce = ice.probability*squareMax,
+			iceZoneCurrentX = beginIceZoneX,
+			iceZoneCurrentY = beginIceZoneY;
+
 		// Boucle pour parcourir le tableau
 		while(count < squareMax){
 
@@ -135,17 +151,44 @@
 
 			// Récupéation des coordonnée les 9 cases situé autour de la case séléctionnés
 			// (la case selectionné c'est la 5)
-			square1 = this._map[squareX-1][squareY-1].z;
-			square2 = this._map[squareX][squareY-1].z;
-			square3 = this._map[squareX-1][squareY-1].z;
-			square4 = this._map[squareX-1][squareY].z;
+			square1 = {
+				z: this._map[squareX-1][squareY-1].z,
+				nature: this._map[squareX-1][squareY-1].nature
+			};
+			square2 = {
+				z: this._map[squareX][squareY-1].z,
+				nature: this._map[squareX][squareY-1].nature
+			};
+			square3 = {
+				z: this._map[squareX+1][squareY-1].z,
+				nature: this._map[squareX+1][squareY-1].nature
+			};
+			square4 = {
+				z: this._map[squareX-1][squareY].z,
+				nature: this._map[squareX-1][squareY].nature
+			};
 
-			square5 = this._map[squareX][squareY].z;
+			square5 = {
+				z: this._map[squareX][squareY].z,
+				nature: this._map[squareX][squareY].nature
+			};
 
-			square6 = this._map[squareX+1][squareY].z;
-			square7 = this._map[squareX-1][squareY+1].z;
-			square8 = this._map[squareX][squareY+1].z;
-			square9 = this._map[squareX+1][squareY+1].z;
+			square6 = {
+				z: this._map[squareX+1][squareY].z,
+				nature: this._map[squareX+1][squareY].nature
+			};
+			square7 = {
+				z: this._map[squareX-1][squareY+1].z,
+				nature: this._map[squareX-1][squareY+1].nature
+			};
+			square8 = {
+				z: this._map[squareX][squareY+1].z,
+				nature: this._map[squareX][squareY+1].nature
+			};
+			square9 = {
+				z: this._map[squareX+1][squareY+1].z,
+				nature: this._map[squareX+1][squareY+1].nature
+			};
 
 			/***************************
 			 	----- ----- -----
@@ -162,24 +205,44 @@
 
 			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
 			// square 2
-			this._map[squareX][squareY-1].z = (square1+square5+square3)/3;
+			this._map[squareX][squareY-1].z = (square1.z+square5.z+square3.z)/3;
 			// square 4
-			this._map[squareX-1][squareY].z = (square1+square5+square7)/3;
+			this._map[squareX-1][squareY].z = (square1.z+square5.z+square7.z)/3;
 			// square 8
-			this._map[squareX][squareY+1].z = (square5+square7+square9)/3;
+			this._map[squareX][squareY+1].z = (square5.z+square7.z+square9.z)/3;
 			// square 6
-			this._map[squareX+1][squareY].z = (square5+square3+square9)/3;
+			this._map[squareX+1][squareY].z = (square5.z+square3.z+square9.z)/3;
+
+			/**
+			* Materials smothing
+			*/
+			if (square5.nature != iron.id) { // The iron doesn't move
+				if (square5.nature == ice.id) {
+					// Switch the nature present in the actual iceblok with the tracker
+					temp = this._map[iceZoneCurrentX][iceZoneCurrentY].nature;
+					this._map[iceZoneCurrentX][iceZoneCurrentY].nature = this._map[squareX][squareY].nature;
+					this._map[squareX][squareY].nature = temp;
+
+					if (iceZoneCurrentX < endIceZoneX) {
+						iceZoneCurrentX++;
+					} else {
+						beginIceZoneX++;
+						endIceZoneX--;
+						iceZoneCurrentX = beginIceZoneX;
+						iceZoneCurrentY++;
+					}
+				} else { // for all others
+					this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
+				}
+			}
 
 			// Gestion du nombre de passage
 			if((count == squareMax-1) && (countPassages != nbPassage)){
 				count = 0;
 				countPassages++;
 			}
-
-
 			count++;
 		}
-
 	};
 
 	/**
@@ -200,7 +263,7 @@
 			}
 		}
 
-		return 6; // Material 6 by default
+		return 5; // Material 5 by default
 	};
 
 	/**
@@ -216,6 +279,97 @@
 
 		return sum;
 	};
+
+	/**
+	 * [ description]
+	 * @return { Int } The sum of materials probabilities
+	 */
+	nsEditor.TerrainGenerator._getAroundMajorMaterial = function(x, y) {
+		var arrayCounters = [],
+			nbRock = 0,
+			nbSand = 0,
+			nbOre = 0,
+			nbOther = 0;
+
+		square1 = this._map[x-1][y-1].nature;
+		switch (square1) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		square2 = this._map[x][y-1].nature;
+		switch (square2) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		square3 = this._map[x+1][y-1].nature;
+		switch (square3) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		square4 = this._map[x-1][y].nature;
+		switch (square4) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		square6 = this._map[x+1][y].nature;
+		switch (square6) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		square7 = this._map[x-1][y+1].nature;
+		switch (square7) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		square8 = this._map[x][y+1].nature;
+		switch (square8) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;		
+		}
+
+		square9 = this._map[x+1][y+1].nature;
+		switch (square9) {
+			case rock.id : nbRock++; break;
+			case sand.id : nbSand++; break;
+			case ore.id : nbOre++; break;
+			case other.id : nbOther++; break;
+		}
+
+		// Save all numbers in an array to get the maximal value
+		arrayCounters.push(nbRock);
+		arrayCounters.push(nbSand);
+		arrayCounters.push(nbOre);
+		arrayCounters.push(nbOther);
+		valueMax = maxValueOfArray(arrayCounters);
+
+		// Return the id of the material the most present
+		switch (valueMax) {
+			case nbRock : return rock.id;
+			case nbSand : return sand.id;
+			case nbOre : return ore.id;
+			case nbOther : return other.id;
+		}
+	}
 
 	/**
 	 * [ description]
@@ -273,7 +427,6 @@
 					posY = j + y;
 					if (posX <= mapHeight) {
 						this._map[posX][posY].z += element[i][j].z;
-						this._map[posX][posY].nature = element[i][j].nature;
 					}
 					
 				}

@@ -5,3 +5,7 @@ function getRandomInt(min, max) {
 function getRandomIntArray(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
+
+function maxValueOfArray(array) {
+	return Math.max.apply(Math, array);
+}

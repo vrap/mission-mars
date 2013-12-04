@@ -26,10 +26,11 @@
 		this.tankSize = (parseInt(tankSize) >= 0) ? parseInt(tankSize) : 0;
 		this.tank = this.tankSize;
 
+		/* Define the default direction of the Rover to North. */
+		this.direction = nsRover.Rover.DIRECTION.NORTH;
+
 		/* Retrieve an instance of the Observable. */
 		this.observer = new nsCommon.Observable();
-
-		console.log(nsRover.Rover.DIRECTION.NORTH);
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -76,92 +77,174 @@
 	 * @return {[type]}           [description]
 	 */
 	nsRover.Rover.prototype.setDirection = function(direction) {
+		for (var directionName in this.constructor.DIRECTION) {
+			var directionCode = this.constructor.DIRECTION[directionName];
 
+			if (directionCode == direction) {
+				var lastDirection = this.direction;
+				this.direction = directionCode;
+
+				this.publishEvent('direction', {lastDirection: lastDirection});
+				break;
+			}
+		}
 	};
 
+	/**
+	 * Publish an event.
+	 * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
+	 *
+	 * @param  {string} channel Subchannel where the event need to be published. (The channel will be prefixed by "rover.").
+	 * @param  {object} options An object containing the params to sends when publishing the event.
+	 */
+	nsRover.Rover.prototype.publishEvent = function(channel, options) {
+		/* Initialize default options. */
+		options = (Object.keys(options).length > 0) ? options : {};
+		channel = 'rover.' + channel;
+
+		/* Add rover instance to the options. */
+		options.rover = this;
+
+		/* Publish the event. */
+		this.observer.publish(channel, [options]);
+
+		/* Debug. */
+		console.debug('Publish event : ', channel, options);
+	};
+
+	/**
+	 * [ description]
+	 * @param  {[type]} direction [description]
+	 * @param  {[type]} distance  [description]
+	 * @return {[type]}           [description]
+	 */
+	nsRover.Rover.prototype.getSquare = function(direction, distance) {
+		var x = this.x;
+		var y = this.y;
+
+		switch (direction) {
+			case this.constructor.DIRECTION.NORTH:
+				y += distance;
+			break;
+			case this.constructor.DIRECTION.NORTH_EAST:
+				y += distance;
+				x += distance;
+			break;
+			case this.constructor.DIRECTION.NORTH_WEST:
+				y += distance;
+				x -= distance;
+			break;
+			case this.constructor.DIRECTION.SOUTH:
+				y -= distance;
+			break;
+			case this.constructor.DIRECTION.SOUTH_EAST:
+				y -= distance;
+				x += distance;
+			break;
+			case this.constructor.DIRECTION.SOUTH_WEST:
+				y -= distance;
+				x -= distance;
+			break;
+			case this.constructor.DIRECTION.EAST:
+				x += distance;
+			break;
+			case this.constructor.DIRECTION.WEST:
+				x -= distance;
+			break;
+		}
+
+		var square = this.map.getSquare(x, y);
+
+		if (square) {
+			return {
+				x: x,
+				y: y,
+				z: square.z,
+				type: square.nature
+			};
+		}
+
+		return null;
+	};
+
+	/**
+	 * [ description]
+	 * @param  {[type]} direction [description]
+	 * @param  {[type]} distance  [description]
+	 * @return {[type]}           [description]
+	 */
 	nsRover.Rover.prototype.move = function(direction, distance) {
 		if (distance < 1 || distance > 2) {
 			throw new Error('Distance can only be set to 1 or 2.');
 		}
 
-		var lastX = this.x,
-			lastY = this.y,
-			nextX = this.x,
-			nextY = this.y;
+		var square = this.getSquare(direction, distance);
 
-		if (direction == this.constructor.DIRECTION.EAST) {
-			nextX += distance;
-		}
-		else if (direction == this.constructor.DIRECTION.WEST) {
-			nextX -= distance;
-		}
-		else {
-			if (direction == this.constructor.DIRECTION.NORTH || direction == this.constructor.DIRECTION.NORTH_EAST || direction == this.constructor.DIRECTION.NORTH_WEST) {
-				nextY += distance;
+		if (square !== null) {
+			var lastX = this.x;
+			var lastY = this.y;
 
-				if (direction == this.constructor.DIRECTION.NORTH_EAST) {
-					nextX += distance;
-				}
-				else if (direction == this.constructor.DIRECTION.NORTH_WEST) {
-					nextX -= distance;
-				}
-			}
-			else if (direction == this.constructor.DIRECTION.SOUTH || direction == this.constructor.DIRECTION.SOUTH_EAST || direction == this.constructor.DIRECTION.SOUTH_WEST) {
-				nextY -= distance;
+			this.x = square.x;
+			this.y = square.y;
 
-				if (direction == this.constructor.DIRECTION.SOUTH_EAST) {
-					nextX += distance;
+			this.publishEvent(
+				'move',
+				{
+					direction: direction,
+					distance: distance,
+					lastX: lastX,
+					lastY: lastY,
+					newX: this.x,
+					newY: this.y
 				}
-				else if (direction == this.constructor.DIRECTION.SOUTH_WEST) {
-					nextX -= distance;
-				}
-			}
-		}
-
-		console.log(nextX, nextY);
-		if (this.map._squares[nextX] && this.map._squares[nextX][nextY]) {
-			this.x = nextX;
-			this.y = nextY;
+			);
 		}
 		else {
 			throw new Error('The map is undiscovered here.');
 		}
-
-		this.observer.publish(
-			'rover.move',
-			[{
-				rover: this,
-				direction: direction,
-				distance: distance,
-				lastX: lastX,
-				lastY: lastY,
-				newX: nextX,
-				newY: nextY
-			}]
-		);
 	};
 
 	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
-		this.observer.publish(
-			'rover.scanElevation',
-			[{
-				rover: this,
-				direction: direction,
-				distance: distance,
-				elevation: elevation
-			}]
-		);
+		if (distance < 0 || distance > 2) {
+			throw new Error('Distance can only be set to 0 or 2.');
+		}
+
+		var square = this.getSquare(direction, distance);
+
+		if (square === null) {
+			throw new Error('The map is undiscovered here.');
+		}
+		else {
+			this.publishEvent(
+				'scanElevation',
+				{
+					direction: direction,
+					distance: distance,
+					elevation: square.z
+				}
+			);
+		}
 	};
 
 	nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
-		this.observer.publish(
-			'rover.scanMaterial',
-			[{
-				rover: this,
-				direction: direction,
-				distance: distance,
-				material: material
-			}]
-		);
+		if (distance < 0 || distance > 2) {
+			throw new Error('Distance can only be set to 0 or 2.');
+		}
+
+		var square = this.getSquare(direction, distance);
+
+		if (square === null) {
+			throw new Error('The map is undiscovered here.');
+		}
+		else {
+			this.publishEvent(
+				'scanMaterial',
+				{
+					direction: direction,
+					distance: distance,
+					type: square.type
+				}
+			);
+		}
 	};
 })();

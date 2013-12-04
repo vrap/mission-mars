@@ -43,4 +43,16 @@
 	nsCommon.Map.prototype.getHeight = function() {
 		return this._squares[0].length;
 	};
+
+	/**
+	 * [ description]
+	 * @param  {[type]} x [description]
+	 * @param  {[type]} y [description]
+	 * @return {[type]}   [description]
+	 */
+	nsCommon.Map.prototype.getSquare = function(x, y) {
+		if (this._squares[x] && this._squares[x][y]) {
+			return this._squares[x][y];
+		}
+	};
 })();
