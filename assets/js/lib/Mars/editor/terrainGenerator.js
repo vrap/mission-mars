@@ -349,12 +349,15 @@
 			case other.id : nbOther++; break;
 		}
 
+		// Save all numbers in an array to get the maximal value
 		arrayCounters.push(nbRock);
 		arrayCounters.push(nbSand);
 		arrayCounters.push(nbOre);
 		arrayCounters.push(nbOther);
+		valueMax = maxValueOfArray(arrayCounters);
 
-		switch (Math.max.apply( Math, arrayCounters )) {
+		// Return the id of the material the most present
+		switch (valueMax) {
 			case nbRock : return rock.id; break;
 			case nbSand : return sand.id; break;
 			case nbOre : return ore.id; break;
