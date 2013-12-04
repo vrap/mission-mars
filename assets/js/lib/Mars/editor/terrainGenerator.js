@@ -40,9 +40,11 @@
 		|	Elevation du z    |
 		*--------------------*/
 
+
+		console.log(this._width * this._height/12);
 		/* Boucle général */
 		var count = 0;
-		while(count < 800 ){
+		while(count < Math.round(this._width * this._height/12) ){
 
 			/* Tous les 2 tours inverser la map
 			à l'aide d'un clone de la map */
