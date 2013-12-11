@@ -16,14 +16,16 @@
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -20, 20);
+	var elementCrater = new nsElements.CraterModel([materialSand], -20, 20, 0);
+	var elementHill   = new nsElements.HillModel([materialSand], -5, 5, 0);
+	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 1);
 
 	/* Define viewer container. */
-	var renderDiv  = document.querySelector('#render');
-	var render2dDiv  = document.querySelector('#mini-map');
+	var renderDiv = document.querySelector('#render');
+	var render2dDiv = document.querySelector('#mini-map');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [], 400, 400, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementRavine], 400, 400, -10, 10);
 	
 	var map = new nsCommon.Map(terrain);
 

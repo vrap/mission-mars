@@ -48,7 +48,7 @@
 		|	Random elevation  |
 		*--------------------*/
 
-		console.log(Math.round(this._width/2));
+	    //console.log(Math.round(this._width/2));
 		/* Boucle général */
 		var count = 0;
 		while(count < Math.round(this._width/2)){
@@ -367,35 +367,53 @@
 	};
 
 	nsEditor.TerrainGenerator._createElements = function() {
-
 		for (var elementKey in this._elements) {
-			var element = this._elements[elementKey];
+            // console.log(this._elements);
+            // console.log(this._elements[element]);
 
-			var sizeX = getRandomInt(10, 100);
-			var sizeY = getRandomInt(10, 100);
+            // var array4Points = Array();
 
-			var test = element.create(sizeX, sizeY);
-			var objectTest = JSON.parse(test);
+            //var utmost = this._elements[elementKey]._utmost; 
 
-			var posX = getRandomInt(0,100);
-			var posY = getRandomInt(0,100);
+            //for (var elementNumber = 0; elementNumber < utmost; elementNumber++) {   
+                var element = this._elements[elementKey];
 
-			this._pushElement(objectTest, 10, 10);
+                // console.log(element + ' est crée, elementNumber : ' + elementNumber);
+                console.log(element);
+               	
 
-			// var sizeX = getRandomInt(0, 50);
-			// var sizeY = getRandomInt(0, 50);
+                var sizeX = getRandomInt(10, 200);
+                var sizeY = getRandomInt(10, 200);
+                var posX  = getRandomInt(0, 400);
+                var posY  = getRandomInt(0, 400);
 
-			// var test = element.create(sizeX, sizeY);
-			// var objectTest = JSON.parse(test);
+                //console.log(sizeX + ' ' + sizeY + ' ' + posX + ' ' + posY);
 
-			// var posX = getRandomInt(0,100);
-			// var posY = getRandomInt(0,100);
+                /*array4Points.push(posX, (posX + sizeX), (posY + sizeY), posY);
 
-			// this._pushElement(objectTest, posX, posY);
+                if (array4Points.indexOf(searchElement[, fromIndex]) != -1) {
+
+                }*/
+
+                var test = element.create(sizeX, sizeY);
+                var objectTest = JSON.parse(test);
+
+                this._pushElement(objectTest, posX, posY);
+            //}
 
 
-		}
+            /*var element = this._elements[elementKey];
 
+            var sizeX = getRandomInt(5, 20);
+            var sizeY = getRandomInt(5, 20);
+            var posX  = getRandomInt(0, 100);
+            var posY  = getRandomInt(0, 100);
+
+            var test = element.create(sizeX, sizeY);
+            var objectTest = JSON.parse(test);
+
+            this._pushElement(objectTest, posX, posY);*/
+        }
 	};
 
 	/**
