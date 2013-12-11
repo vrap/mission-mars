@@ -47,12 +47,7 @@
 		/*--------------------*
 		|	Random elevation  |
 		*--------------------*/
-<<<<<<< HEAD
 
-	    //console.log(Math.round(this._width/2));
-=======
-		
->>>>>>> 6542567aa260a526621a08b3e230ac1ab67cdee8
 		/* Boucle général */
 		var count = 0;
 		while(count < Math.round(this._width)*2){
