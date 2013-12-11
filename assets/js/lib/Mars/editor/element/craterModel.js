@@ -30,7 +30,7 @@
 	 */
 	nsElements.CraterModel.prototype.create = function(width, height, materials) {
 		/* Initialize the creation of the element. */
-		this.parent.create(width, height, materials);
+		this.parent.create.call(this, width, height, materials);
 
 		//Generer un carte aleatoir avec un max et un min X y
 		var count = 0;
