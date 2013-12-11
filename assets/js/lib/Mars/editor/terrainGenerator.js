@@ -47,11 +47,10 @@
 		/*--------------------*
 		|	Random elevation  |
 		*--------------------*/
-
-		console.log(Math.round(this._width/2));
+		
 		/* Boucle général */
 		var count = 0;
-		while(count < Math.round(this._width/2)){
+		while(count < Math.round(this._width)*2){
 
 			/* Tous les 2 tours inverser la map
 			à l'aide d'un clone de la map */
@@ -72,7 +71,7 @@
 			/* Élévation des points */
 			for (var i = startWidth; i < width; i++) {
 				for (var j = startHeight; j < height; j++) {
-					this._map[i][j].z += 0.2;
+					this._map[i][j].z += 0.1;
 				}
 				height--; // <= pour avoir des dessins en diagonale
 			}
@@ -86,7 +85,7 @@
 			/* Diminution des points */
 			for (var i = startWidth; i < width; i++) {
 				for (var j = startHeight; j < height; j++) {
-					this._map[i][j].z -= 0.2;
+					this._map[j][i].z -= 0.1;
 				}
 				height--;
 
@@ -103,133 +102,6 @@
 			}
 		}
 
-
-		/*--------------------*
-		|	Smoothing         |
-		*--------------------*/
-
-		var countPassages = 0;
-		var nbPassage = 1;
-		// Inisialisation des variables :
-		var square1, square2, square3, square4, square5, square6, square7, square8, square9;
-		var squareX, squareY;
-
-		var count = 0;
-		var squareMax = this._width * this._height;
-
-		var beginIceZoneX = parseInt(0.25*this._width),
-			beginIceZoneY = 0,
-			endIceZoneX = parseInt(0.75*this._width),
-			temp,
-			maxIce = ice.probability*squareMax,
-			iceZoneCurrentX = beginIceZoneX,
-			iceZoneCurrentY = beginIceZoneY;
-
-		// Boucle pour parcourir le tableau
-		while(count < squareMax*2){
-
-			// Récupération d'un case au hazard dans la grille
-			squareX = getRandomInt(3, this._width-3);
-			squareY = getRandomInt(3, this._height-3);
-
-			// Si la case est au bord de la map, la décalé.
-			if(squareX <= 2){ squareX++; }
-			if(squareY <= 2){ squareY++; }
-
-			// Récupéation des coordonnée les 9 cases situé autour de la case séléctionnés
-			// (la case selectionné c'est la 5)
-			square1 = {
-				z: this._map[squareX-1][squareY-1].z,
-				nature: this._map[squareX-1][squareY-1].nature
-			};
-			square2 = {
-				z: this._map[squareX][squareY-1].z,
-				nature: this._map[squareX][squareY-1].nature
-			};
-			square3 = {
-				z: this._map[squareX+1][squareY-1].z,
-				nature: this._map[squareX+1][squareY-1].nature
-			};
-			square4 = {
-				z: this._map[squareX-1][squareY].z,
-				nature: this._map[squareX-1][squareY].nature
-			};
-
-			square5 = {
-				z: this._map[squareX][squareY].z,
-				nature: this._map[squareX][squareY].nature
-			};
-
-			square6 = {
-				z: this._map[squareX+1][squareY].z,
-				nature: this._map[squareX+1][squareY].nature
-			};
-			square7 = {
-				z: this._map[squareX-1][squareY+1].z,
-				nature: this._map[squareX-1][squareY+1].nature
-			};
-			square8 = {
-				z: this._map[squareX][squareY+1].z,
-				nature: this._map[squareX][squareY+1].nature
-			};
-			square9 = {
-				z: this._map[squareX+1][squareY+1].z,
-				nature: this._map[squareX+1][squareY+1].nature
-			};
-
-			/***************************
-			 	----- ----- -----
-				|     |     |     |
-				|   1 |   2 |   3 |
-				 ----- ----- -----
-				|     |     |     |
-				|   4 |   5 |   6 |
-				 ----- ----- -----
-				|     |     |     |
-				|   7 |   8 |   9 |
-				 ----- ----- -----
-			***************************/
-
-			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
-			// square 2
-			this._map[squareX][squareY-1].z = (square1.z+square5.z+square3.z)/3;
-			// square 4
-			this._map[squareX-1][squareY].z = (square1.z+square5.z+square7.z)/3;
-			// square 8
-			this._map[squareX][squareY+1].z = (square5.z+square7.z+square9.z)/3;
-			// square 6
-			this._map[squareX+1][squareY].z = (square5.z+square3.z+square9.z)/3;
-
-			/**
-			* Materials smothing
-			*/
-			if (square5.nature != iron.id) { // The iron doesn't move
-				if (square5.nature == ice.id) {
-					// Switch the nature present in the actual iceblok with the tracker
-					temp = this._map[iceZoneCurrentX][iceZoneCurrentY].nature;
-					this._map[iceZoneCurrentX][iceZoneCurrentY].nature = this._map[squareX][squareY].nature;
-					this._map[squareX][squareY].nature = temp;
-
-					if (iceZoneCurrentX < endIceZoneX) {
-						iceZoneCurrentX++;
-					} else {
-						beginIceZoneX++;
-						endIceZoneX--;
-						iceZoneCurrentX = beginIceZoneX;
-						iceZoneCurrentY++;
-					}
-				} else { // for all others
-					this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
-				}
-			}
-
-			// Gestion du nombre de passage
-			if((count == squareMax-1) && (countPassages != nbPassage)){
-				count = 0;
-				countPassages++;
-			}
-			count++;
-		}
 	};
 
 	/**
@@ -374,13 +246,13 @@
 			var sizeX = getRandomInt(10, 100);
 			var sizeY = getRandomInt(10, 100);
 
-			var test = element.create(sizeX, sizeY);
+			var test = element.create(30, 30);
 			var objectTest = JSON.parse(test);
 
 			var posX = getRandomInt(0,100);
 			var posY = getRandomInt(0,100);
 
-			this._pushElement(objectTest, 10, 10);
+			this._pushElement(objectTest, posX, posY);
 
 			// var sizeX = getRandomInt(0, 50);
 			// var sizeY = getRandomInt(0, 50);
@@ -421,6 +293,130 @@
 		}
 	};
 
+
+	/**
+	 * [ description]
+	 * @return {[type]} [description]
+	 */
+	nsEditor.TerrainGenerator._smoothing = function() {
+
+
+		/*--------------------*
+		|	Smoothing         |
+		*--------------------*/
+
+		var countPassages = 0;
+		var nbPassage = 1;
+		// Inisialisation des variables :
+		var square1, square2, square3, square4, square5, square6, square7, square8, square9;
+		var squareX, squareY;
+
+		var count = 0;
+		var squareMax = this._width * this._height;
+
+		var beginIceZoneX = parseInt(0.25*this._width),
+			beginIceZoneY = 0,
+			endIceZoneX = parseInt(0.75*this._width),
+			temp,
+			maxIce = ice.probability*squareMax,
+			iceZoneCurrentX = beginIceZoneX,
+			iceZoneCurrentY = beginIceZoneY;
+
+		// Boucle pour parcourir le tableau
+		while(count < squareMax){
+
+			// Récupération d'un case au hazard dans la grille
+			squareX = getRandomInt(3, this._width-3);
+			squareY = getRandomInt(3, this._height-3);
+
+			// Si la case est au bord de la map, la décalé.
+			if(squareX <= 2){ squareX++; }
+			if(squareY <= 2){ squareY++; }
+
+			// Récupéation des coordonnée les 9 cases situé autour de la case séléctionnés
+			// (la case selectionné c'est la 5)
+			square1 = {
+				z: this._map[squareX-1][squareY-1].z,
+				nature: this._map[squareX-1][squareY-1].nature
+			};
+			square2 = {
+				z: this._map[squareX][squareY-1].z,
+				nature: this._map[squareX][squareY-1].nature
+			};
+			square3 = {
+				z: this._map[squareX+1][squareY-1].z,
+				nature: this._map[squareX+1][squareY-1].nature
+			};
+			square4 = {
+				z: this._map[squareX-1][squareY].z,
+				nature: this._map[squareX-1][squareY].nature
+			};
+
+			square5 = {
+				z: this._map[squareX][squareY].z,
+				nature: this._map[squareX][squareY].nature
+			};
+
+			square6 = {
+				z: this._map[squareX+1][squareY].z,
+				nature: this._map[squareX+1][squareY].nature
+			};
+			square7 = {
+				z: this._map[squareX-1][squareY+1].z,
+				nature: this._map[squareX-1][squareY+1].nature
+			};
+			square8 = {
+				z: this._map[squareX][squareY+1].z,
+				nature: this._map[squareX][squareY+1].nature
+			};
+			square9 = {
+				z: this._map[squareX+1][squareY+1].z,
+				nature: this._map[squareX+1][squareY+1].nature
+			};
+
+			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
+			// square 2
+			this._map[squareX][squareY-1].z = (square1.z+square5.z+square3.z)/3;
+			// square 4
+			this._map[squareX-1][squareY].z = (square1.z+square5.z+square7.z)/3;
+			// square 8
+			this._map[squareX][squareY+1].z = (square5.z+square7.z+square9.z)/3;
+			// square 6
+			this._map[squareX+1][squareY].z = (square5.z+square3.z+square9.z)/3;
+
+			/**
+			* Materials smothing
+			*/
+			if (square5.nature != iron.id) { // The iron doesn't move
+				if (square5.nature == ice.id) {
+					// Switch the nature present in the actual iceblok with the tracker
+					temp = this._map[iceZoneCurrentX][iceZoneCurrentY].nature;
+					this._map[iceZoneCurrentX][iceZoneCurrentY].nature = this._map[squareX][squareY].nature;
+					this._map[squareX][squareY].nature = temp;
+
+					if (iceZoneCurrentX < endIceZoneX) {
+						iceZoneCurrentX++;
+					} else {
+						beginIceZoneX++;
+						endIceZoneX--;
+						iceZoneCurrentX = beginIceZoneX;
+						iceZoneCurrentY++;
+					}
+				} else { // for all others
+					this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
+				}
+			}
+
+			// Gestion du nombre de passage
+			if((count == squareMax-1) && (countPassages != nbPassage)){
+				count = 0;
+				countPassages++;
+			}
+			count++;
+		}
+
+	};
+
 	/**
 	 * [ description]
 	 * @return {[type]} [description]
@@ -458,6 +454,7 @@
 
 		this._createBase();
 		this._createElements();
+		this._smoothing();
 
 		return this._toJSON();
 	};
