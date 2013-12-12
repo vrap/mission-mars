@@ -36,7 +36,6 @@
 
 		z /= 10;
 
-		console.log(z);
 		var x_center = Math.round(width/2)-1,
 			y_center = Math.round(height/2)-1,
 			rayon =	Math.round(minSize/2)-1;
