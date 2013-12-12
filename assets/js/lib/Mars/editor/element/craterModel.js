@@ -32,43 +32,25 @@
 		/* Initialize the creation of the element. */
 		this.parent.create.call(this, width, height, materials);
 
-		//Generer un carte aleatoir avec un max et un min X y
-		var count = 0;
-		var count2 =0;
-		var count3 = 0;
-		var randomMap;
-		var initialeZ;
-		var maxWidth, maxHeight, minWidth, minHeight;
+		var minSize = (width <= height) ? width : height;
+		var z = getRandomInt(15, 20);
 
-		while(count<150){
+		z /= 10;
 
-			while(count2<150){
+		var x_center = Math.round(width/2)-1,
+			y_center = Math.round(height/2)-1,
+			rayon =	Math.round(minSize/2)-1;
 
-				var pWidth = getRandomInt(0, width);
-				var pHeight = getRandomInt(0, height);
-				var start = getRandomInt(0, height);
+		while (rayon >= 1) {
 
-				maxWidth = getRandomInt(0, pWidth);
-				minWidth = getRandomInt(start, width);
-
-				minHeight = getRandomInt(start, height);
-				maxHeight = getRandomInt(0, pHeight);
-
-				for (var i = minWidth; i < maxWidth; i++) {
-					for (var j = minHeight; j < maxHeight; j++) {
-						initialileZ = this._element[i][j].z;
-						this._element[i][j].z = initialileZ-0.2;
-						this._element[i][j].nature = 4;
-
-					}
-				}
-
-				count2++;
+			drawCircle (x_center, y_center, rayon, z, this._element);
+			
+			if (z >= this._zMin) {
+				var z_temp = getRandomInt(2, 7);
+				z-=(z_temp/10);
 			}
 
-			count2 = 0;
-			count++;
-
+			rayon--;
 		}
 
 		/* Return the element and clean the var. */

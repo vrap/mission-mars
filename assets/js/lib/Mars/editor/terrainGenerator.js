@@ -252,11 +252,10 @@
                 // console.log(element + ' est crée, elementNumber : ' + elementNumber);
                 //  console.log(element);
       
-
-                var sizeX = getRandomInt(10, 90);
-                var sizeY = getRandomInt(10, 90);
-                var posX  = getRandomInt(0, 50);
-                var posY  = getRandomInt(0, 50);
+                var sizeX = getRandomInt(10, 200);
+                var sizeY = getRandomInt(10, 200);
+                var posX  = getRandomInt(0, this._width);
+                var posY  = getRandomInt(0, this._height);
 
                 //console.log(sizeX + ' ' + sizeY + ' ' + posX + ' ' + posY);
 
