@@ -173,19 +173,36 @@
 	 * @param  {[type]} distance  [description]
 	 * @return {[type]}           [description]
 	 */
-	nsRover.Rover.prototype.move = function(direction, distance) {
+	nsRover.Rover.prototype.move = function(direction, distance) { //console.log(nsRover.Rover.MOVE_COST.NORTH);
 		if (distance < 1 || distance > 2) {
 			throw new Error('Distance can only be set to 1 or 2.');
 		}
 
 		var square = this.getSquare(direction, distance);
 
+		// If the rover is still within the limits of the map
+		// Manage here impossibilities travel? (moutain, crater, etc)
 		if (square !== null) {
 			var lastX = this.x;
 			var lastY = this.y;
 
 			this.x = square.x;
 			this.y = square.y;
+
+			for (var directionName in this.constructor.DIRECTION) {
+				var directionCode = this.constructor.DIRECTION[directionName];
+
+				if (directionCode == direction) {
+					for (var moveCostName in this.constructor.MOVE_COST) {
+						var moveCost = this.constructor.MOVE_COST[directionName];
+
+						// Calculate the cost of travel and removes from tank
+						this.tank -= (moveCost * distance); 
+
+						break;
+					}
+				}
+			}
 
 			this.publishEvent(
 				'move',
