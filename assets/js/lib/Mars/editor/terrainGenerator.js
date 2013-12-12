@@ -255,8 +255,8 @@
 
                 var sizeX = getRandomInt(10, 200);
                 var sizeY = getRandomInt(10, 200);
-                var posX  = getRandomInt(0, 400);
-                var posY  = getRandomInt(0, 400);
+                var posX  = getRandomInt(0, this._width);
+                var posY  = getRandomInt(0, this._height);
 
                 //console.log(sizeX + ' ' + sizeY + ' ' + posX + ' ' + posY);
 
