@@ -47,12 +47,7 @@
 		/*--------------------*
 		|	Random elevation  |
 		*--------------------*/
-<<<<<<< HEAD
 
-	    //console.log(Math.round(this._width/2));
-=======
-		
->>>>>>> 6542567aa260a526621a08b3e230ac1ab67cdee8
 		/* Boucle général */
 		var count = 0;
 		while(count < Math.round(this._width)*2){
@@ -255,13 +250,13 @@
                 var element = this._elements[elementKey];
 
                 // console.log(element + ' est crée, elementNumber : ' + elementNumber);
-                console.log(element);
+                //  console.log(element);
       
 
-                var sizeX = getRandomInt(10, 200);
-                var sizeY = getRandomInt(10, 200);
-                var posX  = getRandomInt(0, 400);
-                var posY  = getRandomInt(0, 400);
+                var sizeX = getRandomInt(10, 90);
+                var sizeY = getRandomInt(10, 90);
+                var posX  = getRandomInt(0, 50);
+                var posY  = getRandomInt(0, 50);
 
                 //console.log(sizeX + ' ' + sizeY + ' ' + posX + ' ' + posY);
 
@@ -297,16 +292,18 @@
 	 * @return {[type]} [description]
 	 */
 	nsEditor.TerrainGenerator._pushElement = function(element, x, y) {
-
-		var elementHeight = element[0].length -1;
-		var mapHeight = this._map[0].length -1;
+		var elementHeight = element[0].length - 1;
+		var mapHeight = this._map[0].length - 1;
 
 		for (var i = 0; i < element.length; i++) {
 			posX = i + x;
+
 			if (posX <= this._map.length) {
 				for (var j = 0; j < elementHeight; j++) {
 					posY = j + y;
-					if (posX <= mapHeight) {
+
+					// TODO : fix le bug undefined
+					if (posX <= mapHeight && this._map[posX][posY] != undefined) { console.log(this._map[posX][posY]);
 						this._map[posX][posY].z += element[i][j].z;
 					}
 					
@@ -314,7 +311,6 @@
 			}
 		}
 	};
-
 
 	/**
 	 * [ description]
