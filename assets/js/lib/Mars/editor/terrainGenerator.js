@@ -250,9 +250,8 @@
                 var element = this._elements[elementKey];
 
                 // console.log(element + ' est crée, elementNumber : ' + elementNumber);
-                console.log(element);
+                //  console.log(element);
       
-
                 var sizeX = getRandomInt(10, 200);
                 var sizeY = getRandomInt(10, 200);
                 var posX  = getRandomInt(0, this._width);
@@ -292,16 +291,18 @@
 	 * @return {[type]} [description]
 	 */
 	nsEditor.TerrainGenerator._pushElement = function(element, x, y) {
-
-		var elementHeight = element[0].length -1;
-		var mapHeight = this._map[0].length -1;
+		var elementHeight = element[0].length - 1;
+		var mapHeight = this._map[0].length - 1;
 
 		for (var i = 0; i < element.length; i++) {
 			posX = i + x;
+
 			if (posX <= this._map.length) {
 				for (var j = 0; j < elementHeight; j++) {
 					posY = j + y;
-					if (posX <= mapHeight) {
+
+					// TODO : fix le bug undefined
+					if (posX <= mapHeight && this._map[posX][posY] != undefined) { console.log(this._map[posX][posY]);
 						this._map[posX][posY].z += element[i][j].z;
 					}
 					
@@ -309,7 +310,6 @@
 			}
 		}
 	};
-
 
 	/**
 	 * [ description]
