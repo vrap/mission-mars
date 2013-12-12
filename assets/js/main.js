@@ -23,6 +23,7 @@
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#mini-map');
+	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
 	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
@@ -39,6 +40,7 @@
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 	observable.subscribe('rover.move', function(data) {
+		roverInformations.innerHTML = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize;
 		console.log('move', data);
 	});
 	observable.subscribe('rover.scanMaterial', function(data) {
