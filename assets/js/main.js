@@ -36,7 +36,6 @@
 	viewer.load3D(renderDiv, {fog: 0.06});
 	viewer.load2D(render2dDiv);
 
-	
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 	observable.subscribe('rover.move', function(data) {
@@ -48,6 +47,9 @@
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
 		console.log('elevation found', data);
+	});
+	observable.subscribe('rover.spawn', function(data) {
+		console.log('Rover spawned !', data);
 	});
 
 	/* Rover tests. */

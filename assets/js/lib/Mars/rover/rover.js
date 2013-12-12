@@ -31,6 +31,9 @@
 
 		/* Retrieve an instance of the Observable. */
 		this.observer = new nsCommon.Observable();
+
+		/* Publish a spawn event. */
+		this.publishEvent('spawn');
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -99,7 +102,7 @@
 	 */
 	nsRover.Rover.prototype.publishEvent = function(channel, options) {
 		/* Initialize default options. */
-		options = (Object.keys(options).length > 0) ? options : {};
+		options = (options && Object.keys(options).length > 0) ? options : {};
 		channel = 'rover.' + channel;
 
 		/* Add rover instance to the options. */
