@@ -9,10 +9,11 @@
 	 * @param  {int} zMin             The minimum z value.
 	 * @param  {int} zMax             The maximum z value.
 	 */
-	nsElements.Model = function(allowedMaterials, zMin, zMax) {
+	nsElements.Model = function(allowedMaterials, zMin, zMax, utmost) {
 		this._zMin = zMin;
 		this._zMax = zMax;
 		this._allowedMaterials = allowedMaterials;
+		this._utmost = utmost;
 	};
 
 	/**

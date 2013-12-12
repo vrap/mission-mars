@@ -51,12 +51,17 @@
 	};
 
 	nsViewer.Viewer3D.prototype._loadControls = function() {
-		this.controls = new THREE.OrbitControls(this.camera);
+		//this.controls = new THREE.OrbitControls(this.camera);
+		this.controls = new THREE.FirstPersonControls(this.camera);
+		this.controls.movementSpeed = 0.1;
+        this.controls.lookSpeed = 0.002;
+        this.controls.lookVertical = true;
+        this.controls.activeLook = true;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
 		// add an ambient lighting
-		var directionalLight = new THREE.DirectionalLight( 0xcca182, 0.9 );
+		var directionalLight = new THREE.DirectionalLight( 0xcca182, 0.9 ); //
 		directionalLight.position.set( 0, 2, 0 );
 		this.scene.add( directionalLight );
 	};
@@ -64,13 +69,14 @@
 	nsViewer.Viewer3D.prototype._loadCamera = function() {
 		// Add a camera
 		this.camera = new THREE.PerspectiveCamera(
-			100,
+			75,
 			window.innerWidth / window.innerHeight,
 			0.7,
 			1100
 		);
-
-		this.camera.position.z = 14;
+		this.camera.position.x = -30;
+		this.camera.position.y = 1.5;
+		this.camera.position.z = 0;
 		this.camera.setLens( 1, 2 );
 		this.scene.add(this.camera);
 	};
@@ -88,12 +94,12 @@
 		var natures = [];
 		// materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(true);
-		materials[sand.id] = sand.getColor(true);
-		materials[ore.id] = ore.getColor(true);
-		materials[iron.id] = iron.getColor(true);
-		materials[ice.id] = ice.getColor(true);
-		materials[other.id] = other.getColor(true);
+		materials[rock.id] = rock.getColor(false);
+		materials[sand.id] = sand.getColor(false);
+		materials[ore.id] = ore.getColor(false);
+		materials[iron.id] = iron.getColor(false);
+		materials[ice.id] = ice.getColor(false);
+		materials[other.id] = other.getColor(false);
 
 		console.log(materials);
 		
