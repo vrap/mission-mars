@@ -302,7 +302,7 @@
 					posY = j + y;
 
 					// TODO : fix le bug undefined
-					if (posX <= mapHeight && this._map[posX][posY] != undefined) { console.log(this._map[posX][posY]);
+					if (posX <= mapHeight && this._map[posX][posY] != undefined) {
 						this._map[posX][posY].z += element[i][j].z;
 					}
 					
