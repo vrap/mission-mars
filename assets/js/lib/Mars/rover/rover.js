@@ -245,8 +245,9 @@
 	};
 
 	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
-		if (distance < 0 || distance > 2) {
-			throw new Error('Distance can only be set to 0 or 2.');
+		// It's possible to scan every squares on the map.
+		if (distance < 0) {
+			throw new Error('Distance can only be superior to 0.');
 		}
 
 		var square = this.getSquare(direction, distance);
@@ -255,14 +256,30 @@
 			throw new Error('The map is undiscovered here.');
 		}
 		else {
-			this.publishEvent(
-				'scanElevation',
-				{
-					direction: direction,
-					distance: distance,
-					elevation: square.z
-				}
-			);
+			var scanCost = 0.1 * distance;
+
+			if (distance == 0 || distance == 1) {
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
+			else if (distance > 1 && scanCost <= this.tank) {
+				this.tank -= scanCost;
+
+				this.publishEvent(
+					'scanElevation',
+					{
+						direction: direction,
+						distance: distance,
+						elevation: square.z
+					}
+				);
+			}
 		}
 	};
 
