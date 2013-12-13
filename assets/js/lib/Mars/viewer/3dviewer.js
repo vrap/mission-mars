@@ -85,8 +85,8 @@
 
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
-			60,
-			60,
+			0.25*(this.viewer.map.getWidth()),
+			0.25*(this.viewer.map.getHeight()),
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
 		);
