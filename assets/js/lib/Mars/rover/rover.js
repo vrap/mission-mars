@@ -210,11 +210,25 @@
 				if (directionCode == direction) {
 					for (var moveCostName in this.constructor.MOVE_COST) {
 						var moveCost = this.constructor.MOVE_COST[directionName],
-							tankCost = Math.floor(moveCost * distance);
+							tankCost = (moveCost * distance);
 
 						// Calculate the cost of travel and removes from tank
 						if (tankCost <= this.tank) {
 							this.tank -= tankCost;
+
+							this.moves++;
+
+							this.publishEvent(
+								'move',
+								{
+									direction: direction,
+									distance: distance,
+									lastX: lastX,
+									lastY: lastY,
+									newX: this.x,
+									newY: this.y
+								}
+							);
 
 							break;
 						}
@@ -224,20 +238,6 @@
 					}
 				}
 			}
-
-			this.moves++;
-
-			this.publishEvent(
-				'move',
-				{
-					direction: direction,
-					distance: distance,
-					lastX: lastX,
-					lastY: lastY,
-					newX: this.x,
-					newY: this.y
-				}
-			);
 		}
 		else {
 			throw new Error('The map is undiscovered here.');
@@ -281,14 +281,44 @@
 				this.fillTank();
 			}
 
-			this.publishEvent(
-				'scanMaterial',
-				{
-					direction: direction,
-					distance: distance,
-					type: square.type
-				}
-			);
+			if (distance == 0 && this.tank >= 0.1) {
+				this.tank -= 0.1;
+
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
+
+			if (distance == 1 && this.tank >= 0.2) {
+				this.tank -= 0.2;
+
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
+
+			if (distance == 2 && this.tank >= 0.4) {
+				this.tank -= 0.4;
+
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
 		}
 	};
 

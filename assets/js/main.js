@@ -44,9 +44,13 @@
 		console.log('move', data);
 	});
 	observable.subscribe('rover.scanMaterial', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
 		console.log('material found', data);
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
 		console.log('elevation found', data);
 	});
 	observable.subscribe('rover.spawn', function(data) {
@@ -69,6 +73,6 @@
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
 	rover.move(rover.constructor.DIRECTION.NORTH_EAST, 2);
 	rover.move(rover.constructor.DIRECTION.EAST, 1);
-	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
+	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 2);
 })();
