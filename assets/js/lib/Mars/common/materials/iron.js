@@ -9,6 +9,7 @@
 		this.id = 3;
 		this.name = 'Iron';
 		this.textureColor = "#43371f";
+		//this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/XXX.jpg');
 		this.probability = 0.02;
 
 		/* If already instancied, return instance (Singleton) */
@@ -25,6 +26,6 @@
 	 * @return {THREE.MeshBasicMaterial} Instance of THREE.MeshBasicMaterial with the texture color and wireframe
 	 */
 	nsMaterials.Iron.prototype.getColor = function(wireframe) {
-		return new THREE.MeshBasicMaterial( { color: this.textureColor, wireframe: wireframe });
+		return new THREE.MeshPhongMaterial( { /*map: this.texture*/color: this.textureColor, wireframe: wireframe });
 	};
 })();
