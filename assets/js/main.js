@@ -50,13 +50,17 @@
 	});
 	observable.subscribe('rover.spawn', function(data) {
 		console.log('Rover spawned !', data);
+	observable.subscribe('rover.fillTank', function(data) {
+		console.log('tank is filled', data);
 	});
 
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 10);
+
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
 	rover.move(rover.constructor.DIRECTION.NORTH_EAST, 2);
 	rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
+	rover.fillTank();
 })();
