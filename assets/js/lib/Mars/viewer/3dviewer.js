@@ -19,6 +19,8 @@
 		this.element = element;
 		this.options = (options) ? options : {};
 
+		this.options.wireframe = this.options.wireframe || false;
+
 		this.init();
 	};
 
@@ -93,12 +95,12 @@
 		var natures = [];
 		// materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(true);
-		materials[sand.id] = sand.getColor(true);
-		materials[ore.id] = ore.getColor(true);
-		materials[iron.id] = iron.getColor(true);
-		materials[ice.id] = ice.getColor(true);
-		materials[other.id] = other.getColor(true);
+		materials[rock.id] = rock.getColor(this.options.wireframe);
+		materials[sand.id] = sand.getColor(this.options.wireframe);
+		materials[ore.id] = ore.getColor(this.options.wireframe);
+		materials[iron.id] = iron.getColor(this.options.wireframe);
+		materials[ice.id] = ice.getColor(this.options.wireframe);
+		materials[other.id] = other.getColor(this.options.wireframe);
 		
 		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
