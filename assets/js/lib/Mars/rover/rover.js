@@ -37,6 +37,9 @@
 
 		/* Number of movements. */
 		this.moves = 0;
+
+		/* Cost of deploying solar panels. */
+		this.panelsCost = 5;
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -287,5 +290,20 @@
 				}
 			);
 		}
+	};
+
+	nsRover.Rover.prototype.deploySolarPanels = function() {
+		this.tank  += (this.panelsCost * 2);
+		this.moves += this.panelsCost;
+
+		if (this.tank > this.tankSize) {
+			this.tank = this.tankSize;
+		}
+
+		this.publishEvent(
+			'actions.deploySolarPanels',
+			{
+			}
+		);
 	};
 })();

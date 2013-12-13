@@ -57,6 +57,11 @@
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
 		console.log('tank is filled', data);
 	});
+	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		console.log('panels are deployed', data);
+	});
 
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 10);
