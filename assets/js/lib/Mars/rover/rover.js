@@ -69,6 +69,12 @@
 	 */
 	nsRover.Rover.prototype.fillTank = function() {
 		this.tank = this.tankSize;
+
+		this.publishEvent(
+			'fillTank',
+			{
+			}
+		);
 	};
 
 	/**
@@ -254,6 +260,10 @@
 			throw new Error('The map is undiscovered here.');
 		}
 		else {
+			if (square.type == 4) {
+				this.fillTank();
+			}
+
 			this.publishEvent(
 				'scanMaterial',
 				{
