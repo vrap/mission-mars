@@ -214,6 +214,12 @@
 
 						// Calculate the cost of travel and removes from tank
 						if (tankCost <= this.tank) {
+							var currentSquareZ     = this.scanElevation(nsRover.Rover.DIRECTION.NORTH, 0);
+							var destinationSquareZ = this.scanElevation(direction, distance);
+
+							console.log(currentSquareZ);
+							console.log(destinationSquareZ);
+
 							this.tank -= tankCost;
 
 							this.moves++;
@@ -264,7 +270,7 @@
 					{
 						direction: direction,
 						distance: distance,
-						type: square.type
+						elevation: square.z
 					}
 				);
 			}

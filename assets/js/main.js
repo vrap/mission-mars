@@ -54,25 +54,25 @@
 		console.log('elevation found', data);
 	});
 	observable.subscribe('rover.spawn', function(data) {
-		console.log('Rover spawned !', data);
+		//console.log('Rover spawned !', data);
 	});
 	observable.subscribe('rover.actions.fillTank', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		console.log('tank is filled', data);
+		//console.log('tank is filled', data);
 	});
 	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		console.log('panels are deployed', data);
+		//console.log('panels are deployed', data);
 	});
 
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 10);
 
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
-	rover.move(rover.constructor.DIRECTION.NORTH_EAST, 2);
-	rover.move(rover.constructor.DIRECTION.EAST, 1);
+	rover.move(rover.constructor.DIRECTION.NORTH, 1);
+	/*rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);*/
 })();

@@ -10,7 +10,7 @@
 		this.element = element;
 		this.options = (options) ? options : {};
 
-		console.log('lala');
+		// console.log('lala');
 		this.init();
 	};
 
@@ -28,7 +28,7 @@
 	//couleurs :
 	var color;
 	var ValPixel = 4;
-	console.log(ValPixel);
+	//console.log(ValPixel);
 
 	// dessin de la grille
 	for(var x = 0; x < this.viewer.map.getWidth()-1; x++){

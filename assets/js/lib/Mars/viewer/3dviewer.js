@@ -101,7 +101,7 @@
 		materials[ice.id] = ice.getColor(false);
 		materials[other.id] = other.getColor(false);
 
-		console.log(materials);
+		//console.log(materials);
 		
 		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
