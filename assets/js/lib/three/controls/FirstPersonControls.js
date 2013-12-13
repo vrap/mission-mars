@@ -16,7 +16,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 	this.lookVertical = true;
 	this.autoForward = false;
-	// this.invertVertical = false;
+	this.invertVertical = false;
 
 	this.activeLook = true;
 

@@ -16,24 +16,25 @@
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -20, 20);
+	var elementCrater = new nsElements.CraterModel([materialSand], -3, 20, 1);
+	var elementHill   = new nsElements.HillModel([materialSand], -20, 3, 1);
+	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 1);
 
 	/* Define viewer container. */
-	var renderDiv  = document.querySelector('#render');
-	var render2dDiv  = document.querySelector('#mini-map');
+	var renderDiv = document.querySelector('#render');
+	var render2dDiv = document.querySelector('#mini-map');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [], 400, 400, -10, 10);
-	
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
+
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load3D(renderDiv);
+	viewer.load3D(renderDiv, {fog: 0.06});
 	viewer.load2D(render2dDiv);
 
-	
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 	observable.subscribe('rover.move', function(data) {
@@ -44,6 +45,9 @@
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
 		console.log('elevation found', data);
+	});
+	observable.subscribe('rover.spawn', function(data) {
+		console.log('Rover spawned !', data);
 	});
 
 	/* Rover tests. */
