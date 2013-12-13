@@ -56,14 +56,13 @@
 		this.controls.movementSpeed = 0.1;
         this.controls.lookSpeed = 0.002;
         this.controls.lookVertical = true;
-        this.controls.activeLook = true;
+        this.controls.activeLook = false;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
 		// add an ambient lighting
-		var directionalLight = new THREE.DirectionalLight( 0xcca182, 0.9 ); //
-		directionalLight.position.set( 0, 2, 0 );
-		this.scene.add( directionalLight );
+		var hemisphereLight = new THREE.HemisphereLight( 0xcca182, 0xd3a476, 0.9 );
+		this.scene.add( hemisphereLight );
 	};
 
 	nsViewer.Viewer3D.prototype._loadCamera = function() {
@@ -94,14 +93,12 @@
 		var natures = [];
 		// materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(false);
-		materials[sand.id] = sand.getColor(false);
-		materials[ore.id] = ore.getColor(false);
-		materials[iron.id] = iron.getColor(false);
-		materials[ice.id] = ice.getColor(false);
-		materials[other.id] = other.getColor(false);
-
-		console.log(materials);
+		materials[rock.id] = rock.getColor(true);
+		materials[sand.id] = sand.getColor(true);
+		materials[ore.id] = ore.getColor(true);
+		materials[iron.id] = iron.getColor(true);
+		materials[ice.id] = ice.getColor(true);
+		materials[other.id] = other.getColor(true);
 		
 		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
@@ -110,6 +107,8 @@
 				index++;
 			}
 		}
+
+
 
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
