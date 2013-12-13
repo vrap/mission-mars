@@ -25,14 +25,14 @@
 	var render2dDiv = document.querySelector('#mini-map');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 100, 100, -10, 10);
 
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load3D(renderDiv, {fog: 0.06});
+	//viewer.load3D(renderDiv, {fog: 0.06});
 	viewer.load2D(render2dDiv);
 
 	/* Listen to rover events. */
@@ -53,8 +53,12 @@
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 10);
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
-	rover.move(rover.constructor.DIRECTION.NORTH_EAST, 2);
-	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+
+	rover.move(rover.constructor.DIRECTION.EAST, 1);
+	rover.move(rover.constructor.DIRECTION.SOUTH, 1);
+	//rover.move(rover.constructor.DIRECTION.NORTH, 1);
+	//rover.move(rover.constructor.DIRECTION.NORTH, 1);
+
 	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
 })();
