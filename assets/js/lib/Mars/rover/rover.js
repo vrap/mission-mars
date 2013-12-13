@@ -34,6 +34,9 @@
 
 		/* Publish a spawn event. */
 		this.publishEvent('spawn');
+
+		/* Number of movements. */
+		this.moves = 0;
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -74,7 +77,7 @@
 		this.tank = this.tankSize;
 
 		this.publishEvent(
-			'fillTank',
+			'actions.fillTank',
 			{
 			}
 		);
@@ -182,7 +185,7 @@
 	 * @param  {[type]} distance  [description]
 	 * @return {[type]}           [description]
 	 */
-	nsRover.Rover.prototype.move = function(direction, distance) { //console.log(nsRover.Rover.MOVE_COST.NORTH);
+	nsRover.Rover.prototype.move = function(direction, distance) {
 		if (distance < 1 || distance > 2) {
 			throw new Error('Distance can only be set to 1 or 2.');
 		}
@@ -203,15 +206,23 @@
 
 				if (directionCode == direction) {
 					for (var moveCostName in this.constructor.MOVE_COST) {
-						var moveCost = this.constructor.MOVE_COST[directionName];
+						var moveCost = this.constructor.MOVE_COST[directionName],
+							tankCost = Math.floor(moveCost * distance);
 
 						// Calculate the cost of travel and removes from tank
-						this.tank -= (moveCost * distance); 
+						if (tankCost <= this.tank) {
+							this.tank -= tankCost;
 
-						break;
+							break;
+						}
+						else {
+							throw new Error('You need more tank.');
+						}
 					}
 				}
 			}
+
+			this.moves++;
 
 			this.publishEvent(
 				'move',

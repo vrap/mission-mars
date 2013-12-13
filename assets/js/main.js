@@ -39,7 +39,8 @@
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 	observable.subscribe('rover.move', function(data) {
-		roverInformations.innerHTML = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize;
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
 		console.log('move', data);
 	});
 	observable.subscribe('rover.scanMaterial', function(data) {
@@ -50,7 +51,10 @@
 	});
 	observable.subscribe('rover.spawn', function(data) {
 		console.log('Rover spawned !', data);
-	observable.subscribe('rover.fillTank', function(data) {
+	});
+	observable.subscribe('rover.actions.fillTank', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
 		console.log('tank is filled', data);
 	});
 
@@ -62,5 +66,4 @@
 	rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
-	rover.fillTank();
 })();
