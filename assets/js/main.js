@@ -68,10 +68,16 @@
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 0, 0, 10);
+	var rover = new nsRover.Rover(map, 0, 0, 100);
 
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
-	rover.move(rover.constructor.DIRECTION.NORTH, 1);
+	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+
 	/*rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);*/

@@ -201,48 +201,61 @@
 			var lastX = this.x;
 			var lastY = this.y;
 
-			this.x = square.x;
-			this.y = square.y;
+			// The scan of the current square is free. So we can use square to get z
+			var currentSquareZ     = square.z,
+				// Next square, free too
+				destinationSquare  = this.getSquare(direction, distance),
+				// Next square elevation
+				destinationSquareZ = destinationSquare.z,
+				// Calculate the slope in % between the current square and the next square
+				slope              = (destinationSquareZ - currentSquareZ) / distance;
+				
+			// TODO: check if the slope is % in float or directly in %. Need elevations on the map to test that.
 
-			for (var directionName in this.constructor.DIRECTION) {
-				var directionCode = this.constructor.DIRECTION[directionName];
+			if (slope <= 150) {
+				this.x = square.x;
+				this.y = square.y;
 
-				if (directionCode == direction) {
-					for (var moveCostName in this.constructor.MOVE_COST) {
-						var moveCost = this.constructor.MOVE_COST[directionName],
-							tankCost = (moveCost * distance);
+				for (var directionName in this.constructor.DIRECTION) {
+					var directionCode = this.constructor.DIRECTION[directionName];
 
-						// Calculate the cost of travel and removes from tank
-						if (tankCost <= this.tank) {
-							var currentSquareZ     = this.scanElevation(nsRover.Rover.DIRECTION.NORTH, 0);
-							var destinationSquareZ = this.scanElevation(direction, distance);
+					if (directionCode == direction) {
+						for (var moveCostName in this.constructor.MOVE_COST) {
+							var moveCost      = this.constructor.MOVE_COST[directionName],
+								tankCost      = (moveCost * distance);
+								// The distance cost plus the tank cost from the elevation
+								// Not activated yet because there is no test on slope (see above)
+								// elevationCost = tankCost * (1 + slope);
 
-							console.log(currentSquareZ);
-							console.log(destinationSquareZ);
+							// Calculate the cost of travel and removes from tank
+							if (tankCost <= this.tank) {
+								this.tank -= tankCost;
 
-							this.tank -= tankCost;
+								this.moves++;
 
-							this.moves++;
+								this.publishEvent(
+									'move',
+									{
+										direction: direction,
+										distance: distance,
+										lastX: lastX,
+										lastY: lastY,
+										newX: this.x,
+										newY: this.y
+									}
+								);
 
-							this.publishEvent(
-								'move',
-								{
-									direction: direction,
-									distance: distance,
-									lastX: lastX,
-									lastY: lastY,
-									newX: this.x,
-									newY: this.y
-								}
-							);
-
-							break;
-						}
-						else {
-							throw new Error('You need more tank.');
+								break;
+							}
+							else {
+								throw new Error('You need more tank.');
+							}
 						}
 					}
 				}
+			}
+			else {
+				throw new Error('The slope is more than 150%.');
 			}
 		}
 		else {
@@ -266,7 +279,7 @@
 
 			if (distance == 0 || distance == 1) {
 				this.publishEvent(
-					'scanMaterial',
+					'scanElevation',
 					{
 						direction: direction,
 						distance: distance,
