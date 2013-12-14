@@ -71,7 +71,7 @@
 			/* Élévation des points */
 			for (var i = startWidth; i < width; i++) {
 				for (var j = startHeight; j < height; j++) {
-					this._map[i][j].z += 0.1;
+					this._map[i][j].z += 1;
 				}
 				height--; // <= pour avoir des dessins en diagonale
 			}
@@ -85,7 +85,7 @@
 			/* Diminution des points */
 			for (var i = startWidth; i < width; i++) {
 				for (var j = startHeight; j < height; j++) {
-					this._map[j][i].z -= 0.1;
+					this._map[j][i].z -= 1;
 				}
 				height--;
 
@@ -252,8 +252,8 @@
                 // console.log(element + ' est crée, elementNumber : ' + elementNumber);
                 //  console.log(element);
       
-                var sizeX = getRandomInt(10, 200);
-                var sizeY = getRandomInt(10, 200);
+                var sizeX = getRandomInt(0, Math.round(this._width/2));
+                var sizeY = getRandomInt(0, Math.round(this._height/2));
                 var posX  = getRandomInt(0, this._width);
                 var posY  = getRandomInt(0, this._height);
 
