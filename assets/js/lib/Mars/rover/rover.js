@@ -12,7 +12,7 @@
 	 */
 	nsRover.Rover = function(map, x, y, tankSize) {
 		/* Check if the map is in the good format. */
-		if (!(map instanceof nsCommon.Map)) {
+		if (! (map instanceof nsCommon.Map)) {
 			throw new Error('Map need to be an instance of Map.');
 		}
 
@@ -24,7 +24,7 @@
 
 		/* Define tankSize and default energy level of the rover. */
 		this.tankSize = (parseInt(tankSize) >= 0) ? parseInt(tankSize) : 0;
-		this.tank = this.tankSize;
+		this.tank     = this.tankSize;
 
 		/* Define the default direction of the Rover to North. */
 		this.direction = nsRover.Rover.DIRECTION.NORTH;
@@ -40,6 +40,11 @@
 
 		/* Cost of deploying solar panels. */
 		this.panelsCost = 5;
+
+		/* Fill the memory with the squre of spawn. */
+		nsRover.Rover.memory = {
+
+		};
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -70,6 +75,32 @@
 		NEIGHBOR: 0.2,
 		REMOTE: 0.4
 	};
+
+ 	/**
+ 	 * Pattern:
+ 	 *	{
+ 	 *		x1: { 			
+ 	 *			y1: {
+ 	 *				z: z1,	
+ 	 *				type: nature of the square,
+ 	 *				status: 0 (visited), 1 (inaccessible), -1 (yet unknown),
+ 	 *				adjacents: {
+	 *					north: -1,
+	 *					northEast: -1,
+	 *					east: -1,
+	 *					southEast: -1,
+	 *					south: -1,
+	 *					southWest: -1,
+	 *					west: -1,
+	 *					northWest: -1
+ 	 *				}
+ 	 *			}
+ 	 *		}
+ 	 *	}
+ 	 *
+ 	 * TODO: approve definive pattern
+ 	 */
+	nsRover.Rover.memory = {};
 
 	/**
 	 * Fill the tank.
@@ -196,66 +227,52 @@
 		var square = this.getSquare(direction, distance);
 
 		// If the rover is still within the limits of the map
-		// Manage here impossibilities travel? (moutain, crater, etc)
 		if (square !== null) {
 			var lastX = this.x;
 			var lastY = this.y;
 
-			// The scan of the current square is free. So we can use square to get z
-			var currentSquareZ     = square.z,
-				// Next square, free too
-				destinationSquare  = this.getSquare(direction, distance),
-				// Next square elevation
-				destinationSquareZ = destinationSquare.z,
-				// Calculate the slope in % between the current square and the next square
-				slope              = (destinationSquareZ - currentSquareZ) / distance;
-				
-			// TODO: check if the slope is % in float or directly in %. Need elevations on the map to test that.
+			// Scan the elevation of the current square is free
+			var currentSquareZ = square.z;
 
-			if (slope <= 150) {
-				this.x = square.x;
-				this.y = square.y;
+			this.x = square.x;
+			this.y = square.y;
 
-				for (var directionName in this.constructor.DIRECTION) {
-					var directionCode = this.constructor.DIRECTION[directionName];
+			for (var directionName in this.constructor.DIRECTION) {
+				var directionCode = this.constructor.DIRECTION[directionName];
 
-					if (directionCode == direction) {
-						for (var moveCostName in this.constructor.MOVE_COST) {
-							var moveCost      = this.constructor.MOVE_COST[directionName],
-								tankCost      = (moveCost * distance);
-								// The distance cost plus the tank cost from the elevation
-								// Not activated yet because there is no test on slope (see above)
-								// elevationCost = tankCost * (1 + slope);
+				if (directionCode == direction) {
+					for (var moveCostName in this.constructor.MOVE_COST) {
+						var moveCost = this.constructor.MOVE_COST[directionName],
+							tankCost = (moveCost * distance);
+							// The distance cost plus the tank cost from the elevation
+							// Not activated yet because there is no test on slope (see above)
+							// elevationCost = tankCost * (1 + slope);
 
-							// Calculate the cost of travel and removes from tank
-							if (tankCost <= this.tank) {
-								this.tank -= tankCost;
+						// Calculate the cost of travel and removes from tank
+						if (tankCost <= this.tank) {
+							this.tank -= tankCost;
 
-								this.moves++;
+							this.moves++;
 
-								this.publishEvent(
-									'move',
-									{
-										direction: direction,
-										distance: distance,
-										lastX: lastX,
-										lastY: lastY,
-										newX: this.x,
-										newY: this.y
-									}
-								);
+							this.publishEvent(
+								'move',
+								{
+									direction: direction,
+									distance: distance,
+									lastX: lastX,
+									lastY: lastY,
+									newX: this.x,
+									newY: this.y
+								}
+							);
 
-								break;
-							}
-							else {
-								throw new Error('You need more tank.');
-							}
+							break;
+						}
+						else {
+							throw new Error('You need more tank.');
 						}
 					}
 				}
-			}
-			else {
-				throw new Error('The slope is more than 150%.');
 			}
 		}
 		else {
@@ -264,9 +281,8 @@
 	};
 
 	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
-		// It's possible to scan every squares on the map.
-		if (distance < 0) {
-			throw new Error('Distance can only be superior to 0.');
+		if (distance < 0 || distance > 2) {
+			throw new Error('Distance can only be set to 0 or 2.');
 		}
 
 		var square = this.getSquare(direction, distance);
@@ -275,8 +291,6 @@
 			throw new Error('The map is undiscovered here.');
 		}
 		else {
-			var scanCost = 0.1 * distance;
-
 			if (distance == 0 || distance == 1) {
 				this.publishEvent(
 					'scanElevation',
@@ -287,17 +301,21 @@
 					}
 				);
 			}
-			else if (distance > 1 && scanCost <= this.tank) {
-				this.tank -= scanCost;
+			else if (distance >= 2) {
+				var scanCost = 0.1 * distance;
 
-				this.publishEvent(
-					'scanElevation',
-					{
-						direction: direction,
-						distance: distance,
-						elevation: square.z
-					}
-				);
+				if (scanCost <= this.tank) {
+					this.tank -= scanCost;
+
+					this.publishEvent(
+						'scanElevation',
+						{
+							direction: direction,
+							distance: distance,
+							elevation: square.z
+						}
+					);
+				}
 			}
 		}
 	};
@@ -313,6 +331,8 @@
 			throw new Error('The map is undiscovered here.');
 		}
 		else {
+			// If the current square is ice
+			// TODO: update freely the memory
 			if (square.type == 4) {
 				this.fillTank();
 			}
@@ -329,8 +349,7 @@
 					}
 				);
 			}
-
-			if (distance == 1 && this.tank >= 0.2) {
+			else if (distance == 1 && this.tank >= 0.2) {
 				this.tank -= 0.2;
 
 				this.publishEvent(
@@ -342,8 +361,7 @@
 					}
 				);
 			}
-
-			if (distance == 2 && this.tank >= 0.4) {
+			else if (distance == 2 && this.tank >= 0.4) {
 				this.tank -= 0.4;
 
 				this.publishEvent(

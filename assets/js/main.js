@@ -16,9 +16,9 @@
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -3, 20, 1);
-	var elementHill   = new nsElements.HillModel([materialSand], -20, 3, 1);
-	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 1);
+	var elementCrater = new nsElements.CraterModel([materialSand], -3, 20, 2);
+	var elementHill   = new nsElements.HillModel([materialSand], -20, 3, 0);
+	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 0);
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
@@ -26,7 +26,7 @@
 	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 100, 100, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 300, 300, -10, 10);
 
 	var map = new nsCommon.Map(terrain);
 
@@ -41,16 +41,19 @@
 	observable.subscribe('rover.move', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		console.log('move', data);
 	});
 	observable.subscribe('rover.scanMaterial', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		console.log('material found', data);
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		console.log('elevation found', data);
 	});
 	observable.subscribe('rover.spawn', function(data) {
@@ -59,11 +62,13 @@
 	observable.subscribe('rover.actions.fillTank', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		//console.log('tank is filled', data);
 	});
 	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		//console.log('panels are deployed', data);
 	});
 
@@ -71,10 +76,14 @@
 	var rover = new nsRover.Rover(map, 0, 0, 100);
 
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
+
 	rover.move(rover.constructor.DIRECTION.NORTH, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	
 	rover.move(rover.constructor.DIRECTION.NORTH, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	
 	rover.move(rover.constructor.DIRECTION.NORTH, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
 
