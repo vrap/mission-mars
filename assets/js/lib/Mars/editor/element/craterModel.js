@@ -33,7 +33,7 @@
 		this.parent.create.call(this, width, height, materials);
 
 		var minSize = (width <= height) ? width : height;
-		var z = getRandomInt(2, this._zMax/2);
+		var z = getRandomInt(2, Math.round(this._zMax/2));
 
 		var x_center = Math.round(width/2)-1,
 			y_center = Math.round(height/2)-1,
