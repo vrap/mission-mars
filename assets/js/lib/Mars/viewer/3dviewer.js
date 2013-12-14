@@ -55,10 +55,10 @@
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		//this.controls = new THREE.OrbitControls(this.camera);
 		this.controls = new THREE.FirstPersonControls(this.camera);
-		this.controls.movementSpeed = 0.1;
+		this.controls.movementSpeed = 1;
         this.controls.lookSpeed = 0.002;
         this.controls.lookVertical = true;
-        this.controls.activeLook = false;
+        this.controls.activeLook = true;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
@@ -85,8 +85,8 @@
 
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
-			0.25*(this.viewer.map.getWidth()),
-			0.25*(this.viewer.map.getHeight()),
+			1.75*(this.viewer.map.getWidth()),
+			1.75*(this.viewer.map.getHeight()),
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
 		);

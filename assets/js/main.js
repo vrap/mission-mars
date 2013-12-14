@@ -16,23 +16,23 @@
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -3, 20, 1);
-	var elementHill   = new nsElements.HillModel([materialSand], -20, 3, 1);
-	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 1);
+	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 1);
+	var elementHill   = new nsElements.HillModel([materialSand], 0, 40, 1);
+	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 1);
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#mini-map');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 100, 100, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
 
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load3D(renderDiv, {fog: 0.06, wireframe: true});
+	viewer.load3D(renderDiv, { wireframe: true});
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
