@@ -32,8 +32,8 @@
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load3D(renderDiv, {fog: 0.06});
 	viewer.load2D(render2dDiv);
+	viewer.load3D(renderDiv, {fog: 0.06, wireframe: true});
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();

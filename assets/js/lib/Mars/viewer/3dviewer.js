@@ -19,6 +19,8 @@
 		this.element = element;
 		this.options = (options) ? options : {};
 
+		this.options.wireframe = this.options.wireframe || false;
+
 		this.init();
 	};
 
@@ -56,14 +58,13 @@
 		this.controls.movementSpeed = 0.1;
         this.controls.lookSpeed = 0.002;
         this.controls.lookVertical = true;
-        this.controls.activeLook = true;
+        this.controls.activeLook = false;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
 		// add an ambient lighting
-		var directionalLight = new THREE.DirectionalLight( 0xcca182, 0.9 ); //
-		directionalLight.position.set( 0, 2, 0 );
-		this.scene.add( directionalLight );
+		var hemisphereLight = new THREE.HemisphereLight( 0xcca182, 0xd3a476, 0.9 );
+		this.scene.add( hemisphereLight );
 	};
 
 	nsViewer.Viewer3D.prototype._loadCamera = function() {
@@ -84,8 +85,8 @@
 
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
-			60,
-			60,
+			0.25*(this.viewer.map.getWidth()),
+			0.25*(this.viewer.map.getHeight()),
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
 		);
@@ -94,14 +95,12 @@
 		var natures = [];
 		// materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(false);
-		materials[sand.id] = sand.getColor(false);
-		materials[ore.id] = ore.getColor(false);
-		materials[iron.id] = iron.getColor(false);
-		materials[ice.id] = ice.getColor(false);
-		materials[other.id] = other.getColor(false);
-
-		console.log(materials);
+		materials[rock.id] = rock.getColor(this.options.wireframe);
+		materials[sand.id] = sand.getColor(this.options.wireframe);
+		materials[ore.id] = ore.getColor(this.options.wireframe);
+		materials[iron.id] = iron.getColor(this.options.wireframe);
+		materials[ice.id] = ice.getColor(this.options.wireframe);
+		materials[other.id] = other.getColor(this.options.wireframe);
 		
 		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
@@ -110,6 +109,8 @@
 				index++;
 			}
 		}
+
+
 
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
