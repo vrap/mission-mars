@@ -32,9 +32,7 @@
 		this.parent.create(width, height, materials);
 
 		var minSize = (width <= height) ? width : height;
-		var z = getRandomInt(5, 10);
-
-		z /= 10;
+		var z = getRandomInt(1, Math.round(this._zMax/10));
 
 		var x_center = Math.round(width/2)-1,
 			y_center = Math.round(height/2)-1,
@@ -45,8 +43,8 @@
 			drawCircle (x_center, y_center, rayon, z, this._element);
 			
 			if (z <= this._zMax) {
-				var z_temp = getRandomInt(0, 5);
-				z+=(z_temp/10);
+				var z_temp = getRandomInt(0, 1);
+				z+=z_temp;
 			}
 
 			rayon--;
