@@ -46,7 +46,6 @@
 	 */
 	nsViewer.Viewer.prototype.load2D = function(element, options) {
 		return this.load('2d', element, options);
-		console.log('lolo');
 	};
 
 	/**
