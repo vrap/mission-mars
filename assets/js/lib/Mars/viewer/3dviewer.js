@@ -70,15 +70,15 @@
 	nsViewer.Viewer3D.prototype._loadCamera = function() {
 		// Add a camera
 		this.camera = new THREE.PerspectiveCamera(
-			75,
+			60,
 			window.innerWidth / window.innerHeight,
-			0.7,
-			1100
+			1,
+			1000
 		);
-		this.camera.position.x = -30;
-		this.camera.position.y = 1.5;
+		this.camera.position.x = -380;
+		this.camera.position.y = 8;
 		this.camera.position.z = 0;
-		this.camera.setLens( 1, 2 );
+		this.camera.setLens( 50 );
 		this.scene.add(this.camera);
 	};
 
