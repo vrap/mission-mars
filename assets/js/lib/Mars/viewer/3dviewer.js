@@ -22,6 +22,7 @@
 		this.options.wireframe = this.options.wireframe || false;
 
 		this.init();
+		this.onDocumentMouseWheel();
 	};
 
 	nsViewer.Viewer3D.prototype.init = function() {
@@ -56,8 +57,8 @@
 		//this.controls = new THREE.OrbitControls(this.camera);
 		this.controls = new THREE.FirstPersonControls(this.camera);
 		this.controls.movementSpeed = 1;
-        this.controls.lookSpeed = 0.002;
-        this.controls.lookVertical = true;
+        this.controls.lookSpeed = 0.001;
+        this.controls.lookVertical = false;
         this.controls.activeLook = true;
 	};
 
@@ -70,7 +71,7 @@
 	nsViewer.Viewer3D.prototype._loadCamera = function() {
 		// Add a camera
 		this.camera = new THREE.PerspectiveCamera(
-			60,
+			75,
 			window.innerWidth / window.innerHeight,
 			1,
 			1000
@@ -130,9 +131,28 @@
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = Math.PI / 180 * (-90);
 		this.scene.add(this.mesh);
+	};
 
+	nsViewer.Viewer3D.prototype.onDocumentMouseWheel = function(  ) {
+		// Zoom or un zoom with scrolling
 
+		this.element.addEventListener("mousewheel", function(event){
+			event.preventDefault();
 
+			// WebKit
+			if ( event.wheelDeltaY ) {
+				this.camera.fov -= event.wheelDeltaY * 0.05;
+			// Opera / Explorer 9
+			} else if ( event.wheelDelta ) {
+				this.camera.fov -= event.wheelDelta * 0.05;
+			// Firefox
+			} else if ( event.detail ) {
+				this.camera.fov -= event.detail * 0.05;
+			}
+
+			this.camera.updateProjectionMatrix();
+			this.render();
+		}.bind(this), false);
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {
