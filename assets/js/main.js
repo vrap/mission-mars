@@ -32,7 +32,7 @@
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load3D(renderDiv, { wireframe: true});
+	viewer.load3D(renderDiv, { fog: 0.004, wireframe: true});
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
