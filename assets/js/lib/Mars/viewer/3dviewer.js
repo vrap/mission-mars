@@ -32,6 +32,7 @@
 		this._loadCamera();
 		this._loadRenderer();
 		this._loadMap();
+		this._loadMaterials();
 		this._loadControls();
 
 		// Add fog to the map.
@@ -90,8 +91,22 @@
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
 		);
-		
+
 		var index = 0;
+		// Assign Z attribute
+		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
+			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
+				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
+				index++;
+			}
+		}
+	}
+
+
+	nsViewer.Viewer3D.prototype._loadMaterials = function() {
+		if(undefined !== this.mesh) {
+			this.scene.remove(this.mesh);
+		}
 		var natures = [];
 		// materials
 		var materials = []; 
@@ -102,16 +117,6 @@
 		materials[ice.id] = ice.getColor(this.options.wireframe);
 		materials[other.id] = other.getColor(this.options.wireframe);
 		
-		// Assign Z attribute
-		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
-			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
-				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
-				index++;
-			}
-		}
-
-
-
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
 			for (var j = 0; j < this.viewer.map.getHeight()-1; j++) {
@@ -130,9 +135,6 @@
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = Math.PI / 180 * (-90);
 		this.scene.add(this.mesh);
-
-
-
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {
