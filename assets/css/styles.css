@@ -2,24 +2,22 @@ body {
 	margin: 0;
 	padding: 0;
 }
+#primary-bloc{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
 
-.bloc-mini-map{
-	z-index: 1000;
-/*	top: 0;
-	right: -15px;*/
-/*	width: 200px;
-	height: 200px;*/
-	/*overflow:hidden;*/
-/*    -webkit-border-radius:50%;
-    -moz-border-radius:50%;
-    border-radius:50%;*/
-    overflow: auto;
-	/*position: absolute;*/
-/*	transform:rotate(180deg);
-	-ms-transform:rotate(180deg);  IE 9 
-	-webkit-transform:rotate(180deg); /* Safari and Chrome */*/
+#bloc-mini-map{
+	width: 200px;
+	height: 200px;
+	overflow:hidden;
+	position: relative;
+	margin-top: 30px;
+	margin-right: 30px;
+	/*float: right;*/
 }
 
 #mini-map{
-
+	position: absolute;
 }

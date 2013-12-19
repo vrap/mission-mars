@@ -32,7 +32,8 @@
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load3D(renderDiv, { wireframe: true});
+	viewer.load2D(render2dDiv);
+	viewer.load3D(renderDiv, {fog: 0.04, wireframe: true});
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
@@ -50,10 +51,21 @@
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 0, 0, 10);
+	var rover = new nsRover.Rover(map, 10, 10, 10);
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
 
-	rover.move(rover.constructor.DIRECTION.EAST, 1);
+	var count = 0;
+	// setInterval(function(){
+	// 	if(count % 4 == 0){
+	// 		rover.move(rover.constructor.DIRECTION.SOUTH, 1);
+	// 	}else{
+	// 		rover.move(rover.constructor.DIRECTION.EAST, 1);
+	// 	}
+		
+	// 	count++;
+	// },100);
+	
+	rover.move(rover.constructor.DIRECTION.SOUTH, 1);
 	rover.move(rover.constructor.DIRECTION.SOUTH, 1);
 	//rover.move(rover.constructor.DIRECTION.NORTH, 1);
 	//rover.move(rover.constructor.DIRECTION.NORTH, 1);
