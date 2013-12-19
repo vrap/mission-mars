@@ -4,6 +4,7 @@
 	var nsViewer = using('mars.viewer');
 	var nsEditor = using('mars.editor');
 	var nsRover = using('mars.rover');
+	var nsSpeculator = using('mars.rover.speculator3000');
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
 
@@ -24,15 +25,13 @@
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#mini-map');
 	var roverInformations = document.querySelector('#rover-informations');
-
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 300, 300, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 100, 100, -10, 10);
 
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
-
 	viewer.load3D(renderDiv, {fog: 0.06});
 	viewer.load2D(render2dDiv);
 
@@ -74,6 +73,7 @@
 
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 100);
+	var speculator = new nsSpeculator.S3000(rover);
 
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
@@ -90,4 +90,8 @@
 	/*rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);*/
+
+	console.log(speculator);
+	speculator.enableModule('voyager');
+	speculator.enableModule('voyager', true);
 })();

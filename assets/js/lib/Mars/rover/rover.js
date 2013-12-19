@@ -40,11 +40,6 @@
 
 		/* Cost of deploying solar panels. */
 		this.panelsCost = 5;
-
-		/* Fill the memory with the squre of spawn. */
-		nsRover.Rover.memory = {
-
-		};
 	};
 
 	/* Constant that represent the list of possible directions. */
