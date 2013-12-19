@@ -13,7 +13,31 @@
 		        </canvas>
 			</div>
 		</div>
-
+		<div id="panel-control"  class="opened">
+			<h2 id="controls-header">Panel Control</h2>
+			<div id="controls" class="show">
+				<form name="controlsForm">
+					<div>
+						<h3>Wireframe</h3>
+						<input type="radio" name="wireframe"checked>On
+						<input type="radio" name="wireframe">Off
+					</div>
+					<div>
+						<h3>Fog</h3>
+						<input type="range" id="fog" value="0.04" max="0.1" min="0" step="0.01">
+					</div>
+					<div>
+						<h3>Control camera</h3>
+						<input type="radio" name="camera">On
+						<input type="radio" name="camera" checked>Off
+					</div>
+					<div>
+						<h3>Download map</h3>
+						<a href="#">Here !</a>
+					</div>
+				</form>
+			</div>
+		</div>
 		
 		<!-- Helpers -->
 		<script type="text/javascript" src="assets/js/helper/namespace.js"></script>
@@ -51,6 +75,9 @@
 
 		<!-- Rover invader -->
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js"></script>
+
+		<!-- Script for UI and UX -->
+		<script type="text/javascript" src="assets/js/interface.js"></script>
 
 		<!-- Main script -->
 		<script type="text/javascript" src="assets/js/main.js"></script>
