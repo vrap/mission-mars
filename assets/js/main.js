@@ -1,3 +1,5 @@
+var test;
+
 (function() {
 	/* Loading namespaces. */
 	var nsCommon = using('mars.common');
@@ -25,15 +27,24 @@
 	var render2dDiv = document.querySelector('#mini-map');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 100, 100, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 300, 300, -10, 10);
 
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
-
-	viewer.load2D(render2dDiv);
+	//viewer.load2D(render2dDiv);
 	viewer.load3D(renderDiv, {fog: 0.06, wireframe: true});
+
+	document.controlsForm.wireframe[0].onclick = function () {
+		viewer.viewers[renderDiv].options.wireframe = true;
+		viewer.viewers[renderDiv]._loadMaterials();
+	}
+	document.controlsForm.wireframe[1].onclick = function () {
+		viewer.viewers[renderDiv].options.wireframe = false;
+		viewer.viewers[renderDiv]._loadMaterials();
+	}
+	
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
@@ -52,7 +63,7 @@
 
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 10, 10, 10);
-	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
+	/*rover.setDirection(nsRover.Rover.DIRECTION.NORTH);*/
 
 	var count = 0;
 	// setInterval(function(){
@@ -72,4 +83,7 @@
 
 	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
+
+
+	
 })();
