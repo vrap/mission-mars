@@ -18,8 +18,8 @@
 		this.viewer = viewer;
 		this.element = element;
 		this.options = (options) ? options : {};
-
 		this.options.wireframe = this.options.wireframe || false;
+		this.options.cameraControl = this.options.cameraControl || false;
 
 		this.init();
 	};
@@ -63,7 +63,7 @@
 		this.controls.movementSpeed = 0.1;
         this.controls.lookSpeed = 0.002;
         this.controls.lookVertical = true;
-        this.controls.activeLook = false;
+        this.controls.activeLook = this.options.cameraControl;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {

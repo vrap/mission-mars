@@ -60,6 +60,14 @@ var test;
 		}
 		viewer.viewers[renderDiv]._loadFog();
 	}
+	document.controlsForm.camera[0].onclick = function () {
+		viewer.viewers[renderDiv].options.cameraControl = true;
+		viewer.viewers[renderDiv]._loadControls();
+	}
+	document.controlsForm.camera[1].onclick = function () {
+		viewer.viewers[renderDiv].options.cameraControl = false;
+		viewer.viewers[renderDiv]._loadControls();
+	}
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
