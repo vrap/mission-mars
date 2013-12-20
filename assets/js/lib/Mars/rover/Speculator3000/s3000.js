@@ -67,13 +67,8 @@
 				return;
 			}
 
-			/* If the active module has a onDisabled method, call it. */
-			if (this.activeModule && this.activeModule.onDisabled) {
-				this.activeModule.onDisabled();
-			}
-
-			/* Remove the module instance. */
-			this.activeModule = null;
+			/* Disable the current activated module. */
+			this.disableModule();
 
 			/* Retrieve the module class and instanciate it. */
 			var module = this.hasModule(name);
@@ -83,6 +78,21 @@
 			if (this.activeModule.onEnabled) {
 				this.activeModule.onEnabled();
 			}
+		}
+	};
+
+	/**
+	 * Deactivate the current active module.
+	 */
+	nsSpeculator.S3000.prototype.disableModule = function() {
+		if (this.activeModule) {
+			/* If the active module has a onDisabled method, call it. */
+			if (this.activeModule.onDisabled) {
+				this.activeModule.onDisabled();
+			}
+
+			/* Remove the module instance. */
+			this.activeModule = null;
 		}
 	};
 })();
