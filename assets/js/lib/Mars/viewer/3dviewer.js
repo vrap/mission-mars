@@ -35,13 +35,17 @@
 		this._loadMaterials();
 		this._loadControls();
 
+		this._loadFog();
+
+		// Run the refresh animation while.
+		this.animate();
+	};
+
+	nsViewer.Viewer3D.prototype._loadFog = function() {
 		// Add fog to the map.
 		if (!(isNaN(parseFloat(this.options.fog)))) {
 			this.scene.fog = new THREE.FogExp2(0xd3cfbe, parseFloat(this.options.fog));
 		}
-
-		// Run the refresh animation while.
-		this.animate();
 	};
 
 	nsViewer.Viewer3D.prototype._loadRenderer = function() {

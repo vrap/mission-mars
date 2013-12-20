@@ -34,7 +34,7 @@ var test;
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 	//viewer.load2D(render2dDiv);
-	viewer.load3D(renderDiv, {fog: 0.06, wireframe: true});
+	viewer.load3D(renderDiv, {fog: 0.04, wireframe: true});
 
 	document.controlsForm.wireframe[0].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = true;
@@ -44,7 +44,22 @@ var test;
 		viewer.viewers[renderDiv].options.wireframe = false;
 		viewer.viewers[renderDiv]._loadMaterials();
 	}
-	
+	document.querySelector('#more').onclick = function () {
+		if (viewer.viewers[renderDiv].options.fog < 1) {
+			viewer.viewers[renderDiv].options.fog += 0.01;
+		} else {
+			viewer.viewers[renderDiv].options.fog = 1;
+		}
+		viewer.viewers[renderDiv]._loadFog();
+	}
+	document.querySelector('#less').onclick = function () {
+		if (viewer.viewers[renderDiv].options.fog > 0) {
+			viewer.viewers[renderDiv].options.fog -= 0.01;
+		} else {
+			viewer.viewers[renderDiv].options.fog = 0;
+		}
+		viewer.viewers[renderDiv]._loadFog();
+	}
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
