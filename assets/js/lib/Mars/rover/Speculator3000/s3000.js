@@ -75,10 +75,8 @@
 			var module = this.hasModule(name);
 			this.activeModule = new module(this);
 
-			/* If the new activated module has a onEnabled method call it. */
-			if (this.activeModule.onEnabled) {
-				this.activeModule.onEnabled();
-			}
+			/* Call the "onEnabled" module event. */
+			this.callModuleEvent('onEnabled');
 		}
 	};
 
@@ -87,13 +85,28 @@
 	 */
 	nsSpeculator.S3000.prototype.disableModule = function() {
 		if (this.activeModule) {
-			/* If the active module has a onDisabled method, call it. */
-			if (this.activeModule.onDisabled) {
-				this.activeModule.onDisabled();
-			}
+			/* Call the "onDisabled" module event. */
+			this.callModuleEvent('onDisabled');
 
 			/* Remove the module instance. */
 			this.activeModule = null;
+		}
+	};
+
+	/**
+	 * Call a module method if exist.
+	 * 
+	 * @param  {string} name Name of the method to call.
+	 * @param  {[array]} args An array of arguments to send to the method.
+	 */
+	nsSpeculator.S3000.prototype.callModuleEvent = function(name, args) {
+		/* Check if a module is activated. */
+		if (this.activeModule) {
+			/* Check if the module event method exist. */
+			if (this.activeModule[name]) {
+				/* Call the module method. */
+				this.activeModule[name](args);
+			}
 		}
 	};
 })();
