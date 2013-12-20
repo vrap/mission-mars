@@ -22,6 +22,7 @@
 
 	/**
 	 * Static properties containing an array of available modules.
+	 * 
 	 * @type {Array}
 	 */
 	nsSpeculator.S3000.modules = new Array();
