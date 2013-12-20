@@ -71,32 +71,6 @@
 		REMOTE: 0.4
 	};
 
- 	/**
- 	 * Pattern:
- 	 *	{
- 	 *		x1: { 			
- 	 *			y1: {
- 	 *				z: z1,	
- 	 *				type: nature of the square,
- 	 *				status: 0 (visited), 1 (inaccessible), -1 (yet unknown),
- 	 *				adjacents: {
-	 *					north: -1,
-	 *					northEast: -1,
-	 *					east: -1,
-	 *					southEast: -1,
-	 *					south: -1,
-	 *					southWest: -1,
-	 *					west: -1,
-	 *					northWest: -1
- 	 *				}
- 	 *			}
- 	 *		}
- 	 *	}
- 	 *
- 	 * TODO: approve definive pattern
- 	 */
-	nsRover.Rover.memory = {};
-
 	/**
 	 * Fill the tank.
 	 *
@@ -105,15 +79,13 @@
 	nsRover.Rover.prototype.fillTank = function() {
 		this.tank = this.tankSize;
 
-		this.publishEvent(
-			'actions.fillTank',
-			{
-			}
-		);
+		this.publishEvent('actions.fillTank');
 	};
 
 	/**
 	 * Change rover direction.
+	 *
+	 * @this {Rover}
 	 * @param  {[type]} direction [description]
 	 * @return {[type]}           [description]
 	 */
@@ -135,6 +107,7 @@
 	 * Publish an event.
 	 * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
 	 *
+	 * @this {Rover}
 	 * @param  {string} channel Subchannel where the event need to be published. (The channel will be prefixed by "rover.").
 	 * @param  {object} options An object containing the params to sends when publishing the event.
 	 */
@@ -154,10 +127,12 @@
 	};
 
 	/**
-	 * [ description]
-	 * @param  {[type]} direction [description]
-	 * @param  {[type]} distance  [description]
-	 * @return {[type]}           [description]
+	 * Retrieve a square at a distance and direction relatively to the current position.
+	 *
+	 * @this {Rover}
+	 * @param  {integer} direction Direction of the rover.
+	 * @param  {integer} distance  Distance to seek.
+	 * @return {object}            Return an object containing informations about the square if exist; null otherwise.
 	 */
 	nsRover.Rover.prototype.getSquare = function(direction, distance) {
 		var x = this.x;
@@ -209,10 +184,11 @@
 	};
 
 	/**
-	 * [ description]
-	 * @param  {[type]} direction [description]
-	 * @param  {[type]} distance  [description]
-	 * @return {[type]}           [description]
+	 * Move the rover to a distance and direction relatively to the current position.
+	 * 
+	 * @this {Rover}
+	 * @param  {integer} direction Direction of the rover.
+	 * @param  {integer} distance  Distance to seek.
 	 */
 	nsRover.Rover.prototype.move = function(direction, distance) {
 		if (distance < 1 || distance > 2) {
@@ -379,10 +355,6 @@
 			this.tank = this.tankSize;
 		}
 
-		this.publishEvent(
-			'actions.deploySolarPanels',
-			{
-			}
-		);
+		this.publishEvent('actions.deploySolarPanels');
 	};
 })();
