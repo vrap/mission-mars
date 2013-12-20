@@ -6,9 +6,69 @@ body {
 	padding: 0;
 }
 
+input[type="radio"] {
+    display:none;
+}
+
+input[type="radio"] + label span {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    background:url(../img/check_radio_sheet.png) -38px top no-repeat;
+    cursor:pointer;
+}
+
+input[type="radio"]:checked + label span {
+    background:url(../img/check_radio_sheet.png) -57px top no-repeat;
+}
+
+input[type="button"] {
+	background-color:#49c9e6;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	border:1px solid #49c9e6;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:20px;
+	padding:3px 10px;
+	text-decoration:none;
+}
+
+input[type="button"]:hover {
+	background-color:#4dd2f0;
+}
+
+input[type="button"]:active {
+	position:relative;
+	top:1px;
+}
+
+a {
+	color: #81e8ff;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #49c9e6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-weight: lighter;
+}
+
 /**
 * Main css
 */
+
 #primary-bloc {
 	position: absolute;
 	top: 10px;
@@ -30,28 +90,34 @@ body {
 }
 
 #panel-control {
-	border: 1px solid black;
+	color: #f2f2f2;
 	width: 200px;
-	position: absolute;
+	position: fixed;
 	bottom: 1px;
 	right: 10px;
 	font-family: 'Roboto', sans-serif;
 }
 
 #controls-header {
-	padding: 0 0 0 0;
-	margin: 0 0 0 0;
-	background-color: black; 
-	color: white;
+	margin: 0 0 2px 0;
+	text-transform: uppercase;
+	background-color: rgba(0, 0, 0, 0.5);
 	text-align: center;
+	font-size: 16px;
 }
 
 #controls {
+	background-color: rgba(0, 0, 0, 0.5);
 	height: 250px;
-	padding: 0px 0 0 30px;
-	color: #555;
-	font-size: 13px;
+	padding: 1px 0 0 12px;
+	font-size: 12px;
+	-webkit-transition: height .3s linear;
 }
+
+#controls.hide {
+    height: 0;
+}
+
 #controls div {
 	margin-bottom: 20px;
 }
@@ -60,21 +126,6 @@ body {
 	margin-bottom: 3px;
 }
 
-/**
-* Class utils
-*/
-.hide {
-	display: none;
-}
-
-.show {
-	display: block;
-}
-
-.closed {
-
-}
-
-.opened {
-
+#controls label, #controls a {
+	padding-left: 5px;
 }

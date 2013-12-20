@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
 	</head>
 	<body>
-		<div id="render" width="400" height="400"></div>
+		<div id="render"></div>
 		<div id="primary-bloc">
 			<div id="bloc-mini-map">
 				<canvas id="mini-map">
@@ -13,23 +13,23 @@
 		        </canvas>
 			</div>
 		</div>
-		<div id="panel-control"  class="opened">
+		<div id="panel-control"  class="closed">
 			<h2 id="controls-header">Panel Control</h2>
-			<div id="controls" class="show">
+			<div id="controls" class="hide">
 				<form name="controlsForm">
 					<div>
 						<h3>Wireframe</h3>
-						<input type="radio" name="wireframe"checked>On
-						<input type="radio" name="wireframe">Off
+						<input type="radio" id="w1" name="wireframe"checked><label for="w1"><span></span>On</label>
+						<input type="radio" id="w2" name="wireframe"><label for="w2"><span></span>Off</label>
 					</div>
 					<div>
 						<h3>Fog</h3>
-						<input type="button" value="+" id="more"> <input type="button" value="-" id="less">
+						<input type="button" value=" + " id="more"> <input type="button" value=" - " id="less">
 					</div>
 					<div>
 						<h3>Control camera</h3>
-						<input type="radio" name="camera">On
-						<input type="radio" name="camera" checked>Off
+						<input type="radio" id="c1" name="camera"><label for="c1"><span></span>On</label>
+						<input type="radio" id="c2" name="camera" checked><label for="c2"><span></span>Off</label>
 					</div>
 					<div>
 						<h3>Download map</h3>
