@@ -18,6 +18,9 @@
 
 		/* Retrieve an instance of the Observable. */
 		this.observer = new nsCommon.Observable();
+
+		/* Register to rover events. */
+		this.registerEvents();
 	};
 
 	/**
@@ -109,5 +112,23 @@
 				this.activeModule[name](args);
 			}
 		}
+	};
+
+	/**
+	 * Register rovers events and call the onEvent method.
+	 */
+	nsSpeculator.S3000.prototype.registerEvents = function() {
+		this.observer.subscribe('rover.*', function(event) {
+			this.onEvent(event);
+		}.bind(this));
+	};
+
+	/**
+	 * Function called when a rover event is catched.
+	 *
+	 * @param  {object} event Contain data of the event.
+	 */
+	nsSpeculator.S3000.prototype.onEvent = function(event) {
+		console.log(event);
 	};
 })();
