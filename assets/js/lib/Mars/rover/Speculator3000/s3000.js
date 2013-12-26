@@ -84,6 +84,7 @@
 	 * Deactivate the current active module.
 	 */
 	nsSpeculator.S3000.prototype.disableModule = function() {
+		/* Check if a module is activated. */
 		if (this.activeModule) {
 			/* Call the "onDisabled" module event. */
 			this.callModuleEvent('onDisabled');
