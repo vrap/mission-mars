@@ -24,7 +24,7 @@ var test;
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
-	var render2dDiv = document.querySelector('#mini-map');
+	var render2dDiv = document.querySelector('#minimap');
 
 	/* Generate a map. */
 	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 300, 300, -10, 10);
@@ -68,6 +68,7 @@ var test;
 		viewer.viewers[renderDiv].options.cameraControl = false;
 		viewer.viewers[renderDiv]._loadControls();
 	}
+
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();

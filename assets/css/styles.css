@@ -1,3 +1,16 @@
+
+@font-face {
+    font-family: 'bpmonoregular';
+    src: url('../fonts/bpmono-webfont.eot');
+    src: url('../fonts/bpmono-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/bpmono-webfont.woff') format('woff'),
+         url('../fonts/bpmono-webfont.ttf') format('truetype'),
+         url('../fonts/bpmono-webfont.svg#bpmonoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 /**
 * Resets
 */
@@ -69,33 +82,116 @@ h5 {
 * Main css
 */
 
-#primary-bloc {
+/*****
+* Mini map
+**********/
+
+#panel-minimap {
 	position: absolute;
 	top: 10px;
 	right: 10px;
 }
 
-#bloc-mini-map {
+#bloc-minimap {
 	width: 200px;
 	height: 200px;
 	overflow:hidden;
 	position: relative;
 	margin-top: 30px;
 	margin-right: 30px;
-	/*float: right;*/
 }
 
-#mini-map {
+#minimap {
 	position: absolute;
 }
 
+/*****
+* Console hask
+**********/
+#panel-console{
+	color: #f2f2f2;
+	background-color: #383838;
+	width: 100%;
+	padding: 20px;
+	position: fixed;
+	bottom: 1px;
+	left: 0px;
+	font-family: 'Roboto', sans-serif;
+	z-index: 1000;
+}
+
+#panel-console input[type="text"]{
+	border:0;
+	width:80%;
+	background-color: #383838;
+	color: #4DD2F0;
+	font-size: 1em;
+	font-family: 'bpmonoregular';
+}
+#panel-console input[type="text"]:focus{
+	border:0;
+	outline:0;
+}
+
+#panel-response-console{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+/*****
+* Console response
+**********/
+
+#panel-response-console{
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 10px;
+	font-family: 'bpmonoregular';
+	width: 500px;
+	height: 100px;
+	margin-top: 30px;
+	margin-left: 30px;
+	overflow-x: auto;
+	font-size: 0.7em;
+}
+#panel-response-console li.response{
+	color: #4DD2F0;
+}
+#panel-response-console li.invader{
+	color: #ff0059;
+}
+#panel-response-console ul{
+	padding: 0;
+	margin: 0;
+}
+#panel-response-console li{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+#panel-response-console h3{
+	margin: 0;
+}
+
+
+/*****
+* Control
+**********/
+#panel-control.closed{
+	height: 0px;
+}
+#panel-control.opened{
+	height: 263px;
+}
+
 #panel-control {
+	overflow: hidden;
 	color: #f2f2f2;
 	width: 200px;
 	position: fixed;
-	bottom: 1px;
-	right: 10px;
+	bottom: 90px;
+	right: 40px;
 	font-family: 'Roboto', sans-serif;
+	-webkit-transition: height .3s linear;
 }
 
 #controls-header {
@@ -111,10 +207,10 @@ h5 {
 	height: 250px;
 	padding: 1px 0 0 12px;
 	font-size: 12px;
-	-webkit-transition: height .3s linear;
+	
 }
 
-#controls.hide {
+#panel-control.hide {
     height: 0;
 }
 

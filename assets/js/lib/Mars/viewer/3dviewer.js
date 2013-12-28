@@ -59,7 +59,7 @@
 
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		//this.controls = new THREE.OrbitControls(this.camera);
-		this.controls = new THREE.FirstPersonControls(this.camera);
+		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 0.1;
         this.controls.lookSpeed = 0.002;
         this.controls.lookVertical = true;

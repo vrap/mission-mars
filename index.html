@@ -6,9 +6,9 @@
 	</head>
 	<body>
 		<div id="render"></div>
-		<div id="primary-bloc">
-			<div id="bloc-mini-map">
-				<canvas id="mini-map">
+		<div id="panel-minimap">
+			<div id="bloc-minimap">
+				<canvas id="minimap">
 		          Canvas not supported.
 		        </canvas>
 			</div>
@@ -38,6 +38,19 @@
 				</form>
 			</div>
 		</div>
+
+		<div id="panel-console" class="closed">
+			<form action="#" id="form-commande">
+				<input type="text" name="commande" id="commande" autocomplete="off">
+			</form>
+		</div>
+
+		<ul id="panel-response-console">
+			
+		</ul>
+		
+
+		
 		
 		<!-- Helpers -->
 		<script type="text/javascript" src="assets/js/helper/namespace.js"></script>
@@ -75,6 +88,9 @@
 
 		<!-- Rover invader -->
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js"></script>
+
+		<!-- Console -->
+		<script type="text/javascript" src="assets/js/consoleInvader.js"></script>
 
 		<!-- Script for UI and UX -->
 		<script type="text/javascript" src="assets/js/interface.js"></script>

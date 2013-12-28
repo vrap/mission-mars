@@ -27,35 +27,16 @@
 
 		this.initRover();
 
-		//couleurs :
-		var red = '0';
-		var green = '120';
-		var blue = '120';
-		var color= {red: 0, green: 255, blue: 255, opacity: 1};
-
 		//dessin de la grille
 		for(var x = 0; x < this.viewer.map.getWidth(); x++){
 			for(var y = 0; y < this.viewer.map.getHeight(); y++ ){
-				color= {red: 0, green: 255, blue: 255, opacity: 1};
+				color= {red: 122, green: 122, blue: 122, opacity: 0.8};
 				var elevevation =  Math.round(this.viewer.map._squares[x][y].z*10);
-				//color = 
-				// if(elevevation == -5){ color = '#f06a4c'; }
-				// else if(elevevation == -6){ color = '#e96d4e'; }
-				// else if(elevevation == -4){ color = '#e96d4e'; }
-				// else if(elevevation == -3){ color = '#e27151'; }
-				// else if(elevevation == -2){ color = '#da7553'; }
-				// else if(elevevation == -1){ color = '#d37856'; }
-				// else if(elevevation == 0){ color = '#cc7c59'; }
-				// else if(elevevation == 1){ color = '#c5805b'; }
-				// else if(elevevation == 2){ color = '#be835e'; }
-				// else if(elevevation == 3){ color = '#b68760'; }
-				// else if(elevevation == 4){ color = '#af8b63'; }
-				// else if(elevevation == 5){ color = '#a88e65'; }
 
 				color.blue -= elevevation*3;
 				color.green -= elevevation*3;
+				color.red -= elevevation*3;
 
-				console.log(elevevation);
 				this.context.fillStyle = 'rgba('+ color.red + ','+ color.green + ','+ color.blue + ','+ color.opacity +')';
 				this.context.fillRect(x * this.valPixel, y * this.valPixel, this.valPixel, this.valPixel);
 			}
