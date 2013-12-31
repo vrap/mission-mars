@@ -9,7 +9,9 @@
 		this.id = 2;
 		this.name = 'Ore';
 		this.textureColor = "#4c3515";
-		//this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/XXXX.jpg');
+		this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/sand.jpg');
+		this.texture.magFilter = THREE.NearestFilter;
+		this.texture.minFilter = THREE.LinearMipMapLinearFilter;
 		this.probability = 0.2;
 
 		/* If already instancied, return instance (Singleton) */
@@ -26,6 +28,6 @@
 	 * @return {THREE.MeshBasicMaterial} Instance of THREE.MeshBasicMaterial with the texture color and wireframe
 	 */
 	nsMaterials.Ore.prototype.getColor = function(wireframe) {
-		return new THREE.MeshPhongMaterial( { /*map: this.texture*/color: this.textureColor, wireframe: wireframe });
+		return new THREE.MeshPhongMaterial( { map: this.texture/*color: this.textureColor*/, wireframe: wireframe });
 	};
 })();

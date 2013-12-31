@@ -1,3 +1,26 @@
+TerrainGeneration = function(width, height, segments, smoothingFactor) {
+        this.width = width;
+        this.height = height;
+        this.segments = segments;
+        this.smoothingFactor = smoothingFactor;
+        
+        this.terrain = new Array();
+        
+        // internal functions
+        this._init = function() {
+                this.terrain = new Array();
+                for(var i = 0; i <= this.segments; i++) {
+                        this.terrain[i] = new Array();
+                        for(var j = 0; j <= this.segments; j++) {
+                                this.terrain[i][j] = 0;
+                        }
+                }
+        };
+        
+        
+};
+
+
 (function() {
 	var nsEditor   = using('mars.editor'),
 		nsMaterials = using('mars.common.material'),
@@ -25,7 +48,9 @@
 		_zMin: null,
 		_zMax: null,
 		_materials: [],
-		_elements: []
+		_elements: [],
+		segments: 64,
+		smoothingFactor: 60	
 	};
 
 	/**
@@ -44,9 +69,10 @@
 			}
 		}
 
-		/*--------------------*
-		|	Random elevation  |
-		*--------------------*/
+	};
+
+
+	nsEditor.TerrainGenerator.RandomElevation = function(){
 
 		/* Boucle général */
 		var count = 0;
@@ -101,8 +127,75 @@
 				}
 			}
 		}
+	}
 
-	};
+	nsEditor.TerrainGenerator._diamondSquare = function() {
+
+		this.segments = this._width-1;
+        var size = this.segments+1;
+
+        var memorySmoothing = this.smoothingFactor;
+
+        for (var p = 0; p < 1; p++) {
+        	this.smoothingFactor = memorySmoothing;
+
+	        for(var length = this.segments; length >= 2; length /= 2) {
+	                var half = Math.round(length/2);
+	                this.smoothingFactor /= 2;
+
+	                length = Math.round(length);
+
+	                // generate the new square values
+	                for(var x = 0; x < this.segments; x += length) {
+	                        for(var y = 0; y < this.segments; y += length) {
+
+
+	                                var xLength = x+length;
+	                                var yLength = y+length;
+
+	                                if (xLength >= this._width){ var xLength = this._width-1 };
+	                                if (yLength >= this._width){ var yLength = this._width-1 };
+
+	                                var average = this._map[x][y].z+ // top left
+	                                this._map[xLength][y].z+ // top right
+	                                this._map[x][yLength].z+ // lower left
+	                                this._map[xLength][yLength].z; // lower right
+	                                average /= 4;
+	                                average += 2*this.smoothingFactor*Math.random()-this.smoothingFactor;
+
+	                                this._map[Math.round(x+half)][Math.round(y+half)].z = average;
+	                        }
+	                }
+
+	                // generate the diamond values
+	                for(var x = 0; x < this.segments; x += half) {
+	                        for(var y = Math.round((x+half)%length); y < this.segments-1; y += length) {
+
+	                        		var a = Math.round((x-half+size)%size);
+	                        		var b = Math.round((x+half)%size);
+	                        		var c = Math.round((y+half)%size);
+	                        		var d = Math.round((y-half+size)%size);
+
+	                                var average = this._map[a][y].z+ // middle left
+	                                                this._map[b][y].z+ // middle right
+	                                                this._map[x][c].z+ // middle top
+	                                                this._map[x][(y-half+size)%size].z; // middle bottom
+
+	                                average /= 4;
+	                                average += 2*this.smoothingFactor*Math.random()-this.smoothingFactor;
+	                                
+	                                this._map[x][y].z = average;
+
+	                                // values on the top and right edges
+	                                if(x === 0)
+	                                        this._map[this.segments][y].z = average;
+	                                if(y === 0)
+	                                        this._map[x][this.segments].z = average;
+	                        }
+	                }
+	        }
+        };
+    };
 
 	/**
 	 * [ description]
@@ -150,7 +243,20 @@
 			nbOre = 0,
 			nbOther = 0;
 
-		square1 = this._map[x-1][y-1].nature;
+		xMoinUn = x-1
+		yMoinUn = y-1
+
+		if(xMoinUn < 0){ xMoinUn = 0; }
+		if(yMoinUn < 0){ yMoinUn = 0; }
+
+		xPlusUn = x+1
+		yPlusUn = y+1
+
+		if(xPlusUn >= this._width){ xPlusUn = this._width-1; }
+		if(yPlusUn >= this._height){ yPlusUn = this._height-1; }
+
+		square1 = this._map[xMoinUn][yMoinUn].nature;
+
 		switch (square1) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -158,7 +264,7 @@
 			case other.id : nbOther++; break;
 		}
 
-		square2 = this._map[x][y-1].nature;
+		square2 = this._map[x][yMoinUn].nature;
 		switch (square2) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -166,7 +272,7 @@
 			case other.id : nbOther++; break;
 		}
 
-		square3 = this._map[x+1][y-1].nature;
+		square3 = this._map[xPlusUn][yMoinUn].nature;
 		switch (square3) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -174,7 +280,7 @@
 			case other.id : nbOther++; break;
 		}
 
-		square4 = this._map[x-1][y].nature;
+		square4 = this._map[xMoinUn][y].nature;
 		switch (square4) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -182,7 +288,7 @@
 			case other.id : nbOther++; break;
 		}
 
-		square6 = this._map[x+1][y].nature;
+		square6 = this._map[xPlusUn][y].nature;
 		switch (square6) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -190,7 +296,7 @@
 			case other.id : nbOther++; break;
 		}
 
-		square7 = this._map[x-1][y+1].nature;
+		square7 = this._map[xMoinUn][yPlusUn].nature;
 		switch (square7) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -198,7 +304,7 @@
 			case other.id : nbOther++; break;
 		}
 
-		square8 = this._map[x][y+1].nature;
+		square8 = this._map[x][yPlusUn].nature;
 		switch (square8) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -206,7 +312,7 @@
 			case other.id : nbOther++; break;		
 		}
 
-		square9 = this._map[x+1][y+1].nature;
+		square9 = this._map[xPlusUn][yPlusUn].nature;
 		switch (square9) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -343,63 +449,80 @@
 		while(count < squareMax){
 
 			// Récupération d'un case au hazard dans la grille
-			squareX = getRandomInt(3, this._width-3);
-			squareY = getRandomInt(3, this._height-3);
+			squareX = getRandomInt(0, this._width-1);
+			squareY = getRandomInt(0, this._height-1);
 
 			// Si la case est au bord de la map, la décalé.
-			if(squareX <= 2){ squareX++; }
-			if(squareY <= 2){ squareY++; }
+			if(squareX < 0){ squareX = 0; }
+			if(squareY < 0){ squareY = 0; }
+
+			if(squareX >= this._width){ squareX = this._width-1; }
+			if(squareY >= this._height){ squareY = this._height-1; }
+
+			squareXMoinUn = squareX-1
+			squareYMoinUn = squareY-1
+
+			if(squareXMoinUn < 0){ squareXMoinUn = 0; }
+			if(squareYMoinUn < 0){ squareYMoinUn = 0; }
+
+			squareXPlusUn = squareX+1
+			squareYPlusUn = squareY+1
+
+			if(squareXPlusUn >= this._width){ squareXPlusUn = this._width-1; }
+			if(squareYPlusUn >= this._height){ squareYPlusUn = this._height-1; }
+
+
+			//console.log(squareX + '  ' + squareY + ' ' +squareXMoinUn + ' ' + squareYMoinUn + ' ' + squareXPlusUn + ' ' + squareYPlusUn);
+
 
 			// Récupéation des coordonnée les 9 cases situé autour de la case séléctionnés
 			// (la case selectionné c'est la 5)
 			square1 = {
-				z: this._map[squareX-1][squareY-1].z,
-				nature: this._map[squareX-1][squareY-1].nature
+				z: this._map[squareXMoinUn][squareYMoinUn].z,
+				nature: this._map[squareXMoinUn][squareYMoinUn].nature
 			};
 			square2 = {
-				z: this._map[squareX][squareY-1].z,
-				nature: this._map[squareX][squareY-1].nature
+				z: this._map[squareX][squareYMoinUn].z,
+				nature: this._map[squareX][squareYMoinUn].nature
 			};
 			square3 = {
-				z: this._map[squareX+1][squareY-1].z,
-				nature: this._map[squareX+1][squareY-1].nature
+				z: this._map[squareXPlusUn][squareYMoinUn].z,
+				nature: this._map[squareXPlusUn][squareYMoinUn].nature
 			};
 			square4 = {
-				z: this._map[squareX-1][squareY].z,
-				nature: this._map[squareX-1][squareY].nature
+				z: this._map[squareXMoinUn][squareY].z,
+				nature: this._map[squareXMoinUn][squareY].nature
 			};
-
 			square5 = {
 				z: this._map[squareX][squareY].z,
 				nature: this._map[squareX][squareY].nature
 			};
-
 			square6 = {
-				z: this._map[squareX+1][squareY].z,
-				nature: this._map[squareX+1][squareY].nature
+				z: this._map[squareXPlusUn][squareY].z,
+				nature: this._map[squareXPlusUn][squareY].nature
 			};
 			square7 = {
-				z: this._map[squareX-1][squareY+1].z,
-				nature: this._map[squareX-1][squareY+1].nature
+				z: this._map[squareXMoinUn][squareYPlusUn].z,
+				nature: this._map[squareXMoinUn][squareYPlusUn].nature
 			};
 			square8 = {
-				z: this._map[squareX][squareY+1].z,
-				nature: this._map[squareX][squareY+1].nature
+				z: this._map[squareX][squareYPlusUn].z,
+				nature: this._map[squareX][squareYPlusUn].nature
 			};
 			square9 = {
-				z: this._map[squareX+1][squareY+1].z,
-				nature: this._map[squareX+1][squareY+1].nature
+				z: this._map[squareXPlusUn][squareYPlusUn].z,
+				nature: this._map[squareXPlusUn][squareYPlusUn].nature
 			};
 
 			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
 			// square 2
-			this._map[squareX][squareY-1].z = (square1.z+square5.z+square3.z)/3;
+			this._map[squareX][squareYMoinUn].z = (square1.z+square5.z+square3.z)/3;
 			// square 4
-			this._map[squareX-1][squareY].z = (square1.z+square5.z+square7.z)/3;
+			this._map[squareXMoinUn][squareY].z = (square1.z+square5.z+square7.z)/3;
 			// square 8
-			this._map[squareX][squareY+1].z = (square5.z+square7.z+square9.z)/3;
+			this._map[squareX][squareYPlusUn].z = (square5.z+square7.z+square9.z)/3;
 			// square 6
-			this._map[squareX+1][squareY].z = (square5.z+square3.z+square9.z)/3;
+			this._map[squareXPlusUn][squareY].z = (square5.z+square3.z+square9.z)/3;
 
 			/**
 			* Materials smothing
@@ -470,7 +593,9 @@
 		this._map       = new Array();
 
 		this._createBase();
+		this._diamondSquare();
 		this._createElements();
+
 		this._smoothing();
 
 		return this._toJSON();
