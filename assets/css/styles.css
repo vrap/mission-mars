@@ -8,7 +8,6 @@
          url('../fonts/bpmono-webfont.svg#bpmonoregular') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
 
 /**
@@ -106,7 +105,7 @@ h5 {
 }
 
 /*****
-* Console hask
+* Console ask
 **********/
 #panel-console{
 	color: #f2f2f2;
@@ -133,16 +132,14 @@ h5 {
 	outline:0;
 }
 
-#panel-response-console{
-	position: absolute;
-	top: 10px;
-	left: 10px;
-}
 /*****
 * Console response
 **********/
 
 #panel-response-console{
+	position: absolute;
+	top: 10px;
+	left: 10px;
 	background-color: rgba(0, 0, 0, 0.5);
 	padding: 10px;
 	font-family: 'bpmonoregular';
@@ -176,20 +173,14 @@ h5 {
 /*****
 * Control
 **********/
-#panel-control.closed{
-	height: 0px;
-}
-#panel-control.opened{
-	height: 263px;
-}
-
 #panel-control {
 	overflow: hidden;
 	color: #f2f2f2;
 	width: 200px;
 	position: fixed;
-	bottom: 90px;
+	bottom: 65px;
 	right: 40px;
+	z-index: 1000;
 	font-family: 'Roboto', sans-serif;
 	-webkit-transition: height .3s linear;
 }
@@ -204,14 +195,17 @@ h5 {
 
 #controls {
 	background-color: rgba(0, 0, 0, 0.5);
-	height: 250px;
 	padding: 1px 0 0 12px;
 	font-size: 12px;
-	
+	-webkit-transition: height .3s linear;
 }
 
-#panel-control.hide {
-    height: 0;
+#controls.hide {
+  height: 0;
+}
+
+#controls.show {
+  height: 250px;
 }
 
 #controls div {
