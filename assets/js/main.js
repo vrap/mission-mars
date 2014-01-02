@@ -69,7 +69,6 @@ var test;
 		viewer.viewers[renderDiv]._loadControls();
 	}
 
-
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 	observable.subscribe('rover.move', function(data) {
@@ -97,10 +96,11 @@ var test;
 				document.querySelector('#other-counter').value++;
 				break;
 		}
-
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
 		console.log('elevation found', data);
+		// Change camera elevation
+		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
 		console.log('Rover spawned !', data);
