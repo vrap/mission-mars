@@ -83,6 +83,7 @@
 
 		var commandesList = new Array();
 		commandesList.push({name: 'hello', description: 'Say hello !'});
+		commandesList.push({name: 'infos', description: 'Informations about battery level and materials found.'});
 		commandesList.push({name: 'control', description: 'Control panel of invader 3000.'});
 
 		switch(commandes[1])
@@ -90,6 +91,9 @@
 			case 'hello':
 			  this.invaderResponse('hello you !');
 			  break;
+			 case 'infos':
+			 	this.invaderInfos();
+			 	break;
 			case '--help':
 			  this.response(this.__layoutHelp('Commande of invader 3000', commandesList));
 			  break;
@@ -154,6 +158,16 @@
 		
 	}
 
+	ConsoleInvader.prototype.invaderInfos = function(){
+		this.invaderResponse('Battery: '+ document.querySelector('#battery-level').value +'%');
+		this.invaderResponse('Rock found: '+ document.querySelector('#rock-counter').value);
+		this.invaderResponse('Sand found: '+ document.querySelector('#sand-counter').value);
+		this.invaderResponse('Ore found: '+ document.querySelector('#ore-counter').value);
+		this.invaderResponse('Iron found: '+ document.querySelector('#iron-counter').value);
+		this.invaderResponse('Ice found: '+ document.querySelector('#ice-counter').value);
+		this.invaderResponse('Others: '+ document.querySelector('#other-counter').value);
+	}
+
 	ConsoleInvader.prototype.response = function(text){
 		this.reponseElement.innerHTML = this.reponseElement.innerHTML + '<li class="response">' + text + '</li>';
 	}
@@ -164,8 +178,5 @@
 	ConsoleInvader.prototype.hello = function(){
 		return 'hello';
 	}
-
-
-
 
 })();

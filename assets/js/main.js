@@ -77,6 +77,27 @@ var test;
 	});
 	observable.subscribe('rover.scanMaterial', function(data) {
 		console.log('material found', data);
+		switch(data.type) {
+			case 0:
+				document.querySelector('#rock-counter').value++;
+				break;
+			case 1:
+				document.querySelector('#sand-counter').value++;
+				break;
+			case 2:
+				document.querySelector('#ore-counter').value++;
+				break;
+			case 3:
+				document.querySelector('#iron-counter').value++;
+				break;
+			case 4:
+				document.querySelector('#ice-counter').value++;
+				break;
+			case 5:
+				document.querySelector('#other-counter').value++;
+				break;
+		}
+
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
 		console.log('elevation found', data);
