@@ -93,7 +93,11 @@
 	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);*/
 
-	console.log(speculator);
+	/*speculator.memory.createEmplacement(0, 0, 0, 1, 0, new Array());
+
+	speculator.memory.updateEmplacement(0, 0, 1, 1, 0, new Array());
+	console.log(speculator.memory.readEmplacement(0, 0));*/
+
 	speculator.enableModule('voyager');
 	speculator.enableModule('voyager', true);
 })();

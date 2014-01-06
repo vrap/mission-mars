@@ -83,8 +83,7 @@
 	};
 
 	/**
-	 * Search and delete a square in memory, find by x and y position, then create a new square with
-	 * new properties. This is to avoid searching for a square in too big array.
+	 * Search a square in memory, find by x and y position, then update with new properties.
 	 * 
 	 * @param  {int}     x         position of the square.
 	 * @param  {int}     y         position of the square.
@@ -107,33 +106,44 @@
 			throw new Error('Status can only be set between -1 and 1.');
 		}
 
-		//var square = this.readMemory(x, y);
+		this.memory = this.memory.filter(function(square) {
+    		if (square.x == x && square.y == y) {
+    			square.z         = z;
+    			square.type      = type;
+    			square.status    = status;
+    			square.adjacents = adjacents;
 
-		var elementPos = this.memory.map(function(x) {
-			return x.id; 
-		}).indexOf(idYourAreLookingFor);
+    			return true;
+    		}
+  		});
 
-		var objectFound = array[elementPos];
+  		return false;
 	};
 
+	/**
+	 * Search and delete a square in memory, find by x and y position.
+	 * 
+	 * @param  {int}     x         position of the square.
+	 * @param  {int}     y         position of the square.
+	 * @return {boolean}           true if modified, false otherwise.
+	 */
 	nsMemory.Memory.prototype.deleteEmplacement = function(x, y) {
 		if (x < 0 || y < 0) {
 			throw new Error('X and Y can only be set superior to 0.');
 		}
-	};
 
-	/**
-	 * Read a circle of squares stored in memory.
-	 * 
-	 * @param  {int}   x position of the center square.
-	 * @param  {int}   y position of the center square.
-	 * @param  {int}   r radius of the circle
-	 * @return {array}   all squares in the circle with all their properties.
-	 */
-	nsMemory.Memory.prototype.readAreaEmplacement = function(x, y, r) {
-		if (x < 0 || y < 0) {
-			throw new Error('X and Y can only be set superior to 0.');
-		}
+		this.memory = this.memory.filter(function(square) {
+    		if (square.x == x && square.y == y) {
+    			square.z         = null;
+    			square.type      = null;
+    			square.status    = null;
+    			square.adjacents = null;
+
+    			return true;
+    		}
+  		});
+
+  		return false;
 	};
 
 	/**
