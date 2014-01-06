@@ -4,6 +4,7 @@
 	var nsViewer = using('mars.viewer');
 	var nsEditor = using('mars.editor');
 	var nsRover = using('mars.rover');
+	var nsMemory = using('mars.rover.memory');
 	var nsSpeculator = using('mars.rover.speculator3000');
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
@@ -73,7 +74,8 @@
 
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 100);
-	var speculator = new nsSpeculator.S3000(rover);
+	var memory = new nsMemory.Memory();
+	var speculator = new nsSpeculator.S3000(rover, memory);
 
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);

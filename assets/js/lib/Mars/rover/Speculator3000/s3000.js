@@ -7,11 +7,12 @@
 	 *
 	 * @param  {Rover} rover Rover instance to control.
 	 */
-	nsSpeculator.S3000 = function(rover) {
+	nsSpeculator.S3000 = function(rover, memory) {
 		this.rover = rover;
 		this.map = new Array();
 		this.activeModule = null;
 		this.report = new Object();
+		this.memory = memory;
 
 		/* Alias to the static propertie modules list. */
 		this.modules = this.constructor.modules;
