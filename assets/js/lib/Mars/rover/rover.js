@@ -119,6 +119,9 @@
 		/* Add rover instance to the options. */
 		options.rover = this;
 
+		/* Add channel name to the options. */
+		options.channel = channel;
+
 		/* Publish the event. */
 		this.observer.publish(channel, [options]);
 
