@@ -74,6 +74,7 @@
 	/* Rover tests. */
 	var rover = new nsRover.Rover(map, 0, 0, 100);
 	var speculator = new nsSpeculator.S3000(rover);
+	speculator.enableModule('voyager');
 
 	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
@@ -90,8 +91,4 @@
 	/*rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);*/
-
-	console.log(speculator);
-	speculator.enableModule('voyager');
-	speculator.enableModule('voyager', true);
 })();
