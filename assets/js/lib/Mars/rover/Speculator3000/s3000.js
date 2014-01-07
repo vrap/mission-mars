@@ -21,6 +21,9 @@
 
 		/* Register to rover events. */
 		this.registerEvents();
+
+		/* Define default tank size alert. */
+		this.setTankSizeAlert(10);
 	};
 
 	/**
@@ -109,9 +112,11 @@
 			/* Check if the module event method exist. */
 			if (this.activeModule[name]) {
 				/* Call the module method. */
-				this.activeModule[name](args);
+				return this.activeModule[name](args);
 			}
 		}
+
+		return true;
 	};
 
 	/**
@@ -129,6 +134,39 @@
 	 * @param  {object} event Contain data of the event.
 	 */
 	nsSpeculator.S3000.prototype.onEvent = function(event) {
-		console.log(event);
+		if (this.callModuleEvent('onEvent', event) !== false) {
+			if (event.channel != 'rover.actions.deploySolarPanels') {
+				if (this.rover.tank < this.sizeAlert) {
+					if (this.callModuleEvent('onLowTankEvent') !== false) {
+						this.onLowTankEvent();
+					}
+				}
+			}
+		}
+	};
+
+	/**
+	 * Redefine the tank size alert in percent.
+	 *
+	 * @param  {integer} size The tank size alert in percent.
+	 */
+	nsSpeculator.S3000.prototype.setTankSizeAlert = function(size) {
+		/* Transform the value to an integer. */
+		size = parseInt(size);
+
+		/* If the size is an integer. */
+		if (!isNaN(size) && size >= 0) {
+			/* Redefine the size. */
+			this.sizeAlert = (size * this.rover.tankSize) /100;
+		}
+	};
+
+	/**
+	 * 
+	 * 
+	 * @return {[type]} [description]
+	 */
+	nsSpeculator.S3000.prototype.onLowTankEvent = function() {
+		this.rover.deploySolarPanels();
 	};
 })();
