@@ -36,35 +36,37 @@
 	var destination = arguments[0][0];
 	var position = { x: this.speculator.rover.x, y: this.speculator.rover.y };
 	var xDirection = nsRover.Rover.DIRECTION.WEST;
-	var yDirection = nsRover.Rover.DIRECTION.NORTH;
+	var yDirection = nsRover.Rover.DIRECTION.SOUTH;
 
 	if (position.x < destination.x) {
 	    xDirection = nsRover.Rover.DIRECTION.EAST;
 	}
 	if (position.y < destination.y) {
-	    yDirection = nsRover.Rover.DIRECTION.SOUTH;
+	    yDirection = nsRover.Rover.DIRECTION.NORTH;
 	}
 
-	var randPosition = getRandomInt(1, 100);
+	var randPosition = getRandomInt(0, 100);
 	if (randPosition <= 50) {
 	    this.speculator.rover.setDirection(xDirection);
-	    this.moveAt(position.x, destination.x);
+	    this.moveAt('x', destination.x);
 	    this.speculator.rover.setDirection(yDirection);
-	    this.moveAt(position.y, destination.y);
+	    this.moveAt('y', destination.y);
 	}
 	else {
 	    this.speculator.rover.setDirection(yDirection);
-	    this.moveAt(position.y, destination.y);
+	    this.moveAt('y', destination.y);
 	    this.speculator.rover.setDirection(xDirection);
-	    this.moveAt(position.x, destination.x);
+	    this.moveAt('x', destination.x);
 	}
     };
 
-    nsVoyager.Voyager.prototype.moveAt = function(position, destination) {
-	while (destination <= position) {
+    nsVoyager.Voyager.prototype.moveAt = function(direction, destination) {
+	var position = this.speculator.rover[direction];
+	while (destination < position) {
 	    var distance = ((position-destination) > 1) ? 2 : 1;
 
 	    this.speculator.rover.move(distance);
+	    position = this.speculator.rover[direction];
 	}
     };
 
