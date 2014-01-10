@@ -59,7 +59,7 @@
 		this.controls.movementSpeed = 1;
         this.controls.lookSpeed = 0.001;
         this.controls.lookVertical = false;
-        this.controls.activeLook = true;
+        this.controls.activeLook = false;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
@@ -86,8 +86,8 @@
 
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
-			1.9*(this.viewer.map.getWidth()),
-			1.9*(this.viewer.map.getHeight()),
+			1.5*(this.viewer.map.getWidth()),
+			1.5*(this.viewer.map.getHeight()),
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
 		);

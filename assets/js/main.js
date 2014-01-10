@@ -32,6 +32,7 @@
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
+
 	viewer.load2D(render2dDiv);
 	viewer.load3D(renderDiv, {fog: 0.04, wireframe: true});
 
