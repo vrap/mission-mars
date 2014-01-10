@@ -22,7 +22,6 @@
 		this.options.cameraControl = this.options.cameraControl || false;
 
 		this.init();
-		this.onDocumentMouseWheel();
 	};
 
 	nsViewer.Viewer3D.prototype.init = function() {
@@ -140,28 +139,6 @@
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = Math.PI / 180 * (-90);
 		this.scene.add(this.mesh);
-	};
-
-	nsViewer.Viewer3D.prototype.onDocumentMouseWheel = function(  ) {
-		// Zoom or un zoom with scrolling
-
-		this.element.addEventListener("mousewheel", function(event){
-			event.preventDefault();
-
-			// WebKit
-			if ( event.wheelDeltaY ) {
-				this.camera.fov -= event.wheelDeltaY * 0.05;
-			// Opera / Explorer 9
-			} else if ( event.wheelDelta ) {
-				this.camera.fov -= event.wheelDelta * 0.05;
-			// Firefox
-			} else if ( event.detail ) {
-				this.camera.fov -= event.detail * 0.05;
-			}
-
-			this.camera.updateProjectionMatrix();
-			this.render();
-		}.bind(this), false);
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {
