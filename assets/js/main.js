@@ -6,6 +6,8 @@ var test;
 	var nsViewer = using('mars.viewer');
 	var nsEditor = using('mars.editor');
 	var nsRover = using('mars.rover');
+	var nsMemory = using('mars.rover.memory');
+	var nsSpeculator = using('mars.rover.speculator3000');
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
 
@@ -18,16 +20,17 @@ var test;
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 1);
-	var elementHill   = new nsElements.HillModel([materialSand], 0, 40, 1);
-	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 1);
+	var elementCrater = new nsElements.CraterModel([materialSand], -3, 20, 2);
+	var elementHill   = new nsElements.HillModel([materialSand], -20, 3, 0);
+	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 0);
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
-	var render2dDiv = document.querySelector('#minimap');
+	var render2dDiv = document.querySelector('#mini-map');
+	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementHill, elementRavine], 100, 100, -10, 10);
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */
@@ -71,9 +74,15 @@ var test;
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 	observable.subscribe('rover.move', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		console.log('move', data);
 	});
 	observable.subscribe('rover.scanMaterial', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		console.log('material found', data);
 		switch(data.type) {
 			case 0:
@@ -97,37 +106,47 @@ var test;
 		}
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
 		console.log('elevation found', data);
 		// Change camera elevation
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-		console.log('Rover spawned !', data);
+		//console.log('Rover spawned !', data);
+	});
+	observable.subscribe('rover.actions.fillTank', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
+		//console.log('tank is filled', data);
+	});
+	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
+		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
+		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
+		
+		//console.log('panels are deployed', data);
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 10, 10, 10);
-	/*rover.setDirection(nsRover.Rover.DIRECTION.NORTH);*/
+	var rover = new nsRover.Rover(map, 50, 50, 100);
+	var memory = new nsMemory.Memory();
+	var speculator = new nsSpeculator.S3000(rover, memory);
+	speculator.enableModule('voyager');
 
-	var count = 0;
-	// setInterval(function(){
-	// 	if(count % 4 == 0){
-	// 		rover.move(rover.constructor.DIRECTION.SOUTH, 1);
-	// 	}else{
-	// 		rover.move(rover.constructor.DIRECTION.EAST, 1);
-	// 	}
-		
-	// 	count++;
-	// },100);
-	
-	rover.move(rover.constructor.DIRECTION.SOUTH, 1);
-	rover.move(rover.constructor.DIRECTION.SOUTH, 1);
-	//rover.move(rover.constructor.DIRECTION.NORTH, 1);
-	//rover.move(rover.constructor.DIRECTION.NORTH, 1);
-
-	rover.scanMaterial(rover.constructor.DIRECTION.SOUTH, 0);
+	rover.setDirection(nsRover.Rover.DIRECTION.SOUTH);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
 
-
+	rover.move(2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
 	
+	rover.move(2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	
+	rover.move(2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+
+        console.log('STARTING VOYAGER');
+        speculator.start({x: 10, y: 20});
 })();

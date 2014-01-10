@@ -20,7 +20,6 @@
 
 	nsViewer.Viewer2D.prototype.init = function(){
 
-
 		// Taille du canvas
 		this.element.width = this.viewer.map.getWidth() * this.valPixel;
 		this.element.height = this.viewer.map.getHeight()* this.valPixel;

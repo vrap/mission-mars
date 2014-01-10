@@ -12,7 +12,7 @@
 	 */
 	nsRover.Rover = function(map, x, y, tankSize) {
 		/* Check if the map is in the good format. */
-		if (!(map instanceof nsCommon.Map)) {
+		if (! (map instanceof nsCommon.Map)) {
 			throw new Error('Map need to be an instance of Map.');
 		}
 
@@ -24,7 +24,7 @@
 
 		/* Define tankSize and default energy level of the rover. */
 		this.tankSize = (parseInt(tankSize) >= 0) ? parseInt(tankSize) : 0;
-		this.tank = this.tankSize;
+		this.tank     = this.tankSize;
 
 		/* Define the default direction of the Rover to North. */
 		this.direction = nsRover.Rover.DIRECTION.NORTH;
@@ -34,6 +34,12 @@
 
 		/* Publish a spawn event. */
 		this.publishEvent('spawn');
+
+		/* Number of movements. */
+		this.moves = 0;
+
+		/* Cost of deploying solar panels. */
+		this.panelsCost = 5;
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -72,10 +78,14 @@
 	 */
 	nsRover.Rover.prototype.fillTank = function() {
 		this.tank = this.tankSize;
+
+		this.publishEvent('actions.fillTank');
 	};
 
 	/**
 	 * Change rover direction.
+	 *
+	 * @this {Rover}
 	 * @param  {[type]} direction [description]
 	 * @return {[type]}           [description]
 	 */
@@ -97,6 +107,7 @@
 	 * Publish an event.
 	 * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
 	 *
+	 * @this {Rover}
 	 * @param  {string} channel Subchannel where the event need to be published. (The channel will be prefixed by "rover.").
 	 * @param  {object} options An object containing the params to sends when publishing the event.
 	 */
@@ -108,6 +119,9 @@
 		/* Add rover instance to the options. */
 		options.rover = this;
 
+		/* Add channel name to the options. */
+		options.channel = channel;
+
 		/* Publish the event. */
 		this.observer.publish(channel, [options]);
 
@@ -116,10 +130,12 @@
 	};
 
 	/**
-	 * [ description]
-	 * @param  {[type]} direction [description]
-	 * @param  {[type]} distance  [description]
-	 * @return {[type]}           [description]
+	 * Retrieve a square at a distance and direction relatively to the current position.
+	 *
+	 * @this {Rover}
+	 * @param  {integer} direction Direction of the rover.
+	 * @param  {integer} distance  Distance to seek.
+	 * @return {object}            Return an object containing informations about the square if exist; null otherwise.
 	 */
 	nsRover.Rover.prototype.getSquare = function(direction, distance) {
 		var x = this.x;
@@ -171,36 +187,70 @@
 	};
 
 	/**
-	 * [ description]
-	 * @param  {[type]} direction [description]
-	 * @param  {[type]} distance  [description]
-	 * @return {[type]}           [description]
+	 * Move the rover to a distance and direction relatively to the current position.
+	 * 
+	 * @this {Rover}
+	 * @param  {integer} direction Direction of the rover.
+	 * @param  {integer} distance  Distance to seek.
+	 * @todo : Remove direction and use this.direction instead.
 	 */
-	nsRover.Rover.prototype.move = function(direction, distance) {
+	nsRover.Rover.prototype.move = function(distance) {
 		if (distance < 1 || distance > 2) {
 			throw new Error('Distance can only be set to 1 or 2.');
 		}
 
+	          var direction = this.direction;
+
 		var square = this.getSquare(direction, distance);
 
+		// If the rover is still within the limits of the map
 		if (square !== null) {
 			var lastX = this.x;
 			var lastY = this.y;
 
+			// Scan the elevation of the current square is free
+			var currentSquareZ = square.z;
+
 			this.x = square.x;
 			this.y = square.y;
 
-			this.publishEvent(
-				'move',
-				{
-					direction: direction,
-					distance: distance,
-					lastX: lastX,
-					lastY: lastY,
-					newX: this.x,
-					newY: this.y
+			for (var directionName in this.constructor.DIRECTION) {
+				var directionCode = this.constructor.DIRECTION[directionName];
+
+				if (directionCode == direction) {
+					for (var moveCostName in this.constructor.MOVE_COST) {
+						var moveCost = this.constructor.MOVE_COST[directionName],
+							tankCost = (moveCost * distance);
+							// The distance cost plus the tank cost from the elevation
+							// Not activated yet because there is no test on slope (see above)
+							// elevationCost = tankCost * (1 + slope);
+
+						// Calculate the cost of travel and removes from tank
+						if (tankCost <= this.tank) {
+							this.tank -= tankCost;
+
+							this.moves++;
+
+							this.publishEvent(
+								'move',
+								{
+									direction: direction,
+									distance: distance,
+									lastX: lastX,
+									lastY: lastY,
+									newX: this.x,
+									newY: this.y
+								}
+							);
+
+							break;
+						}
+						else {
+							throw new Error('You need more tank.');
+						}
+					}
 				}
-			);
+			}
 		}
 		else {
 			throw new Error('The map is undiscovered here.');
@@ -218,14 +268,32 @@
 			throw new Error('The map is undiscovered here.');
 		}
 		else {
-			this.publishEvent(
-				'scanElevation',
-				{
-					direction: direction,
-					distance: distance,
-					elevation: square.z
+			if (distance == 0 || distance == 1) {
+				this.publishEvent(
+					'scanElevation',
+					{
+						direction: direction,
+						distance: distance,
+						elevation: square.z
+					}
+				);
+			}
+			else if (distance >= 2) {
+				var scanCost = 0.1 * distance;
+
+				if (scanCost <= this.tank) {
+					this.tank -= scanCost;
+
+					this.publishEvent(
+						'scanElevation',
+						{
+							direction: direction,
+							distance: distance,
+							elevation: square.z
+						}
+					);
 				}
-			);
+			}
 		}
 	};
 
@@ -240,14 +308,59 @@
 			throw new Error('The map is undiscovered here.');
 		}
 		else {
-			this.publishEvent(
-				'scanMaterial',
-				{
-					direction: direction,
-					distance: distance,
-					type: square.type
-				}
-			);
+			// If the current square is ice
+			// TODO: update freely the memory
+			if (square.type == 4) {
+				this.fillTank();
+			}
+
+			if (distance == 0 && this.tank >= 0.1) {
+				this.tank -= 0.1;
+
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
+			else if (distance == 1 && this.tank >= 0.2) {
+				this.tank -= 0.2;
+
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
+			else if (distance == 2 && this.tank >= 0.4) {
+				this.tank -= 0.4;
+
+				this.publishEvent(
+					'scanMaterial',
+					{
+						direction: direction,
+						distance: distance,
+						type: square.type
+					}
+				);
+			}
 		}
+	};
+
+	nsRover.Rover.prototype.deploySolarPanels = function() {
+		this.tank  += (this.panelsCost * 2);
+		this.moves += this.panelsCost;
+
+		if (this.tank > this.tankSize) {
+			this.tank = this.tankSize;
+		}
+
+		this.publishEvent('actions.deploySolarPanels');
 	};
 })();

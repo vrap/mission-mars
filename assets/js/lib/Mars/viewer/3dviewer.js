@@ -97,6 +97,7 @@
 		);
 
 		var index = 0;
+
 		// Assign Z attribute
 		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
 			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
