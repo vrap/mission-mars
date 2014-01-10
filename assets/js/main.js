@@ -33,7 +33,7 @@ var test;
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 	viewer.load2D(render2dDiv);
-	viewer.load3D(renderDiv, {fog: 0.04, wireframe: true});
+	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
 
 	document.controlsForm.wireframe[0].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = true;
