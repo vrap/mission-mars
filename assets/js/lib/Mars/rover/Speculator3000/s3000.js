@@ -163,9 +163,7 @@
 	};
 
 	/**
-	 * 
-	 * 
-	 * @return {[type]} [description]
+	 * When the tank is in a low energy state, deploy solar panels to regain the energy.
 	 */
 	nsSpeculator.S3000.prototype.onLowTankEvent = function() {
 		this.rover.deploySolarPanels();
