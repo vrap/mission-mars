@@ -73,22 +73,25 @@
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 0, 0, 100);
+	var rover = new nsRover.Rover(map, 50, 50, 100);
 	var memory = new nsMemory.Memory();
 	var speculator = new nsSpeculator.S3000(rover, memory);
 	speculator.enableModule('voyager');
 
-	rover.setDirection(nsRover.Rover.DIRECTION.NORTH);
+	rover.setDirection(nsRover.Rover.DIRECTION.SOUTH);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
 
-	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
 	
-	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
 	
-	rover.move(rover.constructor.DIRECTION.NORTH, 2);
+	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+
+          console.log('STARTING VOYAGER');
+          speculator.start({x: 10, y: 20});
 
 	/*rover.move(rover.constructor.DIRECTION.EAST, 1);
 	rover.scanMaterial(rover.constructor.DIRECTION.NORTH_EAST, 2);
