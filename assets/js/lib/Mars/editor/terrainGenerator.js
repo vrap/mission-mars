@@ -128,7 +128,6 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 	}
 
 	nsEditor.TerrainGenerator._diamondSquare = function() {
-
 		this._segments = this._width-1;
     var size = this._segments+1;
 
@@ -331,14 +330,6 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case nbOther : return other.id;
 		}
 	}
-
-	/**
-	 * [ description]
-	 * @return {[type]} [description]
-	 */
-	nsEditor.TerrainGenerator._pushMaterial = function() {
-
-	};
 
 	nsEditor.TerrainGenerator._createElements = function() {
 		for (var elementKey in this._elements) {

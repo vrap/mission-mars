@@ -9,7 +9,9 @@
 		this.id = 4;
 		this.name = 'Ice';
 		this.textureColor = "#e6e2df";
-		//this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/XXX.jpg');
+		this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/sand.jpg');
+		this.texture.magFilter = THREE.NearestFilter;
+		this.texture.minFilter = THREE.LinearMipMapLinearFilter;
 		this.probability = 0.01;
 
 		/* If already instancied, return instance (Singleton) */
@@ -22,6 +24,6 @@
 	};
 
 	nsMaterials.Ice.prototype.getColor = function(wireframe) {
-		return new THREE.MeshPhongMaterial( { /*map: this.texture*/color: this.textureColor, wireframe: wireframe });
+		return new THREE.MeshPhongMaterial( { map: this.texture/*color: this.textureColor*/, wireframe: wireframe });
 	};
 })();

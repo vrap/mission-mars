@@ -5,14 +5,60 @@
 		<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
 	</head>
 	<body>
-		<div id="render" width="400" height="400"></div>
-		<div id="primary-bloc">
-			<div id="bloc-mini-map">
-				<canvas id="mini-map">
+		<!-- viewer 3D -->
+		<div id="render"></div>
+		<!-- viewer 2D -->
+		<div id="panel-minimap">
+			<div id="bloc-minimap">
+				<canvas id="minimap">
 		          Canvas not supported.
-		        </canvas>
+		     </canvas>
 			</div>
 		</div>
+		<!-- controls -->
+		<div id="panel-control" class="closed">
+			<div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
+			<div id="controls" class="hide">
+				<form name="controlsForm">
+					<div>
+						<h3>Wireframe</h3>
+						<input type="radio" id="w1" name="wireframe"checked><label for="w1"><span></span>On</label>
+						<input type="radio" id="w2" name="wireframe"><label for="w2"><span></span>Off</label>
+					</div>
+					<div>
+						<h3>Fog</h3>
+						<input type="button" value=" + " id="more"> <input type="button" value=" - " id="less">
+					</div>
+					<div>
+						<h3>Control camera</h3>
+						<input type="radio" id="c1" name="camera"><label for="c1"><span></span>On</label>
+						<input type="radio" id="c2" name="camera" checked><label for="c2"><span></span>Off</label>
+					</div>
+					<div>
+						<h3>Download map</h3>
+						<a href="#">Here !</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- console -->
+		<div id="panel-console" class="closed">
+			<form action="#" id="form-commande">
+				<input type="text" name="commande" id="commande" autocomplete="off" placeholder="Tape a command here !">
+			</form>
+		</div>
+
+		<input type="hidden" id="battery-level" value="100">
+		<input type="hidden" id="rock-counter" value="0">
+		<input type="hidden" id="sand-counter" value="0">
+		<input type="hidden" id="ore-counter" value="0">
+		<input type="hidden" id="iron-counter" value="0">
+		<input type="hidden" id="ice-counter" value="0">
+		<input type="hidden" id="other-counter" value="0">
+
+		<ul id="panel-response-console">
+			
+		</ul>
 
 		
 		<!-- Helpers -->
@@ -51,6 +97,12 @@
 
 		<!-- Rover invader -->
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js"></script>
+
+		<!-- Console -->
+		<script type="text/javascript" src="assets/js/consoleInvader.js"></script>
+
+		<!-- Script for UI and UX -->
+		<script type="text/javascript" src="assets/js/interface.js"></script>
 
 		<!-- Main script -->
 		<script type="text/javascript" src="assets/js/main.js"></script>

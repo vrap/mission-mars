@@ -18,8 +18,8 @@
 		this.viewer = viewer;
 		this.element = element;
 		this.options = (options) ? options : {};
-
 		this.options.wireframe = this.options.wireframe || false;
+		this.options.cameraControl = this.options.cameraControl || false;
 
 		this.init();
 		this.onDocumentMouseWheel();
@@ -33,15 +33,20 @@
 		this._loadCamera();
 		this._loadRenderer();
 		this._loadMap();
+		this._loadMaterials();
 		this._loadControls();
 
+		this._loadFog();
+
+		// Run the refresh animation while.
+		this.animate();
+	};
+
+	nsViewer.Viewer3D.prototype._loadFog = function() {
 		// Add fog to the map.
 		if (!(isNaN(parseFloat(this.options.fog)))) {
 			this.scene.fog = new THREE.FogExp2(0xd3cfbe, parseFloat(this.options.fog));
 		}
-
-		// Run the refresh animation while.
-		this.animate();
 	};
 
 	nsViewer.Viewer3D.prototype._loadRenderer = function() {
@@ -55,11 +60,11 @@
 
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		//this.controls = new THREE.OrbitControls(this.camera);
-		this.controls = new THREE.FirstPersonControls(this.camera);
-		this.controls.movementSpeed = 1;
-        this.controls.lookSpeed = 0.001;
-        this.controls.lookVertical = false;
-        this.controls.activeLook = false;
+		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
+		this.controls.movementSpeed = 0.1;
+        this.controls.lookSpeed = 0.002;
+        this.controls.lookVertical = true;
+        this.controls.activeLook = this.options.cameraControl;
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
@@ -91,8 +96,22 @@
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
 		);
-		
+
 		var index = 0;
+		// Assign Z attribute
+		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
+			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
+				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
+				index++;
+			}
+		}
+	}
+
+
+	nsViewer.Viewer3D.prototype._loadMaterials = function() {
+		if(undefined !== this.mesh) {
+			this.scene.remove(this.mesh);
+		}
 		var natures = [];
 		// materials
 		var materials = []; 
@@ -103,16 +122,6 @@
 		materials[ice.id] = ice.getColor(this.options.wireframe);
 		materials[other.id] = other.getColor(this.options.wireframe);
 		
-		// Assign Z attribute
-		for (var i = 0; i < this.viewer.map.getWidth(); i++) {
-			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
-				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
-				index++;
-			}
-		}
-
-
-
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
 			for (var j = 0; j < this.viewer.map.getHeight()-1; j++) {

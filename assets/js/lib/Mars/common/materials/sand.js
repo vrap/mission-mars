@@ -10,6 +10,8 @@
 		this.name = 'Sand';
 		this.textureColor = "#825c38";
 		this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/sand.jpg');
+		this.texture.magFilter = THREE.NearestFilter;
+		this.texture.minFilter = THREE.LinearMipMapLinearFilter;
 		this.probability = 0.4;
 
 		/* If already instancied, return instance (Singleton) */

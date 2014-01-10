@@ -9,7 +9,9 @@
 		this.id = 0;
 		this.name = 'Rock';
 		this.textureColor = "#5c442c";
-		this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/rock.jpg');
+		this.texture = THREE.ImageUtils.loadTexture('./assets/img/textures/sand.jpg');
+		this.texture.magFilter = THREE.NearestFilter;
+		this.texture.minFilter = THREE.LinearMipMapLinearFilter;
 		this.probability = 0.3;
 
 		/* If already instancied, return instance (Singleton) */
