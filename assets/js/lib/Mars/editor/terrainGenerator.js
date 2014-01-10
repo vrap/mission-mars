@@ -157,7 +157,6 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 							            this._map[xLength][yLength].z; // lower right
             average = Math.round(average / 4);
             average += Math.round(2*this._smoothingFactor*Math.random()-this._smoothingFactor);
-
             this._map[Math.round(x+half)][Math.round(y+half)].z = average;
           }
         }

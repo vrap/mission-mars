@@ -26,7 +26,7 @@ var test;
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
-	var render2dDiv = document.querySelector('#mini-map');
+	var render2dDiv = document.querySelector('#minimap');
 	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
@@ -73,12 +73,6 @@ var test;
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
-	observable.subscribe('rover.move', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
-		console.log('move', data);
-	});
 	observable.subscribe('rover.scanMaterial', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
@@ -106,10 +100,6 @@ var test;
 		}
 	});
 	observable.subscribe('rover.scanElevation', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
-		console.log('elevation found', data);
 		// Change camera elevation
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
