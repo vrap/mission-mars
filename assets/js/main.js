@@ -30,7 +30,7 @@ var test;
 	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
+	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 200, 200, -10, 10);
 	var map = new nsCommon.Map(terrain);
 
 	/* Load map in 3d viewer. */

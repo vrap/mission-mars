@@ -44,7 +44,7 @@
 			drawCircle (x_center, y_center, rayon, z, this._element);
 			
 			if (z >= this._zMin) {
-				var z_temp = getRandomInt(1, 2);
+				var z_temp = 1;
 				z-=z_temp;
 			}
 

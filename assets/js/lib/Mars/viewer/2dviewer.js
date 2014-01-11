@@ -46,14 +46,14 @@
 	}
 
 	nsViewer.Viewer2D.prototype.drawRover = function(data){
-		this.context.fillStyle = 'rgba(33, 98, 94, 0.6)';
+		this.context.fillStyle = 'rgba(48, 244, 255, 0.6)';
 		this.context.fillRect(data.newX * this.valPixel, data.newY * this.valPixel, this.valPixel, this.valPixel);
 
 		var square = this.viewer.map.getSquare(data.lastX, data.lastY);
 
 		var elevevation =  Math.round(square.z*10);
-
-		this.context.fillStyle = 'rgba(40, 237, 74, 0.2)';
+		
+		this.context.fillStyle = 'rgba(198, 240, 242, 0.2)';
 		this.context.fillRect(data.lastX * this.valPixel, data.lastY * this.valPixel, this.valPixel, this.valPixel);
 	}
 
