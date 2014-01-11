@@ -129,65 +129,69 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 
 	nsEditor.TerrainGenerator._diamondSquare = function() {
 		this._segments = this._width-1;
-    var size = this._segments+1;
+    	var size = this._segments+1;
 
-    var memorySmoothing = this._smoothingFactor;
+    	var memorySmoothing = this._smoothingFactor;
 
-    for (var p = 0; p < 1; p++) {
-    	this._smoothingFactor = memorySmoothing;
+    	for (var p = 0; p < 1; p++) {
+    		this._smoothingFactor = memorySmoothing;
 
-      for(var length = this._segments; length >= 2; length /= 2) {
-        var half = Math.round(length/2);
-        this._smoothingFactor = Math.round(this._smoothingFactor / 2);
+	      for(var length = this._segments; length >= 2; length /= 2) {
+	        var half = Math.round(length/2);
+	        this._smoothingFactor = Math.round(this._smoothingFactor / 2);
 
-        length = Math.round(length);
+	        length = Math.round(length);
 
-        // generate the new square values
-        for(var x = 0; x < this._segments; x += length) {
-          for(var y = 0; y < this._segments; y += length) {
-            var xLength = x+length;
-            var yLength = y+length;
+	        // generate the new square values
+	        for(var x = 0; x < this._segments; x += length) {
+	          for(var y = 0; y < this._segments; y += length) {
+	            var xLength = x+length;
+	            var yLength = y+length;
 
-            if (xLength >= this._width){ var xLength = this._width-1 };
-            if (yLength >= this._width){ var yLength = this._width-1 };
+	            if (xLength >= this._width){ var xLength = this._width-1 };
+	            if (yLength >= this._width){ var yLength = this._width-1 };
 
-            var average = this._map[x][y].z+ // top left
-							            this._map[xLength][y].z+ // top right
-							            this._map[x][yLength].z+ // lower left
-							            this._map[xLength][yLength].z; // lower right
-            average = Math.round(average / 4);
-            average += Math.round(2*this._smoothingFactor*Math.random()-this._smoothingFactor);
-            this._map[Math.round(x+half)][Math.round(y+half)].z = average;
-          }
-        }
+	            var average = this._map[x][y].z+ // top left
+								            this._map[xLength][y].z+ // top right
+								            this._map[x][yLength].z+ // lower left
+								            this._map[xLength][yLength].z; // lower right
+	            average = Math.round(average / 4);
 
-        // generate the diamond values
-        for(var x = 0; x < this._segments; x += half) {
-          for(var y = Math.round((x+half)%length); y < this._segments-1; y += length) {
+	            average += Math.round(2*this._smoothingFactor*Math.random()-this._smoothingFactor);
+	            //this._map[Math.round(x+half)][Math.round(y+half)].z = average;
+	          }
+	        }
 
-        		var a = Math.round((x-half+size)%size);
-        		var b = Math.round((x+half)%size);
-        		var c = Math.round((y+half)%size);
-        		var d = Math.round((y-half+size)%size);
+	        // generate the diamond values
+	        for(var x = 0; x < this._segments; x += half) {
+	          for(var y = Math.round((x+half)%length); y < this._segments-1; y += length) {
 
-            var average = this._map[a][y].z+ // middle left
-                          this._map[b][y].z+ // middle right
-                          this._map[x][c].z+ // middle top
-                          this._map[x][(y-half+size)%size].z; // middle bottom
+	        		var a = Math.round((x-half+size)%size);
+	        		var b = Math.round((x+half)%size);
+	        		var c = Math.round((y+half)%size);
+	        		var d = Math.round((y-half+size)%size);
 
-            average = Math.round(average / 4);
-            average += Math.round(2*this._smoothingFactor*Math.random()-this._smoothingFactor);
+	            var average = this._map[a][y].z+ // middle left
+	                          this._map[b][y].z+ // middle right
+	                          this._map[x][c].z+ // middle top
+	                          this._map[x][(y-half+size)%size].z; // middle bottom
 
-            this._map[x][y].z = average;
+	            average = Math.round(average / 4);
+	            average += Math.round(2*this._smoothingFactor*Math.random()-this._smoothingFactor);
 
-            // values on the top and right edges
-            if(x === 0)
-              this._map[this._segments][y].z = average;
-            if(y === 0)
-              this._map[x][this._segments].z = average;
-          }
-        }
-      }
+	            if(average < 5){
+	            	this._map[x][y].z = average;
+	            }
+	            
+
+	            // values on the top and right edges
+	            if(x === 0)
+	              this._map[this._segments][y].z = average;
+	            if(y === 0)
+	              this._map[x][this._segments].z = average;
+	          }
+        	}
+      	}
     };
   };
 
