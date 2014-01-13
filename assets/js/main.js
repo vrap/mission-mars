@@ -1,5 +1,3 @@
-var test;
-
 (function() {
 	/* Loading namespaces. */
 	var nsCommon = using('mars.common');
