@@ -1,11 +1,14 @@
 /**
 * File for functions used for UI and UX
 */
+var nsCommon = using('mars.common');
+
 var scripts = [
 		// Main script
 		"assets/js/main.js"
 ];
 
+/* Home and viewer display */
 document.body.onload = function () {
 	document.querySelector('.home').style.display = 'block';
 	document.querySelector('.view').style.display = 'none';
@@ -15,6 +18,15 @@ document.querySelector('#show').onclick = function () {
 	createScripts(scripts);
 	document.querySelector('.home').style.display = 'none';
 	document.querySelector('.view').style.display = 'block';
+}
+
+function createScripts (scriptsArray) {
+	for (var i = 0; i < scriptsArray.length; i++) {
+		var s = document.createElement('script');
+		s.src = scriptsArray[i];
+
+		document.body.appendChild(s);
+	};
 }
 
 /* Control */
@@ -39,11 +51,18 @@ document.querySelector('#form-commande').onsubmit = function(e){
 		consoleInvader.getCommande(commande);
 }
 
-function createScripts (scriptsArray) {
-	for (var i = 0; i < scriptsArray.length; i++) {
-		var s = document.createElement('script');
-		s.src = scriptsArray[i];
+/* Upload */
+document.querySelector('#upload').onclick = function () {
+	var file = document.getElementById('uploadedMap').files[0];
+	if(undefined !== file) {
+		var reader = new FileReader();
+		reader.onload = function(evt) {
+  		document.getElementById('json').value = evt.target.result;
+		};
+		reader.readAsText(file);
 
-		document.body.appendChild(s);
-	};
+		createScripts(scripts);
+		document.querySelector('.home').style.display = 'none';
+		document.querySelector('.view').style.display = 'block';
+	}
 }

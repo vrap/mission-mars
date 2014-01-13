@@ -28,9 +28,16 @@
 	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
-	var terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 200, 200, -10, 10);
-	var map = new nsCommon.Map(terrain);
-
+	var map,
+			terrain;
+	if( "" != document.getElementById('json').value) {
+		terrain = document.getElementById('json').value;
+		map = new nsCommon.Map(terrain);
+	} else {
+		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 200, 200, -10, 10);
+		map = new nsCommon.Map(terrain);
+	}
+	
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 	viewer.load2D(render2dDiv);
