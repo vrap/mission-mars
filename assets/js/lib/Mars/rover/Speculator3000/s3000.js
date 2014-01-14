@@ -162,6 +162,9 @@
 		}
 	};
 
+        /**
+	 * Start the module.
+	 */
         nsSpeculator.S3000.prototype.start = function() {
                 this.callModuleEvent('start', arguments);
         }
