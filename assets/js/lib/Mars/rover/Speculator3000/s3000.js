@@ -162,9 +162,9 @@
 		}
 	};
 
-         nsSpeculator.S3000.prototype.start = function() {
-	         this.callModuleEvent('start', arguments);
-         }
+        nsSpeculator.S3000.prototype.start = function() {
+                this.callModuleEvent('start', arguments);
+        }
 
 	/**
 	 * When the tank is in a low energy state, deploy solar panels to regain the energy.
