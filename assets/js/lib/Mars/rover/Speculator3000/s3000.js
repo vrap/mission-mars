@@ -7,12 +7,11 @@
 	 *
 	 * @param  {Rover} rover Rover instance to control.
 	 */
-	nsSpeculator.S3000 = function(rover, memory) {
+	nsSpeculator.S3000 = function(rover) {
 		this.rover = rover;
 		this.map = new Array();
 		this.activeModule = null;
 		this.report = new Object();
-		this.memory = memory;
 
 		/* Alias to the static propertie modules list. */
 		this.modules = this.constructor.modules;
@@ -162,9 +161,9 @@
 		}
 	};
 
-         nsSpeculator.S3000.prototype.start = function() {
-	         this.callModuleEvent('start', arguments);
-         }
+    nsSpeculator.S3000.prototype.start = function() {
+		this.callModuleEvent('start', arguments);
+    }
 
 	/**
 	 * When the tank is in a low energy state, deploy solar panels to regain the energy.
