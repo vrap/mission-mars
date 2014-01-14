@@ -8,14 +8,17 @@ var scripts = [
 		"assets/js/main.js"
 ];
 
-/* Home and viewer display */
+/* Home and viewer displaying */
 document.body.onload = function () {
+	// Display home page and hide viewer
 	document.querySelector('.home').style.display = 'block';
 	document.querySelector('.view').style.display = 'none';
 }
 
 document.querySelector('#show').onclick = function () {
+	// Call the main
 	createScripts(scripts);
+	// Display viewer and hide home page
 	document.querySelector('.home').style.display = 'none';
 	document.querySelector('.view').style.display = 'block';
 }
@@ -51,18 +54,21 @@ document.querySelector('#form-commande').onsubmit = function(e){
 		consoleInvader.getCommande(commande);
 }
 
-/* Upload */
+/* JSon Upload */
 document.querySelector('#upload').onclick = function () {
 	var file = document.getElementById('uploadedMap').files[0];
 	if(undefined !== file) {
 		var reader = new FileReader();
 		reader.onload = function(evt) {
+			// When reader has finished
+			// Save file in an inout hidden
   		document.getElementById('json').value = evt.target.result;
+  		// Call main.js
+  		createScripts(scripts);
+  		// Display viewer
+			document.querySelector('.home').style.display = 'none';
+			document.querySelector('.view').style.display = 'block';
 		};
 		reader.readAsText(file);
-
-		createScripts(scripts);
-		document.querySelector('.home').style.display = 'none';
-		document.querySelector('.view').style.display = 'block';
 	}
 }

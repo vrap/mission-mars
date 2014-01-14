@@ -31,9 +31,11 @@
 	var map,
 			terrain;
 	if( "" != document.getElementById('json').value) {
+		// When a JSon is uploaded
 		terrain = document.getElementById('json').value;
 		map = new nsCommon.Map(terrain);
 	} else {
+		// Map generation otherwise.
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 200, 200, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
@@ -43,6 +45,7 @@
 	viewer.load2D(render2dDiv);
 	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
 
+	/* UI Controls */
 	document.controlsForm.wireframe[0].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = true;
 		viewer.viewers[renderDiv]._loadMaterials();
@@ -74,6 +77,11 @@
 	document.controlsForm.camera[1].onclick = function () {
 		viewer.viewers[renderDiv].options.cameraControl = false;
 		viewer.viewers[renderDiv]._loadControls();
+	}
+	/* Map download */
+	document.querySelector('#download').onclick = function () {
+		var blob = new Blob([terrain], {type: "octet/stream"});
+		saveAs(blob, "map.json");
 	}
 
 	/* Listen to rover events. */
