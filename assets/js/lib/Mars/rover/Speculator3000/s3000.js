@@ -175,4 +175,28 @@
 	nsSpeculator.S3000.prototype.onLowTankEvent = function() {
 		this.rover.deploySolarPanels();
 	};
+
+       /**
+        * Retrieve the available sided direction of the rover when it is blocked.
+        */
+	nsSpeculator.S3000.prototype.getSideDirection = function() {
+		switch (this.rover.direction) {
+			case this.rover.constructor.DIRECTION.NORTH:
+			case this.rover.constructor.DIRECTION.SOUTH:
+			return [
+				this.rover.constructor.DIRECTION.EAST,
+				this.rover.constructor.DIRECTION.WEST
+			];
+			break;
+			case this.rover.constructor.DIRECTION.EAST:
+			case this.rover.constructor.DIRECTION.WEST:
+				return [
+					this.rover.constructor.DIRECTION.NORTH,
+					this.rover.constructor.DIRECTION.SOUTH
+				];
+			break;
+		}
+
+		return null;
+	};
 })();
