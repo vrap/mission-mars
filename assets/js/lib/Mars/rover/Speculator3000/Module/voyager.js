@@ -32,6 +32,9 @@
 	console.log('Voyager mode disabled');
     };
 
+    /**
+     * Start the voyager scenario.
+     */
     nsVoyager.Voyager.prototype.start = function() {
 	var destination = arguments[0][0];
 	var position = { x: this.speculator.rover.x, y: this.speculator.rover.y };
