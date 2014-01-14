@@ -192,14 +192,14 @@
 	 * @this {Rover}
 	 * @param  {integer} direction Direction of the rover.
 	 * @param  {integer} distance  Distance to seek.
-	 * @todo : Remove direction and use this.direction instead.
 	 */
 	nsRover.Rover.prototype.move = function(distance) {
 		if (distance < 1 || distance > 2) {
 			throw new Error('Distance can only be set to 1 or 2.');
 		}
 
-	          var direction = this.direction;
+	        /* Retrieve the current direction of the rover to move on. */
+                var direction = this.direction;
 
 		var square = this.getSquare(direction, distance);
 
