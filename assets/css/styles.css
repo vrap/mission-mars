@@ -108,6 +108,10 @@ h5 {
 
 #containerUpload {
 	background-color: rgba(0, 0, 0, 0.5);
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding-bottom: 10px;
 }
 
 #uploadedMap {
