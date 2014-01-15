@@ -63,13 +63,51 @@
 	}
     };
 
+    nsVoyager.Voyager.prototype.voyage = function(destination) {
+	var currentDirection, invertedDirection, randPosition;
+	var position = { x: this.speculator.rover.x, y: this.speculator.rover.y };
+	var xDirection = nsRover.Rover.DIRECTION.WEST;
+	var yDirection = nsRover.Rover.DIRECTION.SOUTH;
+
+	if (position.x < destination.x) {
+	    xDirection = nsRover.Rover.DIRECTION.EAST;
+	}
+	if (position.y < destination.y) {
+	    yDirection = nsRover.Rover.DIRECTION.NORTH;
+	}
+
+	randPosition = getRandomInt(0, 100);
+
+	if (randPosition < 50) {
+	    currentDirection = xDirection;
+	    invertedDirection = yDirection;
+	}
+	else {
+	    currentDirection = yDirection;
+	    invertedDirection = xDirection;
+	}
+
+	while (this.speculator.rover.x != destination.x && this.speculator.rover.y != destination.y) {	    
+	    var distance = ((position - destination) > 1) ? 2 : 1;
+
+	    this.speculator.rover.setDirection(currentDirection);
+
+	    try {
+		this.speculator.rover.move(distance);
+	    }
+	    catch (error) {
+		this.speculator.setDirection(yDirection);
+	    }
+	}
+    };
+
     nsVoyager.Voyager.prototype.moveAt = function(direction, destination) {
 	var position = this.speculator.rover[direction];
 	while (destination < position) {
 	    var distance = ((position-destination) > 1) ? 2 : 1;
 
 	    this.speculator.rover.move(distance);
-	    position = this.speculator.rover[direction];
+	    gposition = this.speculator.rover[direction];
 	}
     };
 

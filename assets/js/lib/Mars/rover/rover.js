@@ -1,5 +1,5 @@
 (function() {
-	var nsRover = using('mars.rover');
+	var nsRover  = using('mars.rover');
 	var nsCommon = using('mars.common');
 
 	/**
@@ -10,7 +10,7 @@
 	 * @param  {integer} y Y position of the rover when spawning
 	 * @param  {integer} tankSize Define the energy limit that the rover can handle.
 	 */
-	nsRover.Rover = function(map, x, y, tankSize) {
+	nsRover.Rover = function(map, x, y, tankSize, memory) {
 		/* Check if the map is in the good format. */
 		if (! (map instanceof nsCommon.Map)) {
 			throw new Error('Map need to be an instance of Map.');
@@ -40,6 +40,15 @@
 
 		/* Cost of deploying solar panels. */
 		this.panelsCost = 5;
+
+		this.memory = memory;
+
+		var spawnSquare = this.map.getSquare(x, y);
+
+		if (spawnSquare) {
+			/* Add square to memory. */
+			this.memory.create(x, y, spawnSquare.z, spawnSquare.nature, 0);
+		}
 	};
 
 	/* Constant that represent the list of possible directions. */
@@ -98,6 +107,7 @@
 				this.direction = directionCode;
 
 				this.publishEvent('direction', {lastDirection: lastDirection});
+				
 				break;
 			}
 		}
@@ -175,6 +185,9 @@
 		var square = this.map.getSquare(x, y);
 
 		if (square) {
+			/* Add square to memory. */
+			this.memory.create(x, y, square.z, square.nature, 0);
+
 			return {
 				x: x,
 				y: y,
@@ -201,18 +214,17 @@
 	        /* Retrieve the current direction of the rover to move on. */
                 var direction = this.direction;
 
-		var square = this.getSquare(direction, distance);
+		//var square = this.getSquare(direction, distance);
+		var currentSquare = this.getSquare(direction, 0);
+		var destinationSquare = this.getSquare(direction, distance);
 
 		// If the rover is still within the limits of the map
-		if (square !== null) {
-			var lastX = this.x;
-			var lastY = this.y;
-
-			// Scan the elevation of the current square is free
-			var currentSquareZ = square.z;
-
-			this.x = square.x;
-			this.y = square.y;
+		if (destinationSquare !== null) {
+			//var lastX = this.x;
+			//var lastY = this.y;
+			var lastX = currentSquare.x;
+			var lastY = currentSquare.y;
+			var lastZ = currentSquare.z;
 
 			for (var directionName in this.constructor.DIRECTION) {
 				var directionCode = this.constructor.DIRECTION[directionName];
@@ -227,21 +239,30 @@
 
 						// Calculate the cost of travel and removes from tank
 						if (tankCost <= this.tank) {
-							this.tank -= tankCost;
+							// If the slope is <= 150%
+							var slope = this.calculateSlop(lastZ, destinationSquare.z, distance);
 
-							this.moves++;
+							if (slope <= 150) {			
+								// Move the rover to the destination square
+								this.x = destinationSquare.x;
+								this.y = destinationSquare.y;
 
-							this.publishEvent(
-								'move',
-								{
+								this.tank -= tankCost;
+
+								this.moves++;
+
+								this.publishEvent('move', {
 									direction: direction,
 									distance: distance,
 									lastX: lastX,
 									lastY: lastY,
 									newX: this.x,
 									newY: this.y
-								}
-							);
+								});
+							}
+							else {
+								throw new Error('Slope is too important.');
+							}
 
 							break;
 						}
@@ -269,14 +290,11 @@
 		}
 		else {
 			if (distance == 0 || distance == 1) {
-				this.publishEvent(
-					'scanElevation',
-					{
-						direction: direction,
-						distance: distance,
-						elevation: square.z
-					}
-				);
+				this.publishEvent('scanElevation', {
+					direction: direction,
+					distance: distance,
+					elevation: square.z
+				});
 			}
 			else if (distance >= 2) {
 				var scanCost = 0.1 * distance;
@@ -284,14 +302,11 @@
 				if (scanCost <= this.tank) {
 					this.tank -= scanCost;
 
-					this.publishEvent(
-						'scanElevation',
-						{
-							direction: direction,
-							distance: distance,
-							elevation: square.z
-						}
-					);
+					this.publishEvent('scanElevation', {
+						direction: direction,
+						distance: distance,
+						elevation: square.z
+					});
 				}
 			}
 		}
@@ -317,40 +332,43 @@
 			if (distance == 0 && this.tank >= 0.1) {
 				this.tank -= 0.1;
 
-				this.publishEvent(
-					'scanMaterial',
-					{
-						direction: direction,
-						distance: distance,
-						type: square.type
-					}
-				);
+				this.publishEvent('scanMaterial', {
+					direction: direction,
+					distance: distance,
+					type: square.type
+				});
 			}
 			else if (distance == 1 && this.tank >= 0.2) {
 				this.tank -= 0.2;
 
-				this.publishEvent(
-					'scanMaterial',
-					{
-						direction: direction,
-						distance: distance,
-						type: square.type
-					}
-				);
+				this.publishEvent('scanMaterial', {
+					direction: direction,
+					distance: distance,
+					type: square.type
+				});
 			}
 			else if (distance == 2 && this.tank >= 0.4) {
 				this.tank -= 0.4;
 
-				this.publishEvent(
-					'scanMaterial',
-					{
-						direction: direction,
-						distance: distance,
-						type: square.type
-					}
-				);
+				this.publishEvent('scanMaterial', {
+					direction: direction,
+					distance: distance,
+					type: square.type
+				});
 			}
 		}
+	};
+
+	/**
+	 * Calculate the slope between the current square and the destination square.
+	 * 
+	 * @param  {integer} currentZ      Current square elevation.
+	 * @param  {integer} destinationZ  Destination square elevation.
+	 * @param  {integer} distance      Distance between current and destination squares.
+	 * @return {integer}      		   The slope (in %).
+	 */
+	nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
+		return Math.round((destinationZ - currentZ) / distance);
 	};
 
 	nsRover.Rover.prototype.deploySolarPanels = function() {
