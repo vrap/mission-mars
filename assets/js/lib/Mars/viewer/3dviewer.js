@@ -29,12 +29,13 @@
 		this.scene = new THREE.Scene();
 
 		this._loadLight();
-		this._loadCamera();
+		this._loadCamera(-(0.8*this.viewer.map.getWidth()), 4, 0);
 		this._loadRenderer();
 		this._loadMap();
 		this._loadMaterials();
-		this._loadControls();
-
+		if(this.options.cameraControl) {
+			this._loadControls();
+		}
 		this._loadFog();
 
 		// Run the refresh animation while.
@@ -50,20 +51,19 @@
 
 	nsViewer.Viewer3D.prototype._loadRenderer = function() {
 		// Create renderer, define the width/height and append to the dom.
-		this.renderer = new THREE.WebGLRenderer({ antialias: false });
-		this.renderer.setClearColor( 0xd3cfbe, 1 );
+		this.renderer = new THREE.WebGLRenderer();
+		this.renderer.rendererSize = {width: window.innerWidth, height: window.innerHeight, quality: 100, maxQuality: 400, minQuality: 20};
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
-
 		this.element.appendChild(this.renderer.domElement);
 	};
 
 	nsViewer.Viewer3D.prototype._loadControls = function() {
-		//this.controls = new THREE.OrbitControls(this.camera);
 		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 1;
-        this.controls.lookSpeed = 0.001;
-        this.controls.lookVertical = true;
-        this.controls.activeLook = this.options.cameraControl;
+    this.controls.lookSpeed = 0.001;
+    this.controls.lookVertical = true;
+    this.controls.activeLook = this.options.cameraControl;
+    
 	};
 
 	nsViewer.Viewer3D.prototype._loadLight = function() {
@@ -72,7 +72,7 @@
 		this.scene.add( hemisphereLight );
 	};
 
-	nsViewer.Viewer3D.prototype._loadCamera = function() {
+	nsViewer.Viewer3D.prototype._loadCamera = function(x, y, z) {
 		// Add a camera
 		this.camera = new THREE.PerspectiveCamera(
 			75,
@@ -80,13 +80,13 @@
 			1,
 			1000
 		);
-		this.camera.position.x = -380;
-		this.camera.position.y = 8;
-		this.camera.position.z = 0;
+		this.camera.position.x = x; // Front - Back
+		this.camera.position.y = y; // Up - Down
+		this.camera.position.z = z; // Right - Left
 		this.camera.setLens( 50 );
+		this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
 		this.scene.add(this.camera);
 	};
-
 
 	nsViewer.Viewer3D.prototype._loadMap = function() {
 		this.geometry = new THREE.PlaneGeometry(
@@ -140,7 +140,6 @@
 
 	}
 
-
 	nsViewer.Viewer3D.prototype._loadMaterials = function() {
 		if(undefined !== this.mesh) {
 			this.scene.remove(this.mesh);
@@ -176,13 +175,39 @@
 	};
 
 	nsViewer.Viewer3D.prototype.render = function() {
-		//this.renderer.setSize( 650, 650 );
-		this.controls.update(1);
+		if(this.options.cameraControl) {
+			this.controls.update(1);
+		}
 		this.renderer.render(this.scene, this.camera);
 	};
 
 	nsViewer.Viewer3D.prototype.animate = function() {
 		requestAnimationFrame(function() { this.animate(); }.bind(this));
 		this.render();
+	};
+
+	nsViewer.Viewer3D.prototype.move = function(direction) {
+		switch(direction){
+			case 'straight': 
+				this.camera.position.x++; 
+				break;
+			case 'back': 
+				this.camera.position.x--;
+				break;
+			case 'left':
+				this.camera.position.z++; 
+				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(90));
+				break;
+			case 'right': 
+				this.camera.position.z--; 
+				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
+				break;
+			case 'up':
+				this.camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degToRad(45));
+				break;
+			case 'down': 
+				this.camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degToRad(-45));
+				break;
+		}
 	};
 })();
