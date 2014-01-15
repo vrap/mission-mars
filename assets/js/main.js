@@ -89,7 +89,7 @@
 	observable.subscribe('rover.scanMaterial', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
+		//viewer.viewers[renderDiv].move(data.rover.moves);
 		console.log('material found', data);
 		switch(data.type) {
 			case 0:
@@ -149,7 +149,6 @@
 	
 	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-
         console.log('STARTING VOYAGER');
         speculator.start({x: 10, y: 20});
 })();
