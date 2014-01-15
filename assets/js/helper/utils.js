@@ -33,3 +33,7 @@ function drawCircle (x_center, y_center, rayon, z, elements) {
 		m = m + 8*x + 4;
 	}
 }
+
+function degToRad (degrees) {
+	return degrees * Math.PI/180;
+}
