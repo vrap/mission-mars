@@ -61,7 +61,7 @@
 		//this.controls = new THREE.OrbitControls(this.camera);
 		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 1;
-        this.controls.lookSpeed = 0.002;
+        this.controls.lookSpeed = 0.001;
         this.controls.lookVertical = true;
         this.controls.activeLook = this.options.cameraControl;
 	};
