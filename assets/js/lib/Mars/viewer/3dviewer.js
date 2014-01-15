@@ -29,7 +29,7 @@
 		this.scene = new THREE.Scene();
 
 		this._loadLight();
-		this._loadCamera(-(0.8*this.viewer.map.getWidth()), 4, 0);
+		this._loadCamera(-(0.75*this.viewer.map.getWidth()), 4, 0);
 		this._loadRenderer();
 		this._loadMap();
 		this._loadMaterials();
