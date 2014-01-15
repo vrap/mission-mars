@@ -506,13 +506,13 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 
 			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
 			// square 2
-			this._map[squareX][squareYMoinUn].z = (square1.z+square5.z+square3.z)/3;
+			this._map[squareX][squareYMoinUn].z = Math.floor((square1.z+square5.z+square3.z)/3);
 			// square 4
-			this._map[squareXMoinUn][squareY].z = (square1.z+square5.z+square7.z)/3;
+			this._map[squareXMoinUn][squareY].z = Math.floor((square1.z+square5.z+square7.z)/3);
 			// square 8
-			this._map[squareX][squareYPlusUn].z = (square5.z+square7.z+square9.z)/3;
+			this._map[squareX][squareYPlusUn].z = Math.floor((square5.z+square7.z+square9.z)/3);
 			// square 6
-			this._map[squareXPlusUn][squareY].z = (square5.z+square3.z+square9.z)/3;
+			this._map[squareXPlusUn][squareY].z = Math.floor((square5.z+square3.z+square9.z)/3);
 
 			/**
 			* Materials smothing
