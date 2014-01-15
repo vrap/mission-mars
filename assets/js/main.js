@@ -18,9 +18,9 @@
 	var materialOther = new nsMaterial.Other();
 
 	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -3, 40, 2);
-	var elementHill   = new nsElements.HillModel([materialSand], -20, 3, 0);
-	var elementRavine = new nsElements.RavineModel([materialRock], -20, 20, 0);
+	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
+	var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 0);
+	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 0);
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
@@ -36,7 +36,7 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
-		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 200, 200, -10, 10);
+		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
 	
