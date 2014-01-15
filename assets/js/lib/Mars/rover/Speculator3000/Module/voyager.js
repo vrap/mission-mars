@@ -37,30 +37,8 @@
      */
     nsVoyager.Voyager.prototype.start = function() {
 	var destination = arguments[0][0];
-	var position = { x: this.speculator.rover.x, y: this.speculator.rover.y };
-	var xDirection = nsRover.Rover.DIRECTION.WEST;
-	var yDirection = nsRover.Rover.DIRECTION.SOUTH;
 
-	if (position.x < destination.x) {
-	    xDirection = nsRover.Rover.DIRECTION.EAST;
-	}
-	if (position.y < destination.y) {
-	    yDirection = nsRover.Rover.DIRECTION.NORTH;
-	}
-
-	var randPosition = getRandomInt(0, 100);
-	if (randPosition <= 50) {
-	    this.speculator.rover.setDirection(xDirection);
-	    this.moveAt('x', destination.x);
-	    this.speculator.rover.setDirection(yDirection);
-	    this.moveAt('y', destination.y);
-	}
-	else {
-	    this.speculator.rover.setDirection(yDirection);
-	    this.moveAt('y', destination.y);
-	    this.speculator.rover.setDirection(xDirection);
-	    this.moveAt('x', destination.x);
-	}
+	this.voyage(destination);
     };
 
     nsVoyager.Voyager.prototype.voyage = function(destination) {
@@ -78,7 +56,11 @@
 
 	randPosition = getRandomInt(0, 100);
 
-	if (randPosition < 50) {
+	directions = {};
+	directions[xDirection] = 'x';
+	directions[yDirection] = 'y';
+
+	if (randPosition > 100) {
 	    currentDirection = xDirection;
 	    invertedDirection = yDirection;
 	}
@@ -87,8 +69,13 @@
 	    invertedDirection = xDirection;
 	}
 
-	while (this.speculator.rover.x != destination.x && this.speculator.rover.y != destination.y) {	    
+	while (this.speculator.rover.x != destination.x || this.speculator.rover.y != destination.y) {	    
 	    var distance = ((position - destination) > 1) ? 2 : 1;
+
+	    if (this.speculator.rover[directions[currentDirection]] == destination[directions[currentDirection]]) {
+		currentDirection = invertedDirection;
+		invertedDirection = this.speculator.rover.direction; 
+	    }
 
 	    this.speculator.rover.setDirection(currentDirection);
 
@@ -96,18 +83,9 @@
 		this.speculator.rover.move(distance);
 	    }
 	    catch (error) {
-		this.speculator.setDirection(yDirection);
+		invertedDirection = currentDirection;
+		currentDirection = this.speculator.rover.direction;
 	    }
-	}
-    };
-
-    nsVoyager.Voyager.prototype.moveAt = function(direction, destination) {
-	var position = this.speculator.rover[direction];
-	while (destination < position) {
-	    var distance = ((position-destination) > 1) ? 2 : 1;
-
-	    this.speculator.rover.move(distance);
-	    gposition = this.speculator.rover[direction];
 	}
     };
 
