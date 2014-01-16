@@ -35,7 +35,7 @@
 		this.scene = new THREE.Scene();
 		// Load every parts of the viewer
 		this._loadLight();
-		this._loadCamera(-(0.8*this.viewer.map.getWidth()), 4, 0);
+		this._loadCamera(-(0.75*this.viewer.map.getWidth()), 4, 0);
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
