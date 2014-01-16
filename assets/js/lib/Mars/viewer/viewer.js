@@ -2,8 +2,7 @@
 	var nsViewer = using('mars.viewer');
 
 	/**
-	 * [ description]
-	 * @return {[type]}         [description]
+	 * Constructor
 	 */
 	nsViewer.Viewer = function(map) {
 		this.map = map;
@@ -14,6 +13,9 @@
 		};
 	};
 
+	/**
+	 * Check if the viewer is instanciated
+	 */
 	nsViewer.Viewer.prototype.hasViewer = function(element) {
 		if (this.viewers.hasOwnProperty(element)) {
 			return true;
@@ -22,35 +24,31 @@
 		return false;
 	};
 
+	/**
+	 * Instancy a viewer if it's available
+	 */
 	nsViewer.Viewer.prototype.load = function(type, element, options) {
-
+		// Check if the viewer typr is available
 		if (this._allowedType.hasOwnProperty(type)) {
 			type = this._allowedType[type];
-
-			// if (element instanceof HTMLDivElement) {
-				if (!this.hasViewer(element)) {
-					this.viewers[element] = new nsViewer[type](this, element, options);
-
-					return this.viewers[element];
-				}
-			//}
-			// else { 
-			// 	throw new TypeError('DOM Element "' + element + '" does not exist');
-			// }
+			// When the viewer is not already loaded
+			if (!this.hasViewer(element)) {
+				this.viewers[element] = new nsViewer[type](this, element, options);
+				// Return new instance of viewer
+				return this.viewers[element];
+			}
 		}
 	};
 
 	/**
-	 * [ description]
-	 * @return {[type]} [description]
+	 * Load 2D Viewer
 	 */
 	nsViewer.Viewer.prototype.load2D = function(element, options) {
 		return this.load('2d', element, options);
 	};
 
 	/**
-	 * [ description]
-	 * @return {[type]} [description]
+	 * Load 3D Viewer
 	 */
 	nsViewer.Viewer.prototype.load3D = function(element, options) {
 		return this.load('3d', element, options);
