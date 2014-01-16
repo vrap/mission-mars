@@ -27,7 +27,12 @@
 	 * @param {boolean}
 	 * @return {THREE.MeshBasicMaterial} Instance of THREE.MeshBasicMaterial with the texture color and wireframe
 	 */
-	nsMaterials.Rock.prototype.getColor = function(wireframe) {
-		return new THREE.MeshPhongMaterial( { map: this.texture/*color: this.textureColor*/, wireframe: wireframe });
+	nsMaterials.Rock.prototype.getColor = function(wireframe, color) {
+		if (true == color) {
+			// Material color
+			return new THREE.MeshPhongMaterial( { color: this.textureColor, wireframe: wireframe });
+		}
+		// Material texture image
+		return new THREE.MeshPhongMaterial( { map: this.texture, wireframe: wireframe });
 	};
 })();

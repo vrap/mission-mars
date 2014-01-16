@@ -179,12 +179,12 @@
 		var natures = [];
 		// Materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(this.options.wireframe);
-		materials[sand.id] = sand.getColor(this.options.wireframe);
-		materials[ore.id] = ore.getColor(this.options.wireframe);
-		materials[iron.id] = iron.getColor(this.options.wireframe);
-		materials[ice.id] = ice.getColor(this.options.wireframe);
-		materials[other.id] = other.getColor(this.options.wireframe);
+		materials[rock.id] = rock.getColor(this.options.wireframe, false);
+		materials[sand.id] = sand.getColor(this.options.wireframe, false);
+		materials[ore.id] = ore.getColor(this.options.wireframe, false);
+		materials[iron.id] = iron.getColor(this.options.wireframe, false);
+		materials[ice.id] = ice.getColor(this.options.wireframe, false);
+		materials[other.id] = other.getColor(this.options.wireframe, false);
 		
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
