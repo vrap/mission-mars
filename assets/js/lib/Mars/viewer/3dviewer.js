@@ -176,7 +176,7 @@
 			this.scene.remove(this.mesh);
 		}
 
-		var natures = [];
+		var types = [];
 		// Materials
 		var materials = []; 
 		materials[rock.id] = rock.getColor(this.options.wireframe, false);
@@ -189,14 +189,14 @@
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
 			for (var j = 0; j < this.viewer.map.getHeight()-1; j++) {
-				natures.push(this.viewer.map._squares[i][j].nature);
-				natures.push(this.viewer.map._squares[i][j].nature);
+				types.push(this.viewer.map._squares[i][j].type);
+				types.push(this.viewer.map._squares[i][j].type);
 			}
 		}
 
 		// Assign a material to each face
 		for( var i = 0; i <= this.geometry.faces.length-1; i ++ ) {
-			this.geometry.faces[ i ].materialIndex = natures[i];
+			this.geometry.faces[ i ].materialIndex = types[i];
 		}
 
 		// Init the mesh

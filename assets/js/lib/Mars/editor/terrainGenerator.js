@@ -62,7 +62,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			this._map[i] = new Array();
 			for (var j = 0; j < this._height; j++) {
 				this._map[i][j] = { z: 0,
-					nature: this._getFloorType()
+					type: this._getFloorType()
 				};
 			}
 		}
@@ -253,7 +253,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 		if(xPlusUn >= this._width){ xPlusUn = this._width-1; }
 		if(yPlusUn >= this._height){ yPlusUn = this._height-1; }
 
-		square1 = this._map[xMoinUn][yMoinUn].nature;
+		square1 = this._map[xMoinUn][yMoinUn].type;
 
 		switch (square1) {
 			case rock.id : nbRock++; break;
@@ -262,7 +262,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;
 		}
 
-		square2 = this._map[x][yMoinUn].nature;
+		square2 = this._map[x][yMoinUn].type;
 		switch (square2) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -270,7 +270,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;
 		}
 
-		square3 = this._map[xPlusUn][yMoinUn].nature;
+		square3 = this._map[xPlusUn][yMoinUn].type;
 		switch (square3) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -278,7 +278,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;
 		}
 
-		square4 = this._map[xMoinUn][y].nature;
+		square4 = this._map[xMoinUn][y].type;
 		switch (square4) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -286,7 +286,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;
 		}
 
-		square6 = this._map[xPlusUn][y].nature;
+		square6 = this._map[xPlusUn][y].type;
 		switch (square6) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -294,7 +294,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;
 		}
 
-		square7 = this._map[xMoinUn][yPlusUn].nature;
+		square7 = this._map[xMoinUn][yPlusUn].type;
 		switch (square7) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -302,7 +302,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;
 		}
 
-		square8 = this._map[x][yPlusUn].nature;
+		square8 = this._map[x][yPlusUn].type;
 		switch (square8) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -310,7 +310,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			case other.id : nbOther++; break;		
 		}
 
-		square9 = this._map[xPlusUn][yPlusUn].nature;
+		square9 = this._map[xPlusUn][yPlusUn].type;
 		switch (square9) {
 			case rock.id : nbRock++; break;
 			case sand.id : nbSand++; break;
@@ -469,39 +469,39 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			// (la case selectionné c'est la 5)
 			square1 = {
 				z: this._map[squareXMoinUn][squareYMoinUn].z,
-				nature: this._map[squareXMoinUn][squareYMoinUn].nature
+				type: this._map[squareXMoinUn][squareYMoinUn].type
 			};
 			square2 = {
 				z: this._map[squareX][squareYMoinUn].z,
-				nature: this._map[squareX][squareYMoinUn].nature
+				type: this._map[squareX][squareYMoinUn].type
 			};
 			square3 = {
 				z: this._map[squareXPlusUn][squareYMoinUn].z,
-				nature: this._map[squareXPlusUn][squareYMoinUn].nature
+				type: this._map[squareXPlusUn][squareYMoinUn].type
 			};
 			square4 = {
 				z: this._map[squareXMoinUn][squareY].z,
-				nature: this._map[squareXMoinUn][squareY].nature
+				type: this._map[squareXMoinUn][squareY].type
 			};
 			square5 = {
 				z: this._map[squareX][squareY].z,
-				nature: this._map[squareX][squareY].nature
+				type: this._map[squareX][squareY].type
 			};
 			square6 = {
 				z: this._map[squareXPlusUn][squareY].z,
-				nature: this._map[squareXPlusUn][squareY].nature
+				type: this._map[squareXPlusUn][squareY].type
 			};
 			square7 = {
 				z: this._map[squareXMoinUn][squareYPlusUn].z,
-				nature: this._map[squareXMoinUn][squareYPlusUn].nature
+				type: this._map[squareXMoinUn][squareYPlusUn].type
 			};
 			square8 = {
 				z: this._map[squareX][squareYPlusUn].z,
-				nature: this._map[squareX][squareYPlusUn].nature
+				type: this._map[squareX][squareYPlusUn].type
 			};
 			square9 = {
 				z: this._map[squareXPlusUn][squareYPlusUn].z,
-				nature: this._map[squareXPlusUn][squareYPlusUn].nature
+				type: this._map[squareXPlusUn][squareYPlusUn].type
 			};
 
 			// Sur les case 2-4-8-9 attribution de nouvelle valeur en calculant la moyenne des valeurs des cases les entourants.
@@ -517,12 +517,12 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 			/**
 			* Materials smothing
 			*/
-			if (square5.nature != iron.id) { // The iron doesn't move
-				if (square5.nature == ice.id) {
-					// Switch the nature present in the actual iceblok with the tracker
-					temp = this._map[iceZoneCurrentX][iceZoneCurrentY].nature;
-					this._map[iceZoneCurrentX][iceZoneCurrentY].nature = this._map[squareX][squareY].nature;
-					this._map[squareX][squareY].nature = temp;
+			if (square5.type != iron.id) { // The iron doesn't move
+				if (square5.type == ice.id) {
+					// Switch the type present in the actual iceblok with the tracker
+					temp = this._map[iceZoneCurrentX][iceZoneCurrentY].type;
+					this._map[iceZoneCurrentX][iceZoneCurrentY].type = this._map[squareX][squareY].type;
+					this._map[squareX][squareY].type = temp;
 
 					if (iceZoneCurrentX < endIceZoneX) {
 						iceZoneCurrentX++;
@@ -533,7 +533,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 						iceZoneCurrentY++;
 					}
 				} else { // for all others
-					this._map[squareX][squareY].nature = this._getAroundMajorMaterial(squareX, squareY);
+					this._map[squareX][squareY].type = this._getAroundMajorMaterial(squareX, squareY);
 				}
 			}
 
@@ -554,8 +554,11 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 	 */
 	nsEditor.TerrainGenerator._toJSON = function() {
 		var map = {
-			"echelle": 100,
-			"lignes": this._map
+			"size": {
+        "x": this._width,
+        "y": this._height
+    	},
+			"map": this._map
 		};
 
 		return JSON.stringify(map);
