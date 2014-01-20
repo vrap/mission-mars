@@ -30,7 +30,7 @@
 	 */
 	nsElements.HillModel.prototype.create = function(width, height, materials) {
 		// Create mini map from parent
-		this.parent.create(width, height, materials);
+		this.parent.create.call(this, width, height, materials);
 
 		var minSize = (width <= height) ? width : height,
 			z = getRandomInt(1, Math.round(this._zMax/10)),

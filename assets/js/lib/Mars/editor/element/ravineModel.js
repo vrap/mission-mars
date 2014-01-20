@@ -30,7 +30,7 @@
 	 */
 	nsElements.RavineModel.prototype.create = function(width, height, materials) {
 		/* Initialize the creation of the element. */
-		this.parent.create(width, height, materials);
+		this.parent.create.call(this, width, height, materials);
 
 		var beginningX  	= getRandomInt(0, Math.round(width/4)),  // Point de départ sur la largeur
 			beginningY  	= getRandomInt(0, height), // Point de départ sur la longueur
