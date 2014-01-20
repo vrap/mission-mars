@@ -336,50 +336,25 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 
 	nsEditor.TerrainGenerator._createElements = function() {
 		for (var elementKey in this._elements) {
-            // console.log(this._elements);
-            // console.log(this._elements[element]);
+			var element = this._elements[elementKey].model,
+				nbElement = this._elements[elementKey].number,
+				sizeX,
+				sizeY,
+				posX,
+				posY,
+				temp,
+				objectTemp;
 
-            // var array4Points = Array();
-
-
-            //for (var elementNumber = 0; elementNumber < utmost; elementNumber++) {   
-                var element = this._elements[elementKey];
-
-                // console.log(element + ' est crée, elementNumber : ' + elementNumber);
-                //  console.log(element);
-      
-                var sizeX = getRandomInt(10, 200);
-                var sizeY = getRandomInt(10, 200);
-                var posX  = getRandomInt(0, this._width);
-                var posY  = getRandomInt(0, this._height);
-
-                //console.log(sizeX + ' ' + sizeY + ' ' + posX + ' ' + posY);
-
-                /*array4Points.push(posX, (posX + sizeX), (posY + sizeY), posY);
-
-                if (array4Points.indexOf(searchElement[, fromIndex]) != -1) {
-
-                }*/
-
-                var test = element.create(sizeX, sizeY);
-                var objectTest = JSON.parse(test);
-
-                this._pushElement(objectTest, posX, posY);
-            //}
-
-
-            /*var element = this._elements[elementKey];
-
-            var sizeX = getRandomInt(5, 20);
-            var sizeY = getRandomInt(5, 20);
-            var posX  = getRandomInt(0, 100);
-            var posY  = getRandomInt(0, 100);
-
-            var test = element.create(sizeX, sizeY);
-            var objectTest = JSON.parse(test);
-
-            this._pushElement(objectTest, posX, posY);*/
-        }
+			for (var i = 0; i < nbElement; i++) {
+				sizeX = getRandomInt(10, 200);
+      	sizeY = getRandomInt(10, 200);
+      	posX  = getRandomInt(0, this._width);
+      	posY  = getRandomInt(0, this._height);
+      	temp = element.create(sizeX, sizeY, element._allowedMaterials);
+      	objectTemp = JSON.parse(temp);
+      	this._pushElement(objectTemp, posX, posY);
+			}
+    }
 	};
 
 	/**

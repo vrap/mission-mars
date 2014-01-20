@@ -19,8 +19,8 @@
 
 	/* Loading elements. */
 	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
-	var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 0);
-	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 0);
+	var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
+	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
 
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
@@ -36,7 +36,20 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
-		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], [elementCrater, elementCrater, elementCrater, elementHill, elementRavine], 400, 400, -10, 10);
+		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
+			[{
+				"model": elementCrater,
+				"number": 1
+			},
+			{
+				"model": elementHill,
+				"number": 2
+			},
+			{
+				"model": elementRavine,
+				"number": 3
+			}],
+			400, 400, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
 	
@@ -133,7 +146,7 @@
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 50, 50, 100);
+	/*var rover = new nsRover.Rover(map, 50, 50, 100);
 	var memory = new nsMemory.Memory();
 	var speculator = new nsSpeculator.S3000(rover, memory);
 	speculator.enableModule('voyager');
@@ -150,5 +163,5 @@
 	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
         console.log('STARTING VOYAGER');
-        speculator.start({x: 10, y: 20});
+        speculator.start({x: 10, y: 20});*/
 })();
