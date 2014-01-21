@@ -24,7 +24,7 @@
 	 */
 	nsCommon.Map.prototype._fromJSON = function(terrain) {
 		this._terrain = JSON.parse(terrain);
-		this._squares = this._terrain.lignes;
+		this._squares = this._terrain.map;
 	};
 
 	/**
