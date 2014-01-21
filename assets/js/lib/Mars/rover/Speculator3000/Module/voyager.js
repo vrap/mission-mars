@@ -69,6 +69,37 @@
 	    invertedDirection = xDirection;
 	}
 
+	/*
+	 * 1. Déplacement vertical vers la destination final.
+	 * 2. Si bloquer avant l'arriver, regarder dans quel position on est le plus proche de la destination (x ou y)
+	 * 3. Avancer dans la direction la plus proche jusqu'à un obstacle ou l'arriver.
+	 * 4. Changer de direction.
+	 */
+	var result = false;
+	var canContinue = true;
+	var oldPosition = {x: this.speculator.rover.x, y: this.speculator.rover.y};
+	while (canContinue) {
+	    var rover = this.speculator.rover;
+
+	    if (rover.x == destination.x && rover.y == destination.y) {
+		result = true;
+		break;
+	    }
+	    if (rover.x == oldPosition.x && rover.y == oldPosition.y) {
+		break;
+	    }
+
+	    oldPosition = {x: rover.x, y: rover.y};
+	}
+
+	if (result == true) {
+	    console.log('Mission successfull !');
+	}
+	else {
+	    console.log('Mission failed !');
+	}
+	/*
+	var i = 0;
 	while (this.speculator.rover.x != destination.x || this.speculator.rover.y != destination.y) {	    
 	    var distance = ((position - destination) > 1) ? 2 : 1;
 
@@ -86,7 +117,12 @@
 		invertedDirection = currentDirection;
 		currentDirection = this.speculator.rover.direction;
 	    }
+
+	    console.log('moved to : ' + this.speculator.rover.x + ' / ' + this.speculator.rover.y);
+
+	    i++;
 	}
+	*/
     };
 
     /* Add the voyager module to Speculator3000. */
