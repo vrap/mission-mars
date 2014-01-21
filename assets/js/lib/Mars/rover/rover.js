@@ -47,7 +47,7 @@
 
 		if (spawnSquare) {
 			/* Add square to memory. */
-			this.memory.create(x, y, spawnSquare.z, spawnSquare.nature, 0);
+			this.memory.create(x, y, spawnSquare.z, spawnSquare.type, 0);
 		}
 	};
 

@@ -47,7 +47,7 @@
 			},
 			{
 				"model": elementRavine,
-				"number": 3
+				"number": 0
 			}],
 			400, 400, -10, 10);
 		map = new nsCommon.Map(terrain);
@@ -147,11 +147,10 @@
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 50, 50, 100);
 	var memory = new nsMemory.Memory();
-	var rover = new nsRover.Rover(map, 50, 50, 100, memory);
+        var rover = new nsRover.Rover(map, 50, 50, 100, memory);
 	var speculator = new nsSpeculator.S3000(rover);
-	
+
 	speculator.enableModule('voyager');
 
 	rover.setDirection(nsRover.Rover.DIRECTION.SOUTH);
