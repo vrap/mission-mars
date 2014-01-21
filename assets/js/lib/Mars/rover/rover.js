@@ -153,25 +153,25 @@
 
 		switch (direction) {
 			case this.constructor.DIRECTION.NORTH:
-				y += distance;
+				y -= distance;
 			break;
 			case this.constructor.DIRECTION.NORTH_EAST:
-				y += distance;
+				y -= distance;
 				x += distance;
 			break;
 			case this.constructor.DIRECTION.NORTH_WEST:
-				y += distance;
+				y -= distance;
 				x -= distance;
 			break;
 			case this.constructor.DIRECTION.SOUTH:
-				y -= distance;
+				y += distance;
 			break;
 			case this.constructor.DIRECTION.SOUTH_EAST:
-				y -= distance;
+				y += distance;
 				x += distance;
 			break;
 			case this.constructor.DIRECTION.SOUTH_WEST:
-				y -= distance;
+				y += distance;
 				x -= distance;
 			break;
 			case this.constructor.DIRECTION.EAST:

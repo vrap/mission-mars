@@ -1,15 +1,27 @@
+/**
+ * Return a random integer between min and max
+ */
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+/**
+ * Return a random value in an array
+ */
 function getRandomIntArray(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
+/**
+ * Return maximal value of an array
+ */
 function maxValueOfArray(array) {
 	return Math.max.apply(Math, array);
 }
 
+/**
+ * Draw a circle with the Bresenham algorithm
+ */
 function drawCircle (x_center, y_center, rayon, z, elements) {
 	var x =0,
 		y = rayon,
@@ -32,4 +44,11 @@ function drawCircle (x_center, y_center, rayon, z, elements) {
 		x++;
 		m = m + 8*x + 4;
 	}
+}
+
+/**
+ * Converts a value in degrees to radians
+ */
+function degToRad (degrees) {
+	return degrees * Math.PI/180;
 }

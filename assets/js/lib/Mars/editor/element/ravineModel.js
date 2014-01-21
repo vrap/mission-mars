@@ -32,7 +32,7 @@
 		/* Initialize the creation of the element. */
 		this.parent.create(width, height, materials);
 
-		var beginningX  	= getRandomInt(0, width),  // Point de départ sur la largeur
+		var beginningX  	= getRandomInt(0, Math.round(width/4)),  // Point de départ sur la largeur
 			beginningY  	= getRandomInt(0, height), // Point de départ sur la longueur
 			ravineWidth 	= getRandomInt(3, 8),      // Largeur du ravin
 			ravineDirection = getRandomInt(0, 1);      // 0 ravin horizontal, 1 ravin vertical
@@ -66,17 +66,17 @@
 				// Si la largeur du ravin est paire
 				if (ravineWidth % 2 == 0) {
 					for (var j = 0; j < ravineWidth / 2; j++) {
-						this._element[newBeginningX + j][i].z = -10;
-						this._element[newBeginningX - j][i].z = -10;
+						this._element[newBeginningX + j][i].z = -100;
+						this._element[newBeginningX - j][i].z = -100;
 					}
 				}
 				// Sinon la largeur du ravin est impaire
 				else {
-					this._element[newBeginningX][i].z = -10;
+					this._element[newBeginningX][i].z = -100;
 
 					for (var j = 0; j < (ravineWidth - 1) / 2; j++) {
-						this._element[newBeginningX + j][i].z = -10;
-						this._element[newBeginningX - j][i].z = -10;
+						this._element[newBeginningX + j][i].z = -100;
+						this._element[newBeginningX - j][i].z = -100;
 					}
 				}
 			}
@@ -85,17 +85,17 @@
 				// Si largeur paire
 				if (ravineWidth % 2 == 0) {
 					for (var j = 0; j < ravineWidth / 2; j++) {
-						this._element[beginningX + j][i].z = -10;
-						this._element[beginningX - j][i].z = -10;
+						this._element[beginningX + j][i].z = -100;
+						this._element[beginningX - j][i].z = -100;
 					}
 				}
 				// Si largeur impaire
 				else {
-					this._element[beginningX][i].z = -10;
+					this._element[beginningX][i].z = -100;
 
 					for (var j = 0; j < (ravineWidth - 1) / 2; j++) {
-						this._element[beginningX + j][i].z = -10;
-						this._element[beginningX - j][i].z = -10;
+						this._element[beginningX + j][i].z = -100;
+						this._element[beginningX - j][i].z = -100;
 					}
 				}
 			}

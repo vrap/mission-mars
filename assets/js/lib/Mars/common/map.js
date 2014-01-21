@@ -2,8 +2,7 @@
 	var nsCommon = using('mars.common');
 
 	/**
-	 * [ description]
-	 * @return {[type]} [description]
+	 * Constructor
 	 */
 	nsCommon.Map = function(terrain) {
 		/* Define attributes. */
@@ -13,13 +12,15 @@
 		this._init(terrain);
 	};
 
+	/**
+	 * Initialize the map.
+	 */
 	nsCommon.Map.prototype._init = function(terrain) {
 		this._fromJSON(terrain);
 	};
 
 	/**
-	 * [ description]
-	 * @return {[type]} [description]
+	 * Hydrates map from values of a JSon.
 	 */
 	nsCommon.Map.prototype._fromJSON = function(terrain) {
 		this._terrain = JSON.parse(terrain);
@@ -37,18 +38,17 @@
 	/**
 	 * Return the height of the terrain, assume that it's equal to the
 	 * number of propertie of the first line of the terrain. Each line
-	 * need to be equals. We are substracting the result by one because
-	 * of the properties begin to 0.
+	 * need to be equals. 
 	 */
 	nsCommon.Map.prototype.getHeight = function() {
 		return this._squares[0].length;
 	};
 
 	/**
-	 * [ description]
-	 * @param  {[type]} x [description]
-	 * @param  {[type]} y [description]
-	 * @return {[type]}   [description]
+	 * Obtains the value of an element of the map.
+	 * @param  {Integer} x Square's position X
+	 * @param  {Integer} y Square's position Y
+	 * @return {Array element}
 	 */
 	nsCommon.Map.prototype.getSquare = function(x, y) {
 		if (this._squares[x] && this._squares[x][y]) {
