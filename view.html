@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mars invader !</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+  <link href='http://fonts.googleapis.com/css?family=Oxygen:400,300' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <!-- Map view -->
+  <div class="view">
+    <!-- viewer 3D -->
+    <div id="render"></div>
+    <!-- viewer 2D -->
+    <div id="panel-minimap">
+      <div id="bloc-minimap">
+        <canvas id="minimap">
+          Canvas not supported.
+        </canvas>
+      </div>
+    </div>
+    <!-- controls -->
+    <div id="panel-control" class="closed">
+      <div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
+      <div id="controls" class="hide">
+        <form name="controlsForm">
+          <div>
+            <h3>Wireframe</h3>
+            <input type="radio" id="w1" name="wireframe"><label for="w1"><span></span>On</label>
+            <input type="radio" id="w2" name="wireframe" checked><label for="w2"><span></span>Off</label>
+          </div>
+          <div>
+            <h3>Fog</h3>
+            <input type="button" class="btn-control" value=" + " id="more"> <input type="button" class="btn-control" value=" - " id="less">
+          </div>
+          <div>
+            <h3>Control camera</h3>
+            <input type="radio" id="c1" name="camera"><label for="c1"><span></span>On</label>
+            <input type="radio" id="c2" name="camera" checked><label for="c2"><span></span>Off</label>
+          </div>
+          <div>
+            <h3>Download map</h3>
+            <a id="download" href='#'>Here !</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- console -->
+    <div id="panel-console" class="closed">
+      <form action="#" id="form-commande">
+        <input type="text" name="commande" id="commande" autocomplete="off" placeholder="Tape a command here !">
+      </form>
+    </div>
+
+    <input type="hidden" id="battery-level" value="100">
+    <input type="hidden" id="rock-counter" value="0">
+    <input type="hidden" id="sand-counter" value="0">
+    <input type="hidden" id="ore-counter" value="0">
+    <input type="hidden" id="iron-counter" value="0">
+    <input type="hidden" id="ice-counter" value="0">
+    <input type="hidden" id="other-counter" value="0">
+
+    <ul id="panel-response-console">
+
+    </ul>
+  </div>
+
+  <!-- Console -->
+  <script type="text/javascript" src="assets/js/consoleInvader.js"></script>
+
+  <!-- Script for UI and UX -->
+  <script type="text/javascript" src="assets/js/interface.js"></script>
+
+  <!-- Helpers -->
+  <script type="text/javascript" src="assets/js/helper/namespace.js"></script>
+  <script type="text/javascript" src="assets/js/helper/utils.js"></script>
+  <script type="text/javascript" src="assets/js/helper/requestAnimationFrame.js"></script>
+  <script type="text/javascript" src="assets/js/helper/FileSaver.js"></script>
+
+  <!-- Threejs library -->
+  <script type="text/javascript" src="assets/js/lib/three/Three.js"></script>
+  <script type="text/javascript" src="assets/js/lib/three/controls/FirstPersonControls.js"></script>
+
+  <!-- Mars common libraries -->
+  <script type="text/javascript" src="assets/js/lib/Mars/common/observer.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/mapManager.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/map.js"></script>
+
+  <!-- Mars materials -->
+  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/rock.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ice.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/iron.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ore.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/sand.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/other.js"></script>
+
+  <!-- Mars Editors and elements -->
+  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/elementModel.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/craterModel.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/hillModel.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/ravineModel.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/editor/terrainGenerator.js"></script>
+
+  <!-- Mars viewer -->
+  <script type="text/javascript" src="assets/js/lib/Mars/viewer/viewer.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/viewer/2dviewer.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/viewer/3dviewer.js"></script>
+
+  <!-- Rover invader -->
+  <script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js"></script>
+
+  <!-- Speculator3000 -->
+  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/s3000.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/explorer.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/voyager.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/crawler.js"></script>
+  <script type="text/javascript" src="assets/js/lib/Mars/rover/Memory/memory.js"></script>
+
+</body>
+</html>

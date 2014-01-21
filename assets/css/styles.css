@@ -92,17 +92,17 @@ h5 {
 	bottom: 0px;
 }
 
-.container footer {
+.container .block {
 	font-weight: 300;
 	width: 400px;
 	margin: 0 auto 7% auto;
 }
 
-.container footer a:hover:before {
+.container a:hover:before {
 	content: "[  ";
 }
 
-.container footer a:hover:after {
+.container a:hover:after {
 	content: "  ]";
 }
 
