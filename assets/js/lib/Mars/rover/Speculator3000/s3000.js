@@ -198,4 +198,52 @@
 
 		return null;
 	};
+
+       /**
+        * Retrieve the direction of the rover to move on a point.
+	*
+	* @this {S3000}
+	* @param integer x The "x" position of the destination to found.
+	* @param integer y The "y" position of the destination to found.
+	* @return integer The direction of the rover to move to the destination.
+        */
+	nsSpeculator.S3000.prototype.getDirectionFromPoint = function(x, y) {
+		var currentDirection = this.rover.direction;
+		var currentPosition = this.rover.getPosition();
+		var sideDirection = null;
+		var topDirection  = null;
+
+		if (currentPosition.x == x) {
+			sideDirection = null;
+		}
+		else if (currentPosition.x > x) {
+			sideDirection = this.rover.constructor.DIRECTION.WEST;
+		}
+		else {
+			sideDirection = this.rover.constructor.DIRECTION.EAST;
+		}
+
+		if (currentPosition.y == y) {
+			topDirection = null;
+		}
+		else if (currentPosition.y > y) {
+			topDirection = this.rover.constructor.DIRECTION.SOUTH;
+		}
+		else {
+			topDirection = this.rover.constructor.DIRECTION.NORTH;
+		}
+		if ((sideDirection != null && topDirection == null) || (topDirection != null && sideDirection == null)) {
+		    direction = (sideDirection != null) ? sideDirection : topDirection;
+		}
+		else {
+		    if (topDirection == this.rover.constructor.DIRECTION.NORTH) {
+			direction = (sideDirection == this.rover.constructor.DIRECTION.EAST) ? this.rover.constructor.DIRECTION.NORTH_EAST : this.rover.constructor.DIRECTION.NORTH_WEST;
+		    }
+		    else if (topDirection == this.rover.constructor.DIRECTION.SOUTH) {
+			direction = (sideDirection == this.rover.constructor.DIRECTION.EAST) ? this.rover.constructor.DIRECTION.SOUTH_EAST : this.rover.constructor.DIRECTION.SOUTH_WEST;
+		    }
+		}
+
+	    return direction;
+	};
 })();
