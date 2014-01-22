@@ -91,6 +91,17 @@
 		this.publishEvent('actions.fillTank');
 	};
 
+
+	/**
+	 * Get the current position of the rover.
+	 *
+	 * @this {Rover}
+	 * @return {object} An object of x and y position.
+	 */
+	nsRover.Rover.prototype.getPosition = function() {
+	    return {x: this.x, y: this.y };
+	}
+
 	/**
 	 * Change rover direction.
 	 *
