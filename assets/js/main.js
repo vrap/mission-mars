@@ -69,7 +69,7 @@
 	}
 	document.querySelector('#more').onclick = function () {
 		if (viewer.viewers[renderDiv].options.fog < 1) {
-			viewer.viewers[renderDiv].options.fog += 0.01;
+			viewer.viewers[renderDiv].options.fog += 0.001;
 		} else {
 			viewer.viewers[renderDiv].options.fog = 1;
 		}
@@ -77,7 +77,7 @@
 	}
 	document.querySelector('#less').onclick = function () {
 		if (viewer.viewers[renderDiv].options.fog > 0) {
-			viewer.viewers[renderDiv].options.fog -= 0.01;
+			viewer.viewers[renderDiv].options.fog -= 0.001;
 		} else {
 			viewer.viewers[renderDiv].options.fog = 0;
 		}
@@ -131,20 +131,21 @@
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-		//console.log('Rover spawned !', data);
+		console.log('Rover spawned !', data.rover);
+    viewer.viewers[renderDiv].camera.position.x += data.rover.y;
+    viewer.viewers[renderDiv].camera.position.z += data.rover.x;
 	});
 	observable.subscribe('rover.actions.fillTank', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
 		//console.log('tank is filled', data);
 	});
 	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
 		//console.log('panels are deployed', data);
 	});
+  observable.subscribe('rover.direction', function(data) {
+    console.log(data.lastDirection);
+    // Set camera with setDirection. Verify direction on move also.
+    viewer.viewers[renderDiv].move(data.lastDirection);
+  });
 
 	/* Rover tests. */
 	var memory = new nsMemory.Memory();
