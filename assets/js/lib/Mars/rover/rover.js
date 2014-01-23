@@ -41,6 +41,12 @@
 		/* Cost of deploying solar panels. */
 		this.panelsCost = 5;
 
+		/* Define the duration of a round. */
+		this.roundTime = 100;
+
+		this.waitingStatus = false;
+		this.waitingActions = [];
+
 		this.memory = memory;
 
 		var spawnSquare = this.map.getSquare(x, y);
@@ -80,15 +86,56 @@
 		REMOTE: 0.4
 	};
 
+	nsRover.Rover.prototype.executeAction = function(action, args) {
+		var bufferedAction = {
+			action: action,
+			args: args
+		}
+
+		this.waitingActions.push(bufferedAction);
+
+		if (this.waitingStatus === false) {
+			this.waitingStatus = true;
+			this.executeBufferedAction();
+		}
+	};
+
+	nsRover.Rover.prototype.executeBufferedAction = function() {
+		if (this.waitingStatus === true) {
+			if (this.waitingActions.length > 0) {
+				var action = this.waitingActions[0].action;
+				var args = this.waitingActions[0].args;
+
+				this[action].apply(this, args);
+				this.waitingActions.splice(0, 1);
+
+					setTimeout(
+						function() {
+							this.executeBufferedAction();
+						}.bind(this),
+						this.roundTime
+					);
+			}
+			else {
+				this.waitingStatus = false;
+			}
+		}
+	};
+
 	/**
 	 * Fill the tank.
 	 *
 	 * @this {Rover}
 	 */
 	nsRover.Rover.prototype.fillTank = function() {
+	    if (arguments.callee.caller == this.executeBufferedAction) {
 		this.tank = this.tankSize;
-
+		
 		this.publishEvent('actions.fillTank');
+	    }
+	    else {
+		this.executeAction('fillTank', arguments);
+	    }
 	};
 
 
