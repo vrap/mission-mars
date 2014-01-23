@@ -39,15 +39,15 @@
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
 			[{
 				"model": elementCrater,
-				"number": 1
+				"number": 10
 			},
 			{
 				"model": elementHill,
-				"number": 2
+				"number": 10
 			},
 			{
 				"model": elementRavine,
-				"number": 3
+				"number": 10
 			}],
 			400, 400, -10, 10);
 		map = new nsCommon.Map(terrain);

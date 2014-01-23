@@ -32,6 +32,45 @@
 		/* Initialize the creation of the element. */
 		this.parent.create.call(this, width, height, materials);
 
+		var startX = getRandomInt(0, width-1);
+		var startY = getRandomInt(0, height-1);
+
+		var squartMax = width*height;
+
+		count = 0;
+		while(width > count){
+
+			startX = startX + getRandomInt(1,2);
+			startY = startY + getRandomInt(1,2);
+
+			if(startX >= width){startX = getRandomInt(0, width-1)};
+			if(startY >= height){startY = getRandomInt(0, height-1)};
+
+
+			this._element[startX][startY].z = -50;
+			count++;
+
+		}
+		
+		/* Return the element and clean the var. */
+		return this._toJSON(true);
+
+
+	}
+
+
+	/**
+	 * [ description]
+	 *
+	 * @this {RavineModel}
+	 * @param  {int} width     [description]
+	 * @param  {int} height    [description]
+	 * @param  {array} materials [description]
+	 */
+	nsElements.RavineModel.prototype.pierre = function(width, height, materials) {
+		/* Initialize the creation of the element. */
+		//this.parent.create.call(this, width, height, materials);
+
 		var beginningX  	= getRandomInt(0, Math.round(width/4)),  // Point de départ sur la largeur
 			beginningY  	= getRandomInt(0, height), // Point de départ sur la longueur
 			ravineWidth 	= getRandomInt(3, 8),      // Largeur du ravin
