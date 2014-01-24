@@ -491,63 +491,7 @@ h5 {
   float: left;
   text-align: center;
 }
-/*
-.home {
-	min-height: 100%;
-	min-width: 100%;
-	width: auto;
-	height: auto;
-	margin: auto;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	background-image: url("../img/bg.jpg");
-	text-transform: uppercase;
-	font-family: 'Oxygen', sans-serif;
-	color: white;
-	text-align: center;
-}
 
-.home h1 {
-	margin-top: 6%;
-	font-size: 80px;
-	font-weight: 400;
-	letter-spacing: 20px;
-}
-
-.container {
-	font-size: 35px;
-	width: 100%;
-	position: fixed;
-	bottom: 0px;
-}
-
-.container .block {
-	font-weight: 300;
-	width: 400px;
-	margin: 0 auto 7% auto;
-}
-
-.container a:hover:before {
-	content: "[  ";
-}
-
-.container a:hover:after {
-	content: "  ]";
-}
-
-#containerUpload {
-	background-color: rgba(0, 0, 0, 0.5);
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	padding-bottom: 10px;
-}
-
-#uploadedMap {
-	margin-bottom: 15px;
-}
-*/
 /********
 * Mini map
 *********/
