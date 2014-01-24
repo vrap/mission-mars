@@ -50,7 +50,7 @@
 				"model": elementRavine,
 				"number": 0
 			}],
-			400, 400, -10, 10);
+			100, 100, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
 	
@@ -132,9 +132,8 @@
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-		console.log('Rover spawned !', data.rover);
-    viewer.viewers[renderDiv].camera.position.x += data.rover.y;
-    viewer.viewers[renderDiv].camera.position.z += data.rover.x;
+    viewer.viewers[renderDiv].camera.position.x += data.rover.x;
+    viewer.viewers[renderDiv].camera.position.z -= data.rover.y;
 	});
 	observable.subscribe('rover.actions.fillTank', function(data) {
 		//console.log('tank is filled', data);
@@ -143,12 +142,13 @@
 		//console.log('panels are deployed', data);
 	});
   observable.subscribe('rover.direction', function(data) {
-    // Set camera with setDirection. Verify direction on move also.
+    // Set camera vision.
     viewer.viewers[renderDiv].setVision(data.lastDirection);
   });
   observable.subscribe('rover.move', function(data) {
-    // Set camera with setDirection. Verify direction on move also.
+    // Set camera position.
     viewer.viewers[renderDiv].move(data.direction);
+    console.log(viewer.viewers[renderDiv].camera.position);
   });
 
 	/* Rover tests. */
@@ -167,6 +167,6 @@
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
         console.log('STARTING VOYAGER');
 
-        speculator.start({x: 10, y: 20});
+        speculator.start({x: 50, y: 50});
 	console.log(rover.memory.readAll());
 })();

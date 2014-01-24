@@ -36,7 +36,8 @@
 		this.scene = new THREE.Scene();
 		// Load every parts of the viewer
 		this._loadLight();
-		this._loadCamera(-0.75*this.viewer.map.getWidth(), 4, 0.75*this.viewer.map.getHeight()); // Init camera's position on case 0-0
+			this._loadCamera(0, 5, 0); // Init camera's position on case 0-0
+    this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
@@ -103,7 +104,6 @@
 		this.camera.position.y = y; // Up - Down
 		this.camera.position.z = z; // Right - Left
 		this.camera.setLens( 50 );
-		this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
 		this.scene.add(this.camera);
 	};
 
@@ -203,7 +203,12 @@
 		// Init the mesh
 		var material = new THREE.MeshFaceMaterial( materials );
 		this.mesh = new THREE.Mesh(this.geometry, material); 
-		this.mesh.rotation.x = Math.PI / 180 * (-90);
+		this.mesh.rotation.x = degToRad(90);
+    this.mesh.rotation.y = degToRad(180);
+    this.mesh.rotation.z = degToRad(-90);
+    this.mesh.position.x = 75;
+    this.mesh.position.y = 0;
+    this.mesh.position.z = -100;
 
 		this.scene.add(this.mesh);
 	};
@@ -232,10 +237,10 @@
 	nsViewer.Viewer3D.prototype.setVision = function(direction) {
 		switch(direction){
 			case nsRover.Rover.DIRECTION.NORTH:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(0));
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(180));
 				break;
 			case nsRover.Rover.DIRECTION.SOUTH:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(180));
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(0));
 				break;
 			case nsRover.Rover.DIRECTION.WEST:
 				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(90));
@@ -244,16 +249,16 @@
 				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
 				break;
 			case nsRover.Rover.DIRECTION.NORTH_EAST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(45));
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
 				break;
 			case nsRover.Rover.DIRECTION.NORTH_WEST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-45));
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(135));
 				break;
       case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(135));
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-45));
         break;
       case nsRover.Rover.DIRECTION.SOUTH_WEST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(45));
         break;
 		}
 	};
@@ -264,32 +269,32 @@
   nsViewer.Viewer3D.prototype.move = function(direction) {
     switch(direction){
       case nsRover.Rover.DIRECTION.NORTH:
-        this.camera.position.x++;
+        this.camera.position.z++;
         break;
       case nsRover.Rover.DIRECTION.SOUTH:
-        this.camera.position.x--;
+        this.camera.position.z--;
         break;
       case nsRover.Rover.DIRECTION.WEST:
-        this.camera.position.z++;
+        this.camera.position.x--;
         break;
       case nsRover.Rover.DIRECTION.EAST:
-        this.camera.position.z--;
+        this.camera.position.x++;
         break;
       case nsRover.Rover.DIRECTION.NORTH_EAST:
+        this.camera.position.z++;
         this.camera.position.x++;
-        this.camera.position.z--;
         break;
       case nsRover.Rover.DIRECTION.NORTH_WEST:
-        this.camera.position.x++;
         this.camera.position.z++;
+        this.camera.position.x--;
         break;
       case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        this.camera.position.x--;
         this.camera.position.z--;
+        this.camera.position.x++;
         break;
       case nsRover.Rover.DIRECTION.SOUTH_WEST:
+        this.camera.position.z--;
         this.camera.position.x--;
-        this.camera.position.z++;
         break;
     }
 	};
