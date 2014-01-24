@@ -256,40 +256,41 @@
         this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
         break;
 		}
+	};
 
-    /**
-     * Change camera's position in the direction wanted.
-     */
-    nsViewer.Viewer3D.prototype.move = function(direction) {
-      switch(direction){
-        case nsRover.Rover.DIRECTION.NORTH:
-          this.camera.position.x++;
-          break;
-        case nsRover.Rover.DIRECTION.SOUTH:
-          this.camera.position.x--;
-          break;
-        case nsRover.Rover.DIRECTION.WEST:
-          this.camera.position.z++;
-          break;
-        case nsRover.Rover.DIRECTION.EAST:
-          this.camera.position.z--;
-          break;
-        case nsRover.Rover.DIRECTION.NORTH_EAST:
-          this.camera.position.x++;
-          this.camera.position.z--;
-          break;
-        case nsRover.Rover.DIRECTION.NORTH_WEST:
-          this.camera.position.x++;
-          this.camera.position.z++;
-          break;
-        case nsRover.Rover.DIRECTION.SOUTH_EAST:
-          this.camera.position.x--;
-          this.camera.position.z--;
-          break;
-        case nsRover.Rover.DIRECTION.SOUTH_WEST:
-          this.camera.position.x--;
-          this.camera.position.z++;
-          break;
-      }
+  /**
+   * Change camera's position in the direction wanted.
+   */
+  nsViewer.Viewer3D.prototype.move = function(direction) {
+    switch(direction){
+      case nsRover.Rover.DIRECTION.NORTH:
+        this.camera.position.x++;
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH:
+        this.camera.position.x--;
+        break;
+      case nsRover.Rover.DIRECTION.WEST:
+        this.camera.position.z++;
+        break;
+      case nsRover.Rover.DIRECTION.EAST:
+        this.camera.position.z--;
+        break;
+      case nsRover.Rover.DIRECTION.NORTH_EAST:
+        this.camera.position.x++;
+        this.camera.position.z--;
+        break;
+      case nsRover.Rover.DIRECTION.NORTH_WEST:
+        this.camera.position.x++;
+        this.camera.position.z++;
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH_EAST:
+        this.camera.position.x--;
+        this.camera.position.z--;
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH_WEST:
+        this.camera.position.x--;
+        this.camera.position.z++;
+        break;
+    }
 	};
 })();
