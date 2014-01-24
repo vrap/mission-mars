@@ -142,9 +142,12 @@
 		//console.log('panels are deployed', data);
 	});
   observable.subscribe('rover.direction', function(data) {
-    console.log(data.lastDirection);
     // Set camera with setDirection. Verify direction on move also.
-    viewer.viewers[renderDiv].move(data.lastDirection);
+    viewer.viewers[renderDiv].setVision(data.lastDirection);
+  });
+  observable.subscribe('rover.move', function(data) {
+    // Set camera with setDirection. Verify direction on move also.
+    viewer.viewers[renderDiv].move(data.direction);
   });
 
 	/* Rover tests. */
