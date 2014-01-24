@@ -6,7 +6,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-  <div class="st-container">
+    <div class="st-container">
     <!-- Bottom menu -->
     <input type="radio" name="radio-set" checked="checked" id="st-control-1"/>
     <a href="javascript: void(0);">Home</a>
@@ -91,108 +91,109 @@
           <a class="btn-link" href="javascript: void(0);" id="view">Go !</a>
         </p>
       </section>
+      </div><!-- // st-scroll -->
+    </div><!-- // st-container -->
 
-      <!-- Viewer -->
-      <div class="view" id="st-panel-5">
-        <!-- viewer 3D -->
-        <div id="render"></div>
-        <!-- viewer 2D -->
-        <div id="panel-minimap">
-          <div id="bloc-minimap">
-            <canvas id="minimap">
-              Canvas not supported.
-            </canvas>
-          </div>
+    <!-- Viewer -->
+    <div class="view">
+      <!-- viewer 3D -->
+      <div id="render"></div>
+      <!-- viewer 2D -->
+      <div id="panel-minimap">
+        <div id="bloc-minimap">
+          <canvas id="minimap">
+            Canvas not supported.
+          </canvas>
         </div>
-        <!-- controls -->
-        <div id="panel-control" class="closed">
-          <div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
-          <div id="controls" class="hide">
-            <form name="controlsForm">
-              <div>
-                <h3>Wireframe</h3>
-                <input type="radio" id="w1" name="wireframe" class="custom-radio"><label for="w1"><span></span>On</label>
-                <input type="radio" id="w2" name="wireframe" class="custom-radio" checked><label for="w2"><span></span>Off</label>
-              </div>
-              <div>
-                <h3>Fog</h3>
-                <input type="button" class="btn-control" value=" + " id="more"> <input type="button" class="btn-control" value=" - " id="less">
-              </div>
-              <div>
-                <h3>Control camera</h3>
-                <input type="radio" id="c1" name="camera" class="custom-radio"><label for="c1"><span></span>On</label>
-                <input type="radio" id="c2" name="camera" class="custom-radio" checked><label for="c2"><span></span>Off</label>
-              </div>
-              <div>
-                <h3>Download map</h3>
-                <a id="download" href='#'>Here !</a>
-              </div>
-            </form>
-          </div>
-        </div>
-        <!-- console -->
-        <div id="panel-console" class="closed">
-          <form action="#" id="form-commande">
-            <input type="text" name="commande" id="commande" autocomplete="off" placeholder="Tape a command here !">
+      </div>
+      <!-- controls -->
+      <div id="panel-control" class="closed">
+        <div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
+        <div id="controls" class="hide">
+          <form name="controlsForm">
+            <div>
+              <h3>Wireframe</h3>
+              <input type="radio" id="w1" name="wireframe" class="custom-radio"><label for="w1"><span></span>On</label>
+              <input type="radio" id="w2" name="wireframe" class="custom-radio" checked><label for="w2"><span></span>Off</label>
+            </div>
+            <div>
+              <h3>Fog</h3>
+              <input type="button" class="btn-control" value=" + " id="more"> <input type="button" class="btn-control" value=" - " id="less">
+            </div>
+            <div>
+              <h3>Control camera</h3>
+              <input type="radio" id="c1" name="camera" class="custom-radio"><label for="c1"><span></span>On</label>
+              <input type="radio" id="c2" name="camera" class="custom-radio" checked><label for="c2"><span></span>Off</label>
+            </div>
+            <div>
+              <h3>Download map</h3>
+              <a id="download" href='#'>Here !</a>
+            </div>
           </form>
         </div>
-
-        <ul id="panel-response-console">
-
-        </ul>
       </div>
-    </div><!-- // st-scroll -->
-  </div><!-- // st-container -->
+      <!-- console -->
+      <div id="panel-console" class="closed">
+        <form action="#" id="form-commande">
+          <input type="text" name="commande" id="commande" autocomplete="off" placeholder="Tape a command here !">
+        </form>
+      </div>
 
-  <!-- Console -->
-  <script type="text/javascript" src="assets/js/consoleInvader.js"></script>
+      <ul id="panel-response-console">
 
-  <!-- Script for UI and UX -->
-  <script type="text/javascript" src="assets/js/interface.js"></script>
+      </ul>
+    </div>
 
-  <!-- Helpers -->
-  <script type="text/javascript" src="assets/js/helper/namespace.js"></script>
-  <script type="text/javascript" src="assets/js/helper/utils.js"></script>
-  <script type="text/javascript" src="assets/js/helper/requestAnimationFrame.js"></script>
-  <script type="text/javascript" src="assets/js/helper/FileSaver.js"></script>
 
-  <!-- Threejs library -->
-  <script type="text/javascript" src="assets/js/lib/three/Three.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/three/controls/FirstPersonControls.js" defer></script>
+    <!-- Console -->
+    <script type="text/javascript" src="assets/js/consoleInvader.js"></script>
 
-  <!-- Mars common libraries -->
-  <script type="text/javascript" src="assets/js/lib/Mars/common/observer.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/mapManager.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/map.js" defer></script>
+    <!-- Script for UI and UX -->
+    <script type="text/javascript" src="assets/js/interface.js"></script>
 
-  <!-- Mars materials -->
-  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/rock.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ice.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/iron.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ore.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/sand.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/common/materials/other.js" defer></script>
+    <!-- Helpers -->
+    <script type="text/javascript" src="assets/js/helper/namespace.js"></script>
+    <script type="text/javascript" src="assets/js/helper/utils.js"></script>
+    <script type="text/javascript" src="assets/js/helper/requestAnimationFrame.js"></script>
+    <script type="text/javascript" src="assets/js/helper/FileSaver.js"></script>
 
-  <!-- Mars Editors and elements -->
-  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/elementModel.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/craterModel.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/hillModel.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/editor/element/ravineModel.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/editor/terrainGenerator.js" defer></script>
+    <!-- Threejs library -->
+    <script type="text/javascript" src="assets/js/lib/three/Three.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/three/controls/FirstPersonControls.js" defer></script>
 
-  <!-- Mars viewer -->
-  <script type="text/javascript" src="assets/js/lib/Mars/viewer/viewer.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/viewer/2dviewer.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/viewer/3dviewer.js" defer></script>
+    <!-- Mars common libraries -->
+    <script type="text/javascript" src="assets/js/lib/Mars/common/observer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/mapManager.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/map.js" defer></script>
 
-  <!-- Rover invader -->
-  <script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js" defer></script>
+    <!-- Mars materials -->
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/rock.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ice.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/iron.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ore.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/sand.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/other.js" defer></script>
 
-  <!-- Speculator3000 -->
-  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/s3000.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/explorer.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/voyager.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/crawler.js" defer></script>
-  <script type="text/javascript" src="assets/js/lib/Mars/rover/Memory/memory.js" defer></script>
+    <!-- Mars Editors and elements -->
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/elementModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/craterModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/hillModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/ravineModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/terrainGenerator.js" defer></script>
+
+    <!-- Mars viewer -->
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/viewer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/2dviewer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/3dviewer.js" defer></script>
+
+    <!-- Rover invader -->
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js" defer></script>
+
+    <!-- Speculator3000 -->
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/s3000.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/explorer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/voyager.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/crawler.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Memory/memory.js" defer></script>
 	</body>
 </html>

@@ -2,14 +2,6 @@
 * File for functions used for UI and UX
 *************************************/
 
-/**
- * Scripts to load
- */
-var scripts = [
-		// Main script
-		"assets/js/main.js"
-];
-
 (function () {
 	/**
 	 * Display home page and hide viewer
@@ -47,6 +39,13 @@ var scripts = [
     document.querySelector('#voyager-settings').style.display = 'inline-block';
     document.querySelector('#explorer-settings').style.display = 'none';
   };
+
+  document.querySelector('#view').onclick = function () {
+    createScript("assets/js/main.js");
+    document.querySelector('.st-container').style.display = 'none';
+    document.querySelector('.view').style.display = 'block';
+  };
+
 	/**
 	 * Open and close control panel
 	 */
@@ -82,12 +81,12 @@ var scripts = [
 	document.querySelector('#upload').onclick = function () {
     var file = document.getElementById('uploadedMap').files[0];
 		if(undefined !== file) {
-      document.querySelector('#st-control-4').checked = true;
-			var reader = new FileReader();
+      var reader = new FileReader();
 			reader.onload = function(evt) {
 				// When reader has finished
 				// Save file in an input hidden
 	  		document.getElementById('json').value = evt.target.result;
+        document.querySelector('#st-control-4').checked = true;
 			};
 			reader.readAsText(file);
       return true;
@@ -101,11 +100,8 @@ var scripts = [
 /**
  * Add scripts at the end of the body
  */
-function createScripts (scriptsArray) {
-	for (var i = 0; i < scriptsArray.length; i++) {
-		var s = document.createElement('script');
-		s.src = scriptsArray[i];
-
-		document.body.appendChild(s);
-	}
+function createScript (script) {
+  var s = document.createElement('script');
+  s.src = scriptsArray[i];
+  document.body.appendChild(s);
 }

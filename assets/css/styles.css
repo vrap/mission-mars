@@ -75,6 +75,8 @@
 *********/
 
 body{
+  padding: 0;
+  margin: 0;
   font-weight: 400;
   font-size: 15px;
   color: #81e8ff;
@@ -83,8 +85,11 @@ body{
 }
 
 a{
-  color: #555;
+  color: #81e8ff;
   text-decoration: none;
+}
+.view input[type="radio"] {
+  display: none;
 }
 
 .custom-radio + label span {
@@ -216,7 +221,7 @@ h5 {
 
   /* Let's enforce some hardware acceleration */
   -webkit-transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
+  -webkit-backface-sibility: hidden;
 }
 
 .st-panel{
