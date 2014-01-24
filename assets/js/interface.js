@@ -14,30 +14,39 @@ var scripts = [
 	/**
 	 * Display home page and hide viewer
 	 */
-	document.querySelector('.home').style.display = 'block';
 	document.querySelector('.view').style.display = 'none';
-	document.querySelector('#containerUpload').style.display = 'none';
+  document.querySelector('#voyager-settings').style.display = 'none';
+  document.querySelector('#explorer-settings').style.display = 'none';
 
-	/**
-	 * Display viewer and hide home page
-	 */
-	document.querySelector('#show').onclick = function () {
-		createScripts(scripts);
-		document.querySelector('.home').style.display = 'none';
-		document.querySelector('.view').style.display = 'block';
-	}
+  document.querySelector('#start').onclick = function () {
+    document.querySelector('#st-control-2').checked = true;
+  };
 
-	/**
-	 * Show or hide file selector
-	 */
-	document.querySelector('#showUpload').onclick = function () {
-		if('none' == document.querySelector('#containerUpload').style.display) {
-			document.querySelector('#containerUpload').style.display = 'block';
-		} else {
-			document.querySelector('#containerUpload').style.display = 'none';
-		}
-	}
+  document.querySelector('#import').onclick = function () {
+    document.querySelector('#st-control-3').checked = true;
+    document.querySelector('#block-generate').style.display = 'none';
+    document.querySelector('#block-upload').style.display = 'block';
+  };
 
+  document.querySelector('#generate').onclick = function () {
+    document.querySelector('#st-control-3').checked = true;
+    document.querySelector('#block-generate').style.display = 'block';
+    document.querySelector('#block-upload').style.display = 'none';
+  };
+
+  document.querySelector('#scenario').onclick = function () {
+    document.querySelector('#st-control-4').checked = true;
+  };
+
+  document.querySelector('#explorer').onclick = function () {
+    document.querySelector('#voyager-settings').style.display = 'none';
+    document.querySelector('#explorer-settings').style.display = 'inline-block';
+  };
+
+  document.querySelector('#voyager').onclick = function () {
+    document.querySelector('#voyager-settings').style.display = 'inline-block';
+    document.querySelector('#explorer-settings').style.display = 'none';
+  };
 	/**
 	 * Open and close control panel
 	 */
@@ -49,7 +58,7 @@ var scripts = [
 			document.querySelector('#controls').className = 'hide';
 			document.querySelector('#panel-control').className = 'closed';
 		}
-	}
+	};
 
 	/**
 	 * Console intialization
@@ -65,27 +74,27 @@ var scripts = [
 		e.preventDefault();
 		var commande = this.elements["commande"];
 		consoleInvader.getCommande(commande);
-	}
+	};
 
 	/**
 	 * Read JSon and save it in an input hidden
 	 */
 	document.querySelector('#upload').onclick = function () {
-		var file = document.getElementById('uploadedMap').files[0];
+    var file = document.getElementById('uploadedMap').files[0];
 		if(undefined !== file) {
+      document.querySelector('#st-control-4').checked = true;
 			var reader = new FileReader();
 			reader.onload = function(evt) {
 				// When reader has finished
 				// Save file in an input hidden
 	  		document.getElementById('json').value = evt.target.result;
-	  		// Call main.js
-	  		createScripts(scripts);
-	  		// Display viewer
-				document.querySelector('.home').style.display = 'none';
-				document.querySelector('.view').style.display = 'block';
 			};
 			reader.readAsText(file);
-		}
+      return true;
+		} else {
+      alert('Please, upload a JSon');
+      return false;
+    }
 	}
 })();
 
@@ -98,5 +107,5 @@ function createScripts (scriptsArray) {
 		s.src = scriptsArray[i];
 
 		document.body.appendChild(s);
-	};
+	}
 }
