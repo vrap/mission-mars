@@ -36,8 +36,7 @@
 		this.scene = new THREE.Scene();
 		// Load every parts of the viewer
 		this._loadLight();
-			this._loadCamera(0, 5, 0); // Init camera's position on case 0-0
-    this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
+		this._loadCamera(0, 5, 0); // Init camera's position on case 0-0
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
@@ -206,9 +205,9 @@
 		this.mesh.rotation.x = degToRad(90);
     this.mesh.rotation.y = degToRad(180);
     this.mesh.rotation.z = degToRad(-90);
-    this.mesh.position.x = 75;
+    this.mesh.position.x = 0.75*this.viewer.map.getWidth();
     this.mesh.position.y = 0;
-    this.mesh.position.z = -100;
+    this.mesh.position.z = -this.viewer.map.getHeight();
 
 		this.scene.add(this.mesh);
 	};
