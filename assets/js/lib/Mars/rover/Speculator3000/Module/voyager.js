@@ -32,39 +32,75 @@
 	console.log('Voyager mode disabled');
     };
 
+    /**
+     * Start the voyager scenario.
+     */
     nsVoyager.Voyager.prototype.start = function() {
 	var destination = arguments[0][0];
+
+	this.voyage(destination);
+    };
+
+    nsVoyager.Voyager.prototype.voyage = function(destination) {
+	var currentDirection, invertedDirection, randPosition;
 	var position = { x: this.speculator.rover.x, y: this.speculator.rover.y };
 	var xDirection = nsRover.Rover.DIRECTION.WEST;
-	var yDirection = nsRover.Rover.DIRECTION.NORTH;
+	var yDirection = nsRover.Rover.DIRECTION.SOUTH;
 
 	if (position.x < destination.x) {
 	    xDirection = nsRover.Rover.DIRECTION.EAST;
 	}
 	if (position.y < destination.y) {
-	    yDirection = nsRover.Rover.DIRECTION.SOUTH;
+	    yDirection = nsRover.Rover.DIRECTION.NORTH;
 	}
 
-	var randPosition = getRandomInt(1, 100);
-	if (randPosition <= 50) {
-	    this.speculator.rover.setDirection(xDirection);
-	    this.moveAt(position.x, destination.x);
-	    this.speculator.rover.setDirection(yDirection);
-	    this.moveAt(position.y, destination.y);
+	randPosition = getRandomInt(0, 100);
+
+	directions = {};
+	directions[xDirection] = 'x';
+	directions[yDirection] = 'y';
+
+	if (randPosition > 100) {
+	    currentDirection = xDirection;
+	    invertedDirection = yDirection;
 	}
 	else {
-	    this.speculator.rover.setDirection(yDirection);
-	    this.moveAt(position.y, destination.y);
-	    this.speculator.rover.setDirection(xDirection);
-	    this.moveAt(position.x, destination.x);
+	    currentDirection = yDirection;
+	    invertedDirection = xDirection;
 	}
-    };
 
-    nsVoyager.Voyager.prototype.moveAt = function(position, destination) {
-	while (destination <= position) {
-	    var distance = ((position-destination) > 1) ? 2 : 1;
+	var result = false;
+	var canContinue = true;
+	var oldPosition = {x: this.speculator.rover.x, y: this.speculator.rover.y};
+	while (canContinue) {
+	    var rover = this.speculator.rover;
 
-	    this.speculator.rover.move(distance);
+	    if (rover.x == destination.x && rover.y == destination.y) {
+		result = true;
+		break;
+	    }
+
+	    oldPosition = {x: rover.x, y: rover.y};
+
+	    this.speculator.rover.setDirection(this.speculator.getDirectionFromPoint(destination.x, destination.y));
+
+	    try {
+		this.speculator.rover.move(1);
+	    }
+	    catch (e) {
+		console.log(e);
+	    }
+
+	    if (rover.x == oldPosition.x && rover.y == oldPosition.y) {
+		break;
+	    }
+	}
+
+	if (result == true) {
+	    console.log('Mission successfull !');
+	}
+	else {
+	    console.log('Mission failed !');
 	}
     };
 

@@ -7,12 +7,11 @@
 	 *
 	 * @param  {Rover} rover Rover instance to control.
 	 */
-	nsSpeculator.S3000 = function(rover, memory) {
+	nsSpeculator.S3000 = function(rover) {
 		this.rover = rover;
 		this.map = new Array();
 		this.activeModule = null;
 		this.report = new Object();
-		this.memory = memory;
 
 		/* Alias to the static propertie modules list. */
 		this.modules = this.constructor.modules;
@@ -162,14 +161,89 @@
 		}
 	};
 
-         nsSpeculator.S3000.prototype.start = function() {
-	         this.callModuleEvent('start', arguments);
-         }
+        /**
+	 * Start the module.
+	 */
+        nsSpeculator.S3000.prototype.start = function() {
+                this.callModuleEvent('start', arguments);
+        }
 
 	/**
 	 * When the tank is in a low energy state, deploy solar panels to regain the energy.
 	 */
 	nsSpeculator.S3000.prototype.onLowTankEvent = function() {
 		this.rover.deploySolarPanels();
+	};
+
+       /**
+        * Retrieve the available sided direction of the rover when it is blocked.
+        */
+	nsSpeculator.S3000.prototype.getSideDirection = function() {
+		switch (this.rover.direction) {
+			case this.rover.constructor.DIRECTION.NORTH:
+			case this.rover.constructor.DIRECTION.SOUTH:
+			return [
+				this.rover.constructor.DIRECTION.EAST,
+				this.rover.constructor.DIRECTION.WEST
+			];
+			break;
+			case this.rover.constructor.DIRECTION.EAST:
+			case this.rover.constructor.DIRECTION.WEST:
+				return [
+					this.rover.constructor.DIRECTION.NORTH,
+					this.rover.constructor.DIRECTION.SOUTH
+				];
+			break;
+		}
+
+		return null;
+	};
+
+       /**
+        * Retrieve the direction of the rover to move on a point.
+	*
+	* @this {S3000}
+	* @param integer x The "x" position of the destination to found.
+	* @param integer y The "y" position of the destination to found.
+	* @return integer The direction of the rover to move to the destination.
+        */
+	nsSpeculator.S3000.prototype.getDirectionFromPoint = function(x, y) {
+		var currentDirection = this.rover.direction;
+		var currentPosition = this.rover.getPosition();
+		var sideDirection = null;
+		var topDirection  = null;
+
+		if (currentPosition.x == x) {
+			sideDirection = null;
+		}
+		else if (currentPosition.x > x) {
+			sideDirection = this.rover.constructor.DIRECTION.WEST;
+		}
+		else {
+			sideDirection = this.rover.constructor.DIRECTION.EAST;
+		}
+
+		if (currentPosition.y == y) {
+			topDirection = null;
+		}
+		else if (currentPosition.y > y) {
+			topDirection = this.rover.constructor.DIRECTION.SOUTH;
+		}
+		else {
+			topDirection = this.rover.constructor.DIRECTION.NORTH;
+		}
+		if ((sideDirection != null && topDirection == null) || (topDirection != null && sideDirection == null)) {
+		    direction = (sideDirection != null) ? sideDirection : topDirection;
+		}
+		else {
+		    if (topDirection == this.rover.constructor.DIRECTION.NORTH) {
+			direction = (sideDirection == this.rover.constructor.DIRECTION.EAST) ? this.rover.constructor.DIRECTION.NORTH_EAST : this.rover.constructor.DIRECTION.NORTH_WEST;
+		    }
+		    else if (topDirection == this.rover.constructor.DIRECTION.SOUTH) {
+			direction = (sideDirection == this.rover.constructor.DIRECTION.EAST) ? this.rover.constructor.DIRECTION.SOUTH_EAST : this.rover.constructor.DIRECTION.SOUTH_WEST;
+		    }
+		}
+
+	    return direction;
 	};
 })();

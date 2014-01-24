@@ -10,8 +10,7 @@
  	 	 * Pattern 
  	 	 * [
  	 	 *   	{ 
- 	 	 *			x0, y0, z0, type0, status0, adjacents: { north, northEast, east, southEast, 
- 	 	 *											         south, southWest, west, northWest }
+ 	 	 *			x0, y0, z0, type0, status0
  	 	 *   	}
  	 	 * ]
  	 	 *
@@ -28,17 +27,16 @@
 	 * @param  {float}   z         elevation of the square.
 	 * @param  {int}     type      nature of the square.
 	 * @param  {int}     status    state of the squre (0 (visited), 1 (inaccessible), -1 (yet unknown)).
-	 * @param  {array}   adjacents state of 9 squares around.
 	 * @return {boolean}           true if added, false otherwise.
 	 *
 	 * TODO: prefer square array in parameter?
 	 */
-	nsMemory.Memory.prototype.createEmplacement = function(x, y, z, type, status, adjacents) {
+	nsMemory.Memory.prototype.create = function(x, y, z, type, status) {
 		if (x < 0 || y < 0) {
 			throw new Error('X and Y can only be set superior to 0.');
 		}
 
-		if (type < 1 || type > 6) {
+		if (type < 0 || type > 6) {
 			throw new Error('Type can only be set between 1 and 6.');
 		}
 
@@ -46,19 +44,18 @@
 			throw new Error('Status can only be set between -1 and 1.');
 		}
 
-		var memorySize = this.getMemorySize();
+		var memorySize = this.getSize();
 		var square     = {
 			x: x,
 			y: y,
 			z: z,
 			type: type,
-			status: status,
-			adjacents: adjacents
+			status: status
 		};
 
 		this.memory.push(square);
 
-		if (memorySize == this.getMemorySize()) {
+		if (memorySize == this.getSize()) {
 			return false;
 		}
 
@@ -72,7 +69,7 @@
 	 * @param  {int}   y position of the square.
 	 * @return {array}   the square with all this properties.
 	 */
-	nsMemory.Memory.prototype.readEmplacement = function(x, y) {
+	nsMemory.Memory.prototype.read = function(x, y) {
 		if (x < 0 || y < 0) {
 			throw new Error('X and Y can only be set superior to 0.');
 		}
@@ -90,15 +87,14 @@
 	 * @param  {int}     z         elevation of the square.
 	 * @param  {int}     type      nature of the square.
 	 * @param  {int}     status    state of the squre (0 (visited), 1 (inaccessible), -1 (yet unknown)).
-	 * @param  {array}   adjacents state of 9 squares around.
 	 * @return {boolean}           true if modified, false otherwise.
 	 */
-	nsMemory.Memory.prototype.updateEmplacement = function(x, y, z, type, status, adjacents) {
+	nsMemory.Memory.prototype.update = function(x, y, z, type, status) {
 		if (x < 0 || y < 0) {
 			throw new Error('X and Y can only be set superior to 0.');
 		}
 
-		if (type < 1 || type > 6) {
+		if (type < 0 || type > 6) {
 			throw new Error('Type can only be set between 1 and 6.');
 		}
 
@@ -111,7 +107,6 @@
     			square.z         = z;
     			square.type      = type;
     			square.status    = status;
-    			square.adjacents = adjacents;
 
     			return true;
     		}
@@ -127,7 +122,7 @@
 	 * @param  {int}     y         position of the square.
 	 * @return {boolean}           true if modified, false otherwise.
 	 */
-	nsMemory.Memory.prototype.deleteEmplacement = function(x, y) {
+	nsMemory.Memory.prototype.delete = function(x, y) {
 		if (x < 0 || y < 0) {
 			throw new Error('X and Y can only be set superior to 0.');
 		}
@@ -137,7 +132,6 @@
     			square.z         = null;
     			square.type      = null;
     			square.status    = null;
-    			square.adjacents = null;
 
     			return true;
     		}
@@ -151,10 +145,10 @@
 	 *
 	 * @return {boolean} true if memory is empty, false otherwise.
 	 */
-	nsMemory.Memory.prototype.resetMemory = function() {
+	nsMemory.Memory.prototype.reset = function() {
 		this.memory = new Array();
 
-		if (this.getMemorySize() != 0) {
+		if (this.getSize() != 0) {
 			return false;
 		}
 
@@ -166,7 +160,16 @@
 	 * 
 	 * @return {int} number of squares stored in memory.
 	 */
-	nsMemory.Memory.prototype.getMemorySize = function() {
+	nsMemory.Memory.prototype.getSize = function() {
 		return this.memory.length;
+	};
+
+	/**
+	 * Return all squares stored in memory.
+	 *
+	 * @return {array} array that contains all squares.
+	 */
+	nsMemory.Memory.prototype.readAll = function() {
+		return this.memory;
 	};
 })();
