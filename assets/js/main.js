@@ -25,6 +25,9 @@
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#minimap');
+
+	var renderFull2dDiv = document.querySelector('#fullmap');
+
 	var roverInformations = document.querySelector('#rover-informations');
 
 	/* Generate a map. */
@@ -55,7 +58,12 @@
 	
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
+
 	viewer.load2D(render2dDiv);
+
+	var viewerFul = new nsViewer.Viewer(map);
+	viewerFul.load2D(renderFull2dDiv);
+
 	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
 
 	/* Load infos of robot */
@@ -63,9 +71,9 @@
 	var elementPosition = document.querySelector('#position');
 	var elementMaterial = document.querySelector('#material');
 	var elementMove = document.querySelector('#move');
+	var elementMiniMap = document.querySelector('#bloc-panel-minimap-hover');
 	
-
-	var interfaces = new nsViewer.Interface(elementBattery, elementPosition, elementMaterial, elementMove);
+	var interfaces = new nsViewer.Interface(elementBattery, elementPosition, elementMaterial, elementMove, elementMiniMap);
 
 	/* UI Controls */
 	document.controlsForm.wireframe[0].onclick = function () {

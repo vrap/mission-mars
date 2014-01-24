@@ -29,6 +29,11 @@
 		<div class="view">
 			<!-- viewer 3D -->
 			<div id="render"></div>
+			<div id="bloc-fullMap">
+				<canvas id="fullmap">
+			    	Canvas not supported.
+			    </canvas>
+			</div>
 			
 			<!-- controls -->
 			<div id="panel-control" class="closed">
@@ -59,6 +64,7 @@
 			
 			<!-- viewer 2D -->
 			<div id="bloc-panel-minimap"></div>
+			<div id="bloc-panel-minimap-hover"></div>
 			<div id="panel-minimap">
 				<div id="bloc-minimap">
 					<canvas id="minimap">
@@ -92,10 +98,7 @@
 					</div>
 				</div>
 
-				<div id="btn-control" class="info-bloc">
-					<i class='glyphicon glyphicon-seetings'></i>
-				</div>
-				<div id="bloc-map" class="info-bloc">
+				<div id="display-control" class="info-bloc btn-panel">
 					<i class='glyphicon glyphicon-seetings'></i>
 				</div>
 

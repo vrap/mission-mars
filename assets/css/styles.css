@@ -119,6 +119,18 @@ h5 {
 }
 
 /********
+* Full map
+*********/
+#bloc-fullMap{
+	/*display: none;*/
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+	overflow: auto; 
+}
+
+/********
 * Mini map
 *********/
 #panel-minimap {
@@ -136,7 +148,24 @@ h5 {
 	height: 200px;
 	border-radius: 100%;
 	background-color: #8e3236;
+}
 
+#bloc-panel-minimap-hover{
+	border: 10px solid #8e3236;
+	position: absolute;
+	bottom: -1px;
+	right: 10px;
+	width: 200px;
+	height: 200px;
+	border-radius: 100%;
+	z-index: 1001;
+	
+}
+
+#bloc-panel-minimap-hover:hover{
+	background-color: #653739;
+	cursor: pointer;
+	opacity: 0.7;
 }
 
 #bloc-minimap {
@@ -185,23 +214,21 @@ h5 {
 	border-right: 3px solid #653739;
 	position: relative;
 }
-.info-bloc:last-child{
+/*.info-bloc:last-child{
 	border-right: 0;
-}
+}*/
 
-/*#bloc-battery{width: 10%;}
-#bloc-position{width: 15%;}
-#bloc-material{width: 15%;}
-#bloc-move{width: 10%;}
-#btn-control{width: 3%;}
-#bloc-map{width: 27%;}*/
+#bloc-battery{}
+#bloc-position{}
+#bloc-material{}
+#bloc-move{}
+#btn-control{}
 
-
-#btn-control:hover{
+.btn-panel:hover{
 	background-color: #653739;
 	cursor: pointer;
 }
-#btn-control:hover .glyphicon-seetings{
+.btn-panel:hover .glyphicon-seetings{
 	opacity: 0.7;
 }
 
@@ -323,7 +350,7 @@ h5 {
 	z-index: 1000;
 	font-family: 'Roboto', sans-serif;
 	-webkit-transition: height .3s linear;
-	opacity: 0;
+	/*opacity: 0;*/
 }
 
 #controls-header {
