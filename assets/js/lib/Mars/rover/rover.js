@@ -106,7 +106,12 @@
 				var action = this.waitingActions[0].action;
 				var args = this.waitingActions[0].args;
 
+			    if (typeof args == 'array') {
 				this[action].apply(this, args);
+			    }
+			    else {
+				this[action].call(this);
+			    }
 				this.waitingActions.splice(0, 1);
 
 					setTimeout(
@@ -157,6 +162,7 @@
 	 * @return {[type]}           [description]
 	 */
 	nsRover.Rover.prototype.setDirection = function(direction) {
+	    if (arguments.callee.caller == this.executeBufferedAction) {
 		for (var directionName in this.constructor.DIRECTION) {
 			var directionCode = this.constructor.DIRECTION[directionName];
 
@@ -169,6 +175,10 @@
 				break;
 			}
 		}
+	    }
+	    else {
+	        this.executeAction('setDirection', arguments);
+	    }
 	};
 
 	/**
@@ -265,6 +275,7 @@
 	 * @param  {integer} distance  Distance to seek.
 	 */
 	nsRover.Rover.prototype.move = function(distance) {
+	    if (arguments.callee.caller == this.executeBufferedAction) {
 		if (distance < 1 || distance > 2) {
 			throw new Error('Distance can only be set to 1 or 2.');
 		}
@@ -334,9 +345,14 @@
 		else {
 			throw new Error('The map is undiscovered here.');
 		}
+	    }
+	    else {
+	        this.executeAction('move', arguments);
+	    }
 	};
 
 	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
+	    if (arguments.callee.caller == this.executeBufferedAction) {
 		if (distance < 0 || distance > 2) {
 			throw new Error('Distance can only be set to 0 or 2.');
 		}
@@ -368,9 +384,14 @@
 				}
 			}
 		}
+	    }
+	    else {
+	        this.executeAction('scanElevation', arguments);
+	    }
 	};
 
 	nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
+	    if (arguments.callee.caller == this.executeBufferedAction) {
 		if (distance < 0 || distance > 2) {
 			throw new Error('Distance can only be set to 0 or 2.');
 		}
@@ -415,6 +436,10 @@
 				});
 			}
 		}
+	    }
+	    else {
+	        this.executeAction('scanMaterial', arguments);
+	    }
 	};
 
 	/**
@@ -430,6 +455,7 @@
 	};
 
 	nsRover.Rover.prototype.deploySolarPanels = function() {
+	    if (arguments.callee.caller == this.executeBufferedAction) {
 		this.tank  += (this.panelsCost * 2);
 		this.moves += this.panelsCost;
 
@@ -438,5 +464,9 @@
 		}
 
 		this.publishEvent('actions.deploySolarPanels');
+	    }
+	    else {
+	        this.executeAction('deploySolarPanels', arguments);
+	    }
 	};
 })();
