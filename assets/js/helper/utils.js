@@ -52,3 +52,12 @@ function drawCircle (x_center, y_center, rayon, z, elements) {
 function degToRad (degrees) {
 	return degrees * Math.PI/180;
 }
+
+/**
+ * Add script at the end of the body
+ */
+function createScript (script) {
+  var s = document.createElement('script');
+  s.src = script;
+  document.body.appendChild(s);
+}

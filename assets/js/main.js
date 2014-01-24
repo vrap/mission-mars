@@ -9,19 +9,6 @@
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
 
-	/* Loading materials. */
-	var materialRock = new nsMaterial.Rock();
-	var materialIce = new nsMaterial.Ice();
-	var materialIron = new nsMaterial.Iron();
-	var materialOre = new nsMaterial.Ore();
-	var materialSand = new nsMaterial.Sand();
-	var materialOther = new nsMaterial.Other();
-
-	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
-	var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
-	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
-
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#minimap');
@@ -36,6 +23,20 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
+
+    /* Loading materials. */
+    var materialRock = new nsMaterial.Rock();
+    var materialIce = new nsMaterial.Ice();
+    var materialIron = new nsMaterial.Iron();
+    var materialOre = new nsMaterial.Ore();
+    var materialSand = new nsMaterial.Sand();
+    var materialOther = new nsMaterial.Other();
+
+    /* Loading elements. */
+    var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
+    var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
+    var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
+
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
 			[{
 				"model": elementCrater,
@@ -62,11 +63,11 @@
 	document.controlsForm.wireframe[0].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = true;
 		viewer.viewers[renderDiv]._loadMaterials();
-	}
+	};
 	document.controlsForm.wireframe[1].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = false;
 		viewer.viewers[renderDiv]._loadMaterials();
-	}
+	};
 	document.querySelector('#more').onclick = function () {
 		if (viewer.viewers[renderDiv].options.fog < 1) {
 			viewer.viewers[renderDiv].options.fog += 0.001;
@@ -74,7 +75,7 @@
 			viewer.viewers[renderDiv].options.fog = 1;
 		}
 		viewer.viewers[renderDiv]._loadFog();
-	}
+	};
 	document.querySelector('#less').onclick = function () {
 		if (viewer.viewers[renderDiv].options.fog > 0) {
 			viewer.viewers[renderDiv].options.fog -= 0.001;
@@ -82,20 +83,20 @@
 			viewer.viewers[renderDiv].options.fog = 0;
 		}
 		viewer.viewers[renderDiv]._loadFog();
-	}
+	};
 	document.controlsForm.camera[0].onclick = function () {
 		viewer.viewers[renderDiv].options.cameraControl = true;
 		viewer.viewers[renderDiv]._loadControls();
-	}
+	};
 	document.controlsForm.camera[1].onclick = function () {
 		viewer.viewers[renderDiv].options.cameraControl = false;
 		viewer.viewers[renderDiv]._loadControls();
-	}
+	};
 	/* Map download */
 	document.querySelector('#download').onclick = function () {
 		var blob = new Blob([terrain], {type: "octet/stream"});
 		saveAs(blob, "map.json");
-	}
+	};
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
