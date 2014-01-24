@@ -74,10 +74,10 @@
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 1;
-    this.controls.lookSpeed = 0.001;
-    this.controls.lookVertical = true;
-    // Control camera if user wants it.
-    this.controls.activeLook = this.options.cameraControl;
+	    this.controls.lookSpeed = 0.001;
+	    this.controls.lookVertical = true;
+	    // Control camera if user wants it.
+	    this.controls.activeLook = this.options.cameraControl;
 	};
 
 	/**

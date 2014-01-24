@@ -16,6 +16,8 @@
 
 		this.observable = new nsCommon.Observable();
 
+		this.init();
+
 		this._pushBattery();
 		this._pushPosition();
 		this._pushMove();

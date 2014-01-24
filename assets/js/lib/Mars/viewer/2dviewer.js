@@ -46,6 +46,7 @@
 	}
 
 	nsViewer.Viewer2D.prototype.drawRover = function(data){
+
 		this.context.fillStyle = 'rgba(48, 244, 255, 0.6)';
 		this.context.fillRect(data.newX * this.valPixel, data.newY * this.valPixel, this.valPixel, this.valPixel);
 
@@ -55,6 +56,7 @@
 		
 		this.context.fillStyle = 'rgba(198, 240, 242, 0.2)';
 		this.context.fillRect(data.lastX * this.valPixel, data.lastY * this.valPixel, this.valPixel, this.valPixel);
+
 	}
 
 	nsViewer.Viewer2D.prototype.initRover = function(){
@@ -108,6 +110,7 @@
 	}
 
 	nsViewer.Viewer2D.prototype.listenRover = function(){
+		
 		/* Listen to rover events. */
 		var observable = new nsCommon.Observable();
 		observable.subscribe('rover.move', function(data) {

@@ -59,6 +59,16 @@ h5 {
 	font-weight: lighter;
 }
 
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
 /********
 * Home page
 *********/
@@ -118,17 +128,51 @@ h5 {
 	margin-bottom: 15px;
 }
 
+#render{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: -1000;
+}
+
 /********
 * Full map
 *********/
 #bloc-fullMap{
+	display: none;
+	width: 800px;
+	height: 500px;
+	border: 10px solid #8e3236;
+	margin-left: 50px;
 	/*display: none;*/
 	position: absolute;
-	top: 0px;
-	left: 0px;
+	bottom: 90px;
+	right: 265px;
 	z-index: 1000;
 	overflow: auto; 
 }
+
+#bloc-fullMap .glyphicon-close{
+	cursor: pointer;
+	position: absolute;
+	top: 13px;
+	left: 13px;
+	z-index: 1001;
+}
+
+#bloc-fullMap.show{
+	display: block;
+}
+
+#bloc-fullMap.hide{
+	display: none;
+}
+
+.drag{
+	cursor: move;
+}
+
+
 
 /********
 * Mini map
@@ -159,7 +203,6 @@ h5 {
 	height: 200px;
 	border-radius: 100%;
 	z-index: 1001;
-	
 }
 
 #bloc-panel-minimap-hover:hover{
@@ -265,6 +308,10 @@ h5 {
 	background-image: url('../img/icons/seetings.png');
 	margin-right: 0px;
 }
+.glyphicon-close{
+	background-color: blue;
+}
+
 
 /********
 * Console ask

@@ -2,6 +2,8 @@
 * File for functions used for UI and UX
 *************************************/
 
+
+
 /**
  * Scripts to load
  */
@@ -11,6 +13,9 @@ var scripts = [
 ];
 
 (function () {
+
+	
+
 	/**
 	 * Display home page and hide viewer
 	 */

@@ -75,6 +75,13 @@
 	
 	var interfaces = new nsViewer.Interface(elementBattery, elementPosition, elementMaterial, elementMove, elementMiniMap);
 
+	document.querySelector('#bloc-panel-minimap-hover').onclick = function (){
+		document.querySelector('#bloc-fullMap').className = 'show';
+	}
+	document.querySelector('#bloc-fullMap .glyphicon-close').onclick = function (){
+		document.querySelector('#bloc-fullMap').className = 'hidde';
+	}
+
 	/* UI Controls */
 	document.controlsForm.wireframe[0].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = true;
@@ -116,6 +123,7 @@
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
+
 	observable.subscribe('rover.scanMaterial', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
@@ -163,22 +171,22 @@
 	});
 
 	/* Rover tests. */
-	var rover = new nsRover.Rover(map, 50, 50, 100);
 	var memory = new nsMemory.Memory();
-	var speculator = new nsSpeculator.S3000(rover, memory);
+    var rover = new nsRover.Rover(map, 50, 50, 100, memory);
+	var speculator = new nsSpeculator.S3000(rover);
+
 	speculator.enableModule('voyager');
 
 	rover.setDirection(nsRover.Rover.DIRECTION.SOUTH);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 0);
+	
+	rover.move(2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+	
+	rover.move(2);
+	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
+    console.log('STARTING VOYAGER');
 
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-	
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-	
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-        console.log('STARTING VOYAGER');
-        speculator.start({x: 10, y: 20});
+    speculator.start({x: 10, y: 20});
+	console.log(rover.memory.readAll());
+
 })();
