@@ -9,19 +9,6 @@
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
 
-	/* Loading materials. */
-	var materialRock = new nsMaterial.Rock();
-	var materialIce = new nsMaterial.Ice();
-	var materialIron = new nsMaterial.Iron();
-	var materialOre = new nsMaterial.Ore();
-	var materialSand = new nsMaterial.Sand();
-	var materialOther = new nsMaterial.Other();
-
-	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
-	var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
-	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
-
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#minimap');
@@ -36,6 +23,20 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
+
+    /* Loading materials. */
+    var materialRock = new nsMaterial.Rock();
+    var materialIce = new nsMaterial.Ice();
+    var materialIron = new nsMaterial.Iron();
+    var materialOre = new nsMaterial.Ore();
+    var materialSand = new nsMaterial.Sand();
+    var materialOther = new nsMaterial.Other();
+
+    /* Loading elements. */
+    var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
+    var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
+    var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
+
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
 			[{
 				"model": elementCrater,
