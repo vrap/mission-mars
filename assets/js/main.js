@@ -49,7 +49,7 @@
 				"model": elementRavine,
 				"number": 10
 			}],
-			400, 400, -10, 10);
+			100, 100, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
 	
@@ -57,6 +57,15 @@
 	var viewer = new nsViewer.Viewer(map);
 	viewer.load2D(render2dDiv);
 	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
+
+	/* Load infos of robot */
+	var elementBattery = document.querySelector('#battery');
+	var elementPosition = document.querySelector('#position');
+	var elementMaterial = document.querySelector('#material');
+	var elementMove = document.querySelector('#move');
+	
+
+	var interfaces = new nsViewer.Interface(elementBattery, elementPosition, elementMaterial, elementMove);
 
 	/* UI Controls */
 	document.controlsForm.wireframe[0].onclick = function () {
@@ -146,7 +155,7 @@
 	});
 
 	/* Rover tests. */
-	/*var rover = new nsRover.Rover(map, 50, 50, 100);
+	var rover = new nsRover.Rover(map, 50, 50, 100);
 	var memory = new nsMemory.Memory();
 	var speculator = new nsSpeculator.S3000(rover, memory);
 	speculator.enableModule('voyager');
@@ -163,5 +172,5 @@
 	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
         console.log('STARTING VOYAGER');
-        speculator.start({x: 10, y: 20});*/
+        speculator.start({x: 10, y: 20});
 })();

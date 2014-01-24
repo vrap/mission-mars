@@ -29,14 +29,7 @@
 		<div class="view">
 			<!-- viewer 3D -->
 			<div id="render"></div>
-			<!-- viewer 2D -->
-			<div id="panel-minimap">
-				<div id="bloc-minimap">
-					<canvas id="minimap">
-			      Canvas not supported.
-			    </canvas>
-				</div>
-			</div>
+			
 			<!-- controls -->
 			<div id="panel-control" class="closed">
 				<div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
@@ -63,6 +56,51 @@
 					</form>
 				</div>
 			</div>
+			
+			<!-- viewer 2D -->
+			<div id="bloc-panel-minimap"></div>
+			<div id="panel-minimap">
+				<div id="bloc-minimap">
+					<canvas id="minimap">
+			      Canvas not supported.
+			    </canvas>
+				</div>
+			</div>
+			<div id="panel-infos">
+				
+				<div id="bloc-battery" class="info-bloc"><i class='glyphicon glyphicon-battery'></i><span id="battery"></span></div>
+				<div id="bloc-position" class="info-bloc"><i class='glyphicon glyphicon-position'></i><span id="position"></span></div>
+				<div id="bloc-material" class="info-bloc"><i class='glyphicon glyphicon-material'></i><span id="material"></span></div>
+				<div id="bloc-move" class="info-bloc"><i class='glyphicon glyphicon-move'></i><span id="move"></span></div>
+				
+				<div id="panel-control-bis">
+					<div class="control-bloc">
+						<input type="radio" id="w1" name="wireframe"><label for="w1"><span></span>On</label>
+						<input type="radio" id="w2" name="wireframe" checked><label for="w2"><span></span>Off</label>
+					</div>
+					<div class="control-bloc">
+						<h3>Fog</h3>
+						<input type="button" class="btn-control" value=" + " id="more">
+						<input type="button" class="btn-control" value=" - " id="less">
+					</div>
+					<div class="control-bloc">
+						<input type="radio" id="c1" name="camera"><label for="c1"><span></span>On</label>
+						<input type="radio" id="c2" name="camera" checked><label for="c2"><span></span>Off</label>
+					</div>
+					<div class="control-bloc">
+						<a id="download" href='#'>Download map</a>
+					</div>
+				</div>
+
+				<div id="btn-control" class="info-bloc">
+					<i class='glyphicon glyphicon-seetings'></i>
+				</div>
+				<div id="bloc-map" class="info-bloc">
+					<i class='glyphicon glyphicon-seetings'></i>
+				</div>
+
+			</div>
+
 			<!-- console -->
 			<div id="panel-console" class="closed">
 				<form action="#" id="form-commande">
@@ -123,6 +161,7 @@
 		<script type="text/javascript" src="assets/js/lib/Mars/viewer/viewer.js" defer></script>
 		<script type="text/javascript" src="assets/js/lib/Mars/viewer/2dviewer.js" defer></script>
 		<script type="text/javascript" src="assets/js/lib/Mars/viewer/3dviewer.js" defer></script>
+		<script type="text/javascript" src="assets/js/lib/Mars/viewer/interface.js" defer></script>
 
 		<!-- Rover invader -->
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js" defer></script>

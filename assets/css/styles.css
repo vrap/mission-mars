@@ -19,9 +19,9 @@
 /********
 * Resets
 *********/
-body {
-	margin: 0;
-	padding: 0;
+body{
+  margin: 0px;
+  overflow: hidden;
 }
 
 input[type="radio"] {
@@ -123,8 +123,20 @@ h5 {
 *********/
 #panel-minimap {
 	position: absolute;
-	top: 10px;
+	bottom: 9px;
+	right: -10px;
+	z-index: 1000;
+}
+#bloc-panel-minimap{
+	border: 10px solid #8e3236;
+	position: absolute;
+	bottom: -1px;
 	right: 10px;
+	width: 200px;
+	height: 200px;
+	border-radius: 100%;
+	background-color: #8e3236;
+
 }
 
 #bloc-minimap {
@@ -138,7 +150,7 @@ h5 {
 	mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
 	width: 200px;
 	height: 200px;
-	overflow:hidden;
+	
 	position: relative;
 	margin-top: 30px;
 	margin-right: 30px;
@@ -149,11 +161,91 @@ h5 {
 }
 
 /********
+* Panel Infos
+*********/
+#panel-infos{
+/*	color: #f2f2f2;
+  	background-color: rgba(0, 0, 0, 0.5);*/
+	width: 100%;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	font-family: 'Roboto', sans-serif;
+	margin: 0px;
+	padding: 0px;
+	background-color: #8e3236;
+}
+.info-bloc{
+	margin: 0px;
+	float: left;
+	padding: 10px 20px 18px 20px;
+	color: #4DD2F0;
+	font-family: 'bpmonoregular';
+	background-color: #8e3236;
+	border-right: 3px solid #653739;
+	position: relative;
+}
+.info-bloc:last-child{
+	border-right: 0;
+}
+
+/*#bloc-battery{width: 10%;}
+#bloc-position{width: 15%;}
+#bloc-material{width: 15%;}
+#bloc-move{width: 10%;}
+#btn-control{width: 3%;}
+#bloc-map{width: 27%;}*/
+
+
+#btn-control:hover{
+	background-color: #653739;
+	cursor: pointer;
+}
+#btn-control:hover .glyphicon-seetings{
+	opacity: 0.7;
+}
+
+#panel-control-bis{
+	display: none;
+	
+}
+
+
+/********
+* Icons
+*********/
+.glyphicon{
+	width: 40px;
+	height: 40px;
+	display: inline-block;
+	margin-right: 10px;
+	margin-bottom: -12px;
+}
+
+.glyphicon-battery{
+	background-image: url('../img/icons/battery.png');
+}
+.glyphicon-position{
+	background-image: url('../img/icons/compass.png');
+}
+.glyphicon-material{
+	/*background-image: url('../img/icons/');*/
+}
+.glyphicon-move{
+	background-image: url('../img/icons/move.png');
+}
+.glyphicon-seetings{
+	background-image: url('../img/icons/seetings.png');
+	margin-right: 0px;
+}
+
+/********
 * Console ask
 *********/
 #panel-console{
+	display: none;
 	color: #f2f2f2;
-  background-color: rgba(0, 0, 0, 0.5);
+  	background-color: rgba(0, 0, 0, 0.5);
 	width: 100%;
 	padding: 20px;
 	position: fixed;
@@ -166,7 +258,7 @@ h5 {
 #panel-console input[type="text"]{
 	border:0;
 	width:80%;
-  background-color: rgba(0,0,0, 0);
+  	background-color: rgba(0,0,0, 0);
 	color: #4DD2F0;
 	font-size: 1em;
 	font-family: 'bpmonoregular';
@@ -181,6 +273,7 @@ h5 {
 * Console response
 *********/
 #panel-response-console{
+	display: none;
 	position: absolute;
 	top: 10px;
 	left: 10px;
@@ -226,10 +319,11 @@ h5 {
 	width: 200px;
 	position: fixed;
 	bottom: 65px;
-	right: 40px;
+	left: 40px;
 	z-index: 1000;
 	font-family: 'Roboto', sans-serif;
 	-webkit-transition: height .3s linear;
+	opacity: 0;
 }
 
 #controls-header {
