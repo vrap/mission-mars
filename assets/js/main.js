@@ -23,7 +23,7 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
-
+    var mapSize = document.querySelector('#map-size').value;
     /* Loading materials. */
     var materialRock = new nsMaterial.Rock();
     var materialIce = new nsMaterial.Ice();
@@ -50,7 +50,7 @@
 				"model": elementRavine,
 				"number": 0
 			}],
-			100, 100, -10, 10);
+			mapSize, mapSize, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
 	
@@ -152,8 +152,24 @@
   });
 
 	/* Rover tests. */
+  var module,
+      startX,
+      startY,
+      endX,
+      endY;
+  if(document.querySelector('#explorer').checked) {
+    module = 'explorer';
+    startX = parseInt(document.querySelector('#explorer-startX').value);
+    startY = parseInt(document.querySelector('#explorer-startY').value);
+  } else {
+    module = 'voyager';
+    startX = parseInt(document.querySelector('#voyager-startX').value);
+    startY = parseInt(document.querySelector('#voyager-startY').value);
+    endX = parseInt(document.querySelector('#voyager-endX').value);
+    endY = parseInt(document.querySelector('#voyager-endY').value);
+  }
 	var memory = new nsMemory.Memory();
-        var rover = new nsRover.Rover(map, 50, 50, 100, memory);
+  var rover = new nsRover.Rover(map, 50, 50, 100, memory);
 	var speculator = new nsSpeculator.S3000(rover);
 
 	speculator.enableModule('voyager');
@@ -165,8 +181,8 @@
 	
 	rover.move(2);
 	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-        console.log('STARTING VOYAGER');
+  console.log('STARTING VOYAGER');
 
-        speculator.start({x: 50, y: 50});
+  speculator.start({x: 50, y: 50});
 	console.log(rover.memory.readAll());
 })();
