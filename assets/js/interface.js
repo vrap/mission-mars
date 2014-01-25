@@ -21,12 +21,14 @@
    */
   document.querySelector('#import').onclick = function () {
     document.querySelector('#st-control-3').checked = true;
+    document.querySelector('#text-map').innerHTML = "Upload your map";
     document.querySelector('#block-generate').style.display = 'none';
     document.querySelector('#block-upload').style.display = 'block';
   };
 
   document.querySelector('#generate').onclick = function () {
     document.querySelector('#st-control-3').checked = true;
+    document.querySelector('#text-map').innerHTML = "New map";
     document.querySelector('#block-generate').style.display = 'block';
     document.querySelector('#block-upload').style.display = 'none';
   };
