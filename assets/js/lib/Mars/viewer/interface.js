@@ -36,7 +36,7 @@
 
 		this.observable.subscribe('rover.move', function(data){
 
-			var tank = data.rover.tank * data.rover.tankSize / 100;
+			var tank = Math.round(data.rover.tank * data.rover.tankSize / 100);
 
 			this.elementBattery.innerHTML = tank + '%';
 		}.bind(this));

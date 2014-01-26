@@ -9,19 +9,6 @@
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
 
-	/* Loading materials. */
-	var materialRock = new nsMaterial.Rock();
-	var materialIce = new nsMaterial.Ice();
-	var materialIron = new nsMaterial.Iron();
-	var materialOre = new nsMaterial.Ore();
-	var materialSand = new nsMaterial.Sand();
-	var materialOther = new nsMaterial.Other();
-
-	/* Loading elements. */
-	var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
-	var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
-	var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
-
 	/* Define viewer container. */
 	var renderDiv = document.querySelector('#render');
 	var render2dDiv = document.querySelector('#minimap');
@@ -39,18 +26,32 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
+
+    /* Loading materials. */
+    var materialRock = new nsMaterial.Rock();
+    var materialIce = new nsMaterial.Ice();
+    var materialIron = new nsMaterial.Iron();
+    var materialOre = new nsMaterial.Ore();
+    var materialSand = new nsMaterial.Sand();
+    var materialOther = new nsMaterial.Other();
+
+    /* Loading elements. */
+    var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
+    var elementHill   = new nsElements.HillModel([materialSand], -0, 40, 2);
+    var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
+
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
 			[{
 				"model": elementCrater,
-				"number": 10
+				"number": 3
 			},
 			{
 				"model": elementHill,
-				"number": 10
+				"number": 2
 			},
 			{
 				"model": elementRavine,
-				"number": 10
+				"number": 2
 			}],
 			100, 100, -10, 10);
 		map = new nsCommon.Map(terrain);
@@ -72,6 +73,13 @@
 	var elementMaterial = document.querySelector('#material');
 	var elementMove = document.querySelector('#move');
 	var elementMiniMap = document.querySelector('#bloc-panel-minimap-hover');
+
+	var elementControl = document.querySelector('#display-control');
+
+	elementControl.onclick = function (){
+		viewer.viewers[renderDiv].options.cameraControl = true;
+		viewer.viewers[renderDiv]._loadControls();
+	}
 	
 	var interfaces = new nsViewer.Interface(elementBattery, elementPosition, elementMaterial, elementMove, elementMiniMap);
 
@@ -86,40 +94,42 @@
 	document.controlsForm.wireframe[0].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = true;
 		viewer.viewers[renderDiv]._loadMaterials();
-	}
+	};
+
+
 	document.controlsForm.wireframe[1].onclick = function () {
 		viewer.viewers[renderDiv].options.wireframe = false;
 		viewer.viewers[renderDiv]._loadMaterials();
-	}
+	};
 	document.querySelector('#more').onclick = function () {
 		if (viewer.viewers[renderDiv].options.fog < 1) {
-			viewer.viewers[renderDiv].options.fog += 0.01;
+			viewer.viewers[renderDiv].options.fog += 0.001;
 		} else {
 			viewer.viewers[renderDiv].options.fog = 1;
 		}
 		viewer.viewers[renderDiv]._loadFog();
-	}
+	};
 	document.querySelector('#less').onclick = function () {
 		if (viewer.viewers[renderDiv].options.fog > 0) {
-			viewer.viewers[renderDiv].options.fog -= 0.01;
+			viewer.viewers[renderDiv].options.fog -= 0.001;
 		} else {
 			viewer.viewers[renderDiv].options.fog = 0;
 		}
 		viewer.viewers[renderDiv]._loadFog();
-	}
+	};
 	document.controlsForm.camera[0].onclick = function () {
 		viewer.viewers[renderDiv].options.cameraControl = true;
 		viewer.viewers[renderDiv]._loadControls();
-	}
+	};
 	document.controlsForm.camera[1].onclick = function () {
 		viewer.viewers[renderDiv].options.cameraControl = false;
 		viewer.viewers[renderDiv]._loadControls();
-	}
+	};
 	/* Map download */
 	document.querySelector('#download').onclick = function () {
 		var blob = new Blob([terrain], {type: "octet/stream"});
 		saveAs(blob, "map.json");
-	}
+	};
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
@@ -155,20 +165,24 @@
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-		//console.log('Rover spawned !', data);
+		console.log('Rover spawned !', data.rover);
+    viewer.viewers[renderDiv].camera.position.x += data.rover.y;
+    viewer.viewers[renderDiv].camera.position.z += data.rover.x;
 	});
 	observable.subscribe('rover.actions.fillTank', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
 		//console.log('tank is filled', data);
 	});
 	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		
 		//console.log('panels are deployed', data);
 	});
+  observable.subscribe('rover.direction', function(data) {
+    // Set camera with setDirection. Verify direction on move also.
+    viewer.viewers[renderDiv].setVision(data.lastDirection);
+  });
+  observable.subscribe('rover.move', function(data) {
+    // Set camera with setDirection. Verify direction on move also.
+    viewer.viewers[renderDiv].move(data.direction);
+  });
 
 	/* Rover tests. */
 	var memory = new nsMemory.Memory();

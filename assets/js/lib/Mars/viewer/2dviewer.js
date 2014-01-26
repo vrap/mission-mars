@@ -29,8 +29,8 @@
 		//dessin de la grille
 		for(var x = 0; x < this.viewer.map.getWidth(); x++){
 			for(var y = 0; y < this.viewer.map.getHeight(); y++ ){
-				color= {red: 122, green: 122, blue: 122, opacity: 0.8};
-				var elevevation =  Math.round(this.viewer.map._squares[x][y].z*10);
+				color= {red: 122, green: 122, blue: 122, opacity: 1};
+				var elevevation =  this.viewer.map._squares[x][y].z;
 
 				color.blue -= elevevation*3;
 				color.green -= elevevation*3;
@@ -52,7 +52,7 @@
 
 		var square = this.viewer.map.getSquare(data.lastX, data.lastY);
 
-		var elevevation =  Math.round(square.z*10);
+		var elevevation =  square.z;
 		
 		this.context.fillStyle = 'rgba(198, 240, 242, 0.2)';
 		this.context.fillRect(data.lastX * this.valPixel, data.lastY * this.valPixel, this.valPixel, this.valPixel);
@@ -110,7 +110,7 @@
 	}
 
 	nsViewer.Viewer2D.prototype.listenRover = function(){
-		
+
 		/* Listen to rover events. */
 		var observable = new nsCommon.Observable();
 		observable.subscribe('rover.move', function(data) {
