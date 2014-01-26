@@ -14,7 +14,7 @@
     <input type="radio" name="radio-set" id="st-control-2"/>
     <a href="javascript: void(0);">Type of map</a>
     <input type="radio" name="radio-set" id="st-control-3"/>
-    <a href="javascript: void(0);">Upload / new map</a>
+    <a href="javascript: void(0);"><span id="text-map">Map</span></a>
     <input type="radio" name="radio-set" id="st-control-4"/>
     <a href="javascript: void(0);">Scenario</a>
     <input type="radio" name="radio-set" id="st-control-5"/>
@@ -58,7 +58,7 @@
         <div id="block-generate">
           <h2>Generate a new map</h2>
           <p>
-            <b>Size:</b> <input type="text" size="1" maxlength="3" placeholder="XXX"> cases.
+            <b>Size:</b> <input type="text" size="1" maxlength="3" id="map-size" placeholder="XXX"> cases.
             <br/>
             <a href="javascript: void(0);" id="scenario" class="btn-link">Choose your scenario</a>
           </p>
@@ -71,26 +71,26 @@
         <h2>Choose your game scenario</h2>
         <p>
           <span class="grid50">
-            <i class="flaticon-push19"></i><br>
+            <i class="flaticon-radar5"></i><br>
             <input type="radio" id="explorer" name="scenario"><label for="explorer">Explorer</label>
             <br>
             <br>
             <span id="explorer-settings">
-              <b>Energy:</b> <input type="text" size="1" maxlength="5" placeholder="XXX"><br/>
-              <b>Start:</b> x: <input type="text" size="1" maxlength="3" placeholder="X">
-              y:<input type="text" size="1" maxlength="3" placeholder="Y">
+              <b>Energy:</b> <input type="text" size="1" maxlength="5" id="explorer-energy" placeholder="XXX"><br/>
+              <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="explorer-startX" placeholder="X">
+              y:<input type="text" size="1" maxlength="3" id="explorer-startY" placeholder="Y">
             </span>
           </span>
           <span class="grid50">
-            <i class="flaticon-radar5"></i><br>
+            <i class="flaticon-push19"></i><br>
             <input type="radio" id="voyager" name="scenario"><label for="voyager">Voyager</label>
             <br><br>
             <span id="voyager-settings">
-              <b>Energy:</b> <input type="text" size="1" maxlength="5" placeholder="XXX"><br/>
-              <b>Start:</b> x: <input type="text" size="1" maxlength="3" placeholder="X">
-              y:<input type="text" size="1" maxlength="3" placeholder="Y"><br>
-              <b>End  :</b> x: <input type="text" size="1" maxlength="3" placeholder="X">
-              y:<input type="text" size="1" maxlength="3" placeholder="Y">
+              <b>Energy:</b> <input type="text" size="1" maxlength="5" id="voyager-energy" placeholder="XXX"><br/>
+              <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="voyager-startX" placeholder="X">
+              y:<input type="text" size="1" maxlength="3" id="voyager-startY" placeholder="Y"><br>
+              <b>End  :</b> x: <input type="text" size="1" maxlength="3" id="voyager-endX" placeholder="X">
+              y:<input type="text" size="1" maxlength="3" id="voyager-endY" placeholder="Y">
             </span>
           </span>
           <br>

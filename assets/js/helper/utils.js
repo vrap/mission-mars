@@ -61,3 +61,7 @@ function createScript (script) {
   s.src = script;
   document.body.appendChild(s);
 }
+
+function isPositiveInteger(n) {
+  return (!isNaN(n) && parseInt(n) >= 0);
+}

@@ -501,7 +501,6 @@ h5 {
   text-align: center;
 }
 
-
 #render{
 	position: absolute;
 	top: 0px;
@@ -545,8 +544,6 @@ h5 {
 .drag{
 	cursor: move;
 }
-
-
 
 /********
 * Mini map

@@ -26,7 +26,7 @@
 		map = new nsCommon.Map(terrain);
 	} else {
 		// Map generation otherwise.
-
+    var mapSize = document.querySelector('#map-size').value;
     /* Loading materials. */
     var materialRock = new nsMaterial.Rock();
     var materialIce = new nsMaterial.Ice();
@@ -53,7 +53,7 @@
 				"model": elementRavine,
 				"number": 2
 			}],
-			100, 100, -10, 10);
+			mapSize, mapSize, -10, 10);
 		map = new nsCommon.Map(terrain);
 	}
 	
@@ -165,9 +165,8 @@
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-		console.log('Rover spawned !', data.rover);
-    viewer.viewers[renderDiv].camera.position.x += data.rover.y;
-    viewer.viewers[renderDiv].camera.position.z += data.rover.x;
+    viewer.viewers[renderDiv].camera.position.x += data.rover.x;
+    viewer.viewers[renderDiv].camera.position.z -= data.rover.y;
 	});
 	observable.subscribe('rover.actions.fillTank', function(data) {
 		//console.log('tank is filled', data);
@@ -176,15 +175,32 @@
 		//console.log('panels are deployed', data);
 	});
   observable.subscribe('rover.direction', function(data) {
-    // Set camera with setDirection. Verify direction on move also.
+    // Set camera vision.
     viewer.viewers[renderDiv].setVision(data.lastDirection);
   });
   observable.subscribe('rover.move', function(data) {
-    // Set camera with setDirection. Verify direction on move also.
+    // Set camera position.
     viewer.viewers[renderDiv].move(data.direction);
+    console.log(viewer.viewers[renderDiv].camera.position);
   });
 
 	/* Rover tests. */
+  var module,
+      startX,
+      startY,
+      endX,
+      endY;
+  if(document.querySelector('#explorer').checked) {
+    module = 'explorer';
+    startX = parseInt(document.querySelector('#explorer-startX').value);
+    startY = parseInt(document.querySelector('#explorer-startY').value);
+  } else {
+    module = 'voyager';
+    startX = parseInt(document.querySelector('#voyager-startX').value);
+    startY = parseInt(document.querySelector('#voyager-startY').value);
+    endX = parseInt(document.querySelector('#voyager-endX').value);
+    endY = parseInt(document.querySelector('#voyager-endY').value);
+  }
 	var memory = new nsMemory.Memory();
     var rover = new nsRover.Rover(map, 50, 50, 100, memory);
 	var speculator = new nsSpeculator.S3000(rover);
