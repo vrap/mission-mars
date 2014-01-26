@@ -1,4 +1,59 @@
 /**
+ * Return offset top of element
+ */
+function getElementTop( elem ) 
+{
+
+    yPos = elem.offsetTop;
+    tempEl = elem.offsetParent;
+
+    while ( tempEl != null ) 
+    {
+        yPos += tempEl.offsetTop;
+        tempEl = tempEl.offsetParent;
+    }  
+
+    return yPos;
+}   
+
+/**
+ * Return offset left of element
+ */
+function getElementLeft( elem ) 
+{
+
+    xPos = elem.offsetLeft;
+    tempEl = elem.offsetParent; 		
+
+    while ( tempEl != null ) 
+    {
+        xPos += tempEl.offsetLeft;
+        tempEl = tempEl.offsetParent;
+    }   		
+    return xPos;
+}
+
+/**
+ * Remove Classe of element
+ */
+function removeClass(elem, classN){
+	var myClassName=classN;
+	elem.className=elem.className.replace(myClassName,'');
+}
+
+/**
+* Adding a class of element
+*/
+function addClass(elem, classN){
+	var myClassName= classN;
+	elem.className=elem.className.replace(myClassName,'');
+	elem.className = elem.className + myClassName;
+}
+
+
+
+
+/**
  * Return a random integer between min and max
  */
 function getRandomInt(min, max) {

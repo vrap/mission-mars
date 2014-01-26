@@ -81,6 +81,7 @@ body{
   color: #81e8ff;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  font-family: 'bpmonoregular';
 }
 
 a{
@@ -486,7 +487,12 @@ h5 {
   text-decoration:none;
   text-transform: uppercase;
 }
-.btn-link:hover {
+
+.btn-link.no-shadow{
+	-moz-box-shadow: 0px 0px 0px 0px #1677ab;
+  	-webkit-box-shadow: 0px 0px 0px 0px #1677ab;
+}
+.btn-link:hover, .btn-link.active {
   background-color:#4aafe6;
 }
 .btn-link:active {
@@ -618,6 +624,7 @@ h5 {
 	padding: 0px;
 	background-color: #8e3236;
 }
+
 .info-bloc{
 	margin: 0px;
 	float: left;
@@ -625,9 +632,10 @@ h5 {
 	color: #4DD2F0;
 	font-family: 'bpmonoregular';
 	background-color: #8e3236;
-	border-right: 3px solid #653739;
+	border-right: 1px solid #653739;
 	position: relative;
 }
+
 /*.info-bloc:last-child{
 	border-right: 0;
 }*/
@@ -640,16 +648,13 @@ h5 {
 
 .btn-panel:hover{
 	background-color: #653739;
-	cursor: pointer;
+	
 }
 .btn-panel:hover .glyphicon-seetings{
 	opacity: 0.7;
+	cursor: pointer;
 }
 
-#panel-control-bis{
-	display: none;
-	
-}
 
 
 /********
@@ -758,7 +763,69 @@ h5 {
 /********
 * Control panel
 *********/
-#panel-control {
+
+#panel-control{
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.8);
+	border: 10px solid #8e3236;
+	padding: 25px;
+	top: 0px;
+	left: 0;
+	display: none;
+}
+
+#panel-control h3{
+	font-weight: 900;
+	margin: 0;
+	margin-bottom: 6px
+}
+#panel-control .btn-link{
+	display: inline-block;
+	cursor: pointer;
+	color: #ffffff;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	padding: 5px 14px;
+	margin-top: 0px;
+	border: none;
+}
+#panel-control.show{
+	display: block;
+	-webkit-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	-moz-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	-o-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	-ms-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	animation: moveUp 0.6s ease-in-out 0.2s backwards;
+}
+
+#panel-control:after {
+	bottom: -30px;
+	border: solid transparent;
+	content: '';
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	left: 50%;
+	margin-left: -20px;
+
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 20px 20px 0 20px;
+	border-color: #8e3236 transparent transparent transparent;
+}
+
+.control-bloc{
+	margin-bottom: 10px;
+}
+.control-bloc:last-child{
+	margin-bottom: 0px;
+	margin-top: 30px;
+}
+
+/*#panel-control {
 	overflow: hidden;
 	color: #f2f2f2;
 	width: 200px;
@@ -768,7 +835,7 @@ h5 {
 	z-index: 1000;
 	font-family: 'Roboto', sans-serif;
 	-webkit-transition: height .3s linear;
-	/*opacity: 0;*/
+	
 }
 
 #controls-header {
@@ -834,4 +901,4 @@ h5 {
 .btn-control:active {
 	position:relative;
 	top:1px;
-}
+}*/

@@ -76,12 +76,38 @@
 
 	var elementControl = document.querySelector('#display-control');
 
-	elementControl.onclick = function (){
-		viewer.viewers[renderDiv].options.cameraControl = true;
-		viewer.viewers[renderDiv]._loadControls();
+	var wireframeOn = document.querySelector('#w1');
+	var wireframeOff = document.querySelector('#w2');
+
+	var moreFog = document.querySelector('#more');
+	var lessFog = document.querySelector('#less');
+
+	var cameraOn = document.querySelector('#c1');
+	var cameraOff = document.querySelector('#c2');
+
+	var downloadMap = document.querySelector('#download');
+
+	var elemements = {
+		'elementBattery' : elementBattery,
+		'elementPosition' : elementPosition,
+		'elementMaterial' : elementMaterial,
+		'elementMove' : elementMove,
+		'elementMiniMap' : elementMiniMap,
+		'elementControl' : elementControl,
+		control : {
+			'wireframeOn' : wireframeOn,
+			'wireframeOff' : wireframeOff,
+			'moreFog' : moreFog,
+			'lessFog' : lessFog,
+			'cameraOn' : cameraOn,
+			'cameraOff' : cameraOff,
+			'downloadMap' : downloadMap,
+			'terrain' : [terrain]
+			}
 	}
 	
-	var interfaces = new nsViewer.Interface(elementBattery, elementPosition, elementMaterial, elementMove, elementMiniMap);
+	var elemementViewer = viewer.viewers[renderDiv];
+	var interfaces = new nsViewer.Interface(elemements, elemementViewer);
 
 	document.querySelector('#bloc-panel-minimap-hover').onclick = function (){
 		document.querySelector('#bloc-fullMap').className = 'show';
@@ -89,47 +115,6 @@
 	document.querySelector('#bloc-fullMap .glyphicon-close').onclick = function (){
 		document.querySelector('#bloc-fullMap').className = 'hidde';
 	}
-
-	/* UI Controls */
-	document.controlsForm.wireframe[0].onclick = function () {
-		viewer.viewers[renderDiv].options.wireframe = true;
-		viewer.viewers[renderDiv]._loadMaterials();
-	};
-
-
-	document.controlsForm.wireframe[1].onclick = function () {
-		viewer.viewers[renderDiv].options.wireframe = false;
-		viewer.viewers[renderDiv]._loadMaterials();
-	};
-	document.querySelector('#more').onclick = function () {
-		if (viewer.viewers[renderDiv].options.fog < 1) {
-			viewer.viewers[renderDiv].options.fog += 0.001;
-		} else {
-			viewer.viewers[renderDiv].options.fog = 1;
-		}
-		viewer.viewers[renderDiv]._loadFog();
-	};
-	document.querySelector('#less').onclick = function () {
-		if (viewer.viewers[renderDiv].options.fog > 0) {
-			viewer.viewers[renderDiv].options.fog -= 0.001;
-		} else {
-			viewer.viewers[renderDiv].options.fog = 0;
-		}
-		viewer.viewers[renderDiv]._loadFog();
-	};
-	document.controlsForm.camera[0].onclick = function () {
-		viewer.viewers[renderDiv].options.cameraControl = true;
-		viewer.viewers[renderDiv]._loadControls();
-	};
-	document.controlsForm.camera[1].onclick = function () {
-		viewer.viewers[renderDiv].options.cameraControl = false;
-		viewer.viewers[renderDiv]._loadControls();
-	};
-	/* Map download */
-	document.querySelector('#download').onclick = function () {
-		var blob = new Blob([terrain], {type: "octet/stream"});
-		saveAs(blob, "map.json");
-	};
 
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();

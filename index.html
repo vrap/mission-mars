@@ -58,7 +58,7 @@
         <div id="block-generate">
           <h2>Generate a new map</h2>
           <p>
-            <b>Size:</b> <input type="text" size="1" maxlength="3" id="map-size" placeholder="XXX"> cases.
+            <b>Size:</b> <input type="text" size="1" maxlength="3" id="map-size" placeholder="XXX" value="100"> cases.
             <br/>
             <a href="javascript: void(0);" id="scenario" class="btn-link">Choose your scenario</a>
           </p>
@@ -83,14 +83,14 @@
           </span>
           <span class="grid50">
             <i class="flaticon-push19"></i><br>
-            <input type="radio" id="voyager" name="scenario"><label for="voyager">Voyager</label>
+            <input type="radio" id="voyager" name="scenario" checked="checked"><label for="voyager">Voyager</label>
             <br><br>
             <span id="voyager-settings">
-              <b>Energy:</b> <input type="text" size="1" maxlength="5" id="voyager-energy" placeholder="XXX"><br/>
-              <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="voyager-startX" placeholder="X">
-              y:<input type="text" size="1" maxlength="3" id="voyager-startY" placeholder="Y"><br>
-              <b>End  :</b> x: <input type="text" size="1" maxlength="3" id="voyager-endX" placeholder="X">
-              y:<input type="text" size="1" maxlength="3" id="voyager-endY" placeholder="Y">
+              <b>Energy:</b> <input type="text" size="1" maxlength="5" id="voyager-energy" placeholder="XXX" value="100"><br/>
+              <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="voyager-startX" placeholder="X" value="1">
+              y:<input type="text" size="1" maxlength="3" id="voyager-startY" placeholder="Y" value="1"><br>
+              <b>End  :</b> x: <input type="text" size="1" maxlength="3" id="voyager-endX" placeholder="X" value="20">
+              y:<input type="text" size="1" maxlength="3" id="voyager-endY" placeholder="Y" value="20">
             </span>
           </span>
           <br>
@@ -111,7 +111,7 @@
 			</div>
       <!-- viewer 3D -->
       <div id="render"></div>
-      			<!-- viewer 2D -->
+      		<!-- viewer 2D -->
 			<div id="bloc-panel-minimap"></div>
 			<div id="bloc-panel-minimap-hover"></div>
 			<div id="panel-minimap">
@@ -121,6 +121,29 @@
 			    </canvas>
 				</div>
 			</div>
+			
+			<!-- controls -->
+			<div id="panel-control">
+				<div class="control-bloc">
+					<h3>Wireframe</h3>
+					<a href="#" id="w1" class="btn-link no-shadow">On</a>
+					<a href="#" id="w2" class="btn-link no-shadow active">Off</a>
+				</div>
+				<div class="control-bloc">
+					<h3>Fog</h3>
+					<a href="#" type="button" class="btn-link no-shadow" id="more"> + </a>
+					<a href="#" type="button" class="btn-link no-shadow" id="less"> - </a>
+				</div>
+				<div class="control-bloc">
+					<h3>Camera</h3>
+					<a href="#" id="c1" class="btn-link no-shadow">On</a>
+					<a href="#" id="c2" class="btn-link no-shadow active">Off</a>
+				</div>
+				<div class="control-bloc">
+					<a id="download" href='#' class="btn-link">Download map</a>
+				</div>
+			</div>
+
 			<div id="panel-infos">
 				
 				<div id="bloc-battery" class="info-bloc"><i class='glyphicon glyphicon-battery'></i><span id="battery"></span></div>
@@ -128,25 +151,6 @@
 				<div id="bloc-material" class="info-bloc"><i class='glyphicon glyphicon-material'></i><span id="material"></span></div>
 				<div id="bloc-move" class="info-bloc"><i class='glyphicon glyphicon-move'></i><span id="move"></span></div>
 				
-				<div id="panel-control-bis">
-					<div class="control-bloc">
-						<input type="radio" id="w1" name="wireframe"><label for="w1"><span></span>On</label>
-						<input type="radio" id="w2" name="wireframe" checked><label for="w2"><span></span>Off</label>
-					</div>
-					<div class="control-bloc">
-						<h3>Fog</h3>
-						<input type="button" class="btn-control" value=" + " id="more">
-						<input type="button" class="btn-control" value=" - " id="less">
-					</div>
-					<div class="control-bloc">
-						<input type="radio" id="c1" name="camera"><label for="c1"><span></span>On</label>
-						<input type="radio" id="c2" name="camera" checked><label for="c2"><span></span>Off</label>
-					</div>
-					<div class="control-bloc">
-						<a id="download" href='#'>Download map</a>
-					</div>
-				</div>
-
 				<div id="display-control" class="info-bloc btn-panel">
 					<i class='glyphicon glyphicon-seetings'></i>
 				</div>
@@ -154,7 +158,7 @@
 			</div>
 
 			<!-- controls -->
-			<div id="panel-control" class="closed">
+<!-- 			<div id="panel-control" class="closed">
 				<div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
 				<div id="controls" class="hide">
 					<form name="controlsForm">
@@ -179,7 +183,7 @@
 						</div>
 					</form>
 				</div>
-			</div>
+			</div> -->
       <!-- console -->
       <div id="panel-console" class="closed">
         <form action="#" id="form-commande">
