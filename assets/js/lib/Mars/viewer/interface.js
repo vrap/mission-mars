@@ -163,18 +163,30 @@
 		this.elementControl.onclick = function(e){
 
 			var panelControl = document.querySelector('#panel-control');
-			panelControl.className = 'show';
 
-			var elem = this;
-			var top = getElementTop(elem);
-			var left = getElementLeft(elem);
+			if(hasClass(panelControl, 'show')){
 
-			console.log(top);
-			panelControl.style.top = (top - 330) + 'px';
-			panelControl.style.left = (left - 50) + 'px';
+				removeClass(panelControl, 'show');
+				addClass(panelControl, 'hide');
+
+			}else{
+
+				removeClass(panelControl, 'hide');
+				addClass(panelControl, 'show');
+
+				var elem = this;
+				var top = getElementTop(elem);
+				var left = getElementLeft(elem);
+
+				panelControl.style.top = (top - 330) + 'px';
+				panelControl.style.left = (left - 60) + 'px';
+
+			}
 			
 
 		};
+
+
 
 	}
 

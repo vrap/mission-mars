@@ -34,6 +34,13 @@ function getElementLeft( elem )
 }
 
 /**
+ * Return bool if element has class
+ */
+function hasClass(elem, className) {
+    return elem.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(elem.className);
+}
+
+/**
  * Remove Classe of element
  */
 function removeClass(elem, classN){

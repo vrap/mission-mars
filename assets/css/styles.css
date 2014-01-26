@@ -771,7 +771,6 @@ h5 {
 	padding: 25px;
 	top: 0px;
 	left: 0;
-	display: none;
 }
 
 #panel-control h3{
@@ -790,6 +789,11 @@ h5 {
 	margin-top: 0px;
 	border: none;
 }
+#panel-control.hide{
+	display: none;
+}
+
+
 #panel-control.show{
 	display: block;
 	-webkit-animation: moveUp 0.6s ease-in-out 0.2s backwards;
