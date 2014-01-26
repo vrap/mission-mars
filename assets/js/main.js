@@ -110,10 +110,10 @@
 	var interfaces = new nsViewer.Interface(elemements, elemementViewer);
 
 	document.querySelector('#bloc-panel-minimap-hover').onclick = function (){
-		document.querySelector('#bloc-fullMap').className = 'show';
+		document.querySelector('#bloc-over-full').className = 'show';
 	}
 	document.querySelector('#bloc-fullMap .glyphicon-close').onclick = function (){
-		document.querySelector('#bloc-fullMap').className = 'hidde';
+		document.querySelector('#bloc-over-full').className = 'hidde';
 	}
 
 	/* Listen to rover events. */

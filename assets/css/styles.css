@@ -471,6 +471,63 @@ h5 {
   }
 }
 
+
+
+@-webkit-keyframes moveLeft{
+  0% {
+    -webkit-transform: translateX(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes moveLeft{
+  0% {
+    -moz-transform: translateX(40px);
+    opacity: 0;
+  }
+  100% {
+    -moz-transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@-o-keyframes moveLeft{
+  0% {
+    -o-transform: translateX(40px);
+    opacity: 0;
+  }
+  100% {
+    -o-transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes moveLeft{
+  0% {
+    -ms-transform: translateX(40px);
+    opacity: 0;
+  }
+  100% {
+    -ms-transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes moveLeft{
+  0% {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
 .btn-link {
   -moz-box-shadow: 2px 2px 3px 0px #1677ab;
   -webkit-box-shadow: 2px 2px 3px 0px #1677ab;
@@ -517,10 +574,13 @@ h5 {
 /********
 * Full map
 *********/
-#bloc-fullMap{
+#bloc-over-full{
 	display: none;
-	width: 800px;
-	height: 500px;
+	-webkit-animation: moveLeft 0.4s ease-in-out 0.1s backwards;
+	-moz-animation: moveLeft 0.4s ease-in-out 0.1s backwards;
+	-o-animation: moveLeft 0.4s ease-in-out 0.1s backwards;
+	-ms-animation: moveLeft 0.4s ease-in-out 0.1s backwards;
+	animation: moveLeft 0.4s ease-in-out 0.1s backwards;
 	border: 10px solid #8e3236;
 	margin-left: 50px;
 	/*display: none;*/
@@ -528,7 +588,28 @@ h5 {
 	bottom: 90px;
 	right: 265px;
 	z-index: 1000;
-	overflow: auto; 
+}
+
+#bloc-fullMap{
+	width: 800px;
+	height: 500px;
+	overflow: auto;
+}
+
+#bloc-over-full:after{
+	bottom: 20px;
+	border: solid transparent;
+	content: '';
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	right: -30px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 20px 0 20px 20px;
+	border-color: transparent transparent transparent #8e3236;
 }
 
 #bloc-fullMap .glyphicon-close{
@@ -539,11 +620,11 @@ h5 {
 	z-index: 1001;
 }
 
-#bloc-fullMap.show{
+#bloc-over-full.show{
 	display: block;
 }
 
-#bloc-fullMap.hide{
+#bloc-over-full.hide{
 	display: none;
 }
 
@@ -765,6 +846,7 @@ h5 {
 *********/
 
 #panel-control{
+	z-index: 1100;
 	position: absolute;
 	background-color: rgba(255, 255, 255, 0.8);
 	border: 10px solid #8e3236;
