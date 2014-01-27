@@ -190,8 +190,12 @@
 	var rover = new nsRover.Rover(map, 50, 50, 100, memory);
 	var speculator = new nsSpeculator.S3000(rover);
 
+	/* Voyager
 	speculator.enableModule('voyager');
-        speculator.start({x: 10, y: 20});
+    speculator.start({x: 10, y: 20});
 
-	console.log(rover.memory.readAll());
+	console.log(rover.memory.readAll()); */
+
+	speculator.enableModule('explorer');
+	speculator.start();
 })();
