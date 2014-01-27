@@ -42,7 +42,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 100;
+	this.roundTime = 1000;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -86,98 +86,61 @@
 	REMOTE: 0.4
     };
 
-    nsRover.Rover.prototype.executeAction = function(action, args) {
+    nsRover.Rover.prototype.executeAction = function(action, args, round) {
+	var defer = Q.defer();
+
 	var bufferedAction = {
-	    action: action,
-	    args: args
+	    dfd: defer,
+	    method: action,
+	    args: args,
+	    round: (isNaN(parseInt(round))) ? 0 : parseInt(round)
 	}
 
 	this.waitingActions.push(bufferedAction);
 
 	if (this.waitingStatus === false) {
 	    this.waitingStatus = true;
-	    this.executeBufferedAction();
+	    Q.nextTick(function() { this.executeBufferedAction() }.bind(this));
 	}
+
+	return defer.promise;
     };
 
     nsRover.Rover.prototype.executeBufferedAction = function() {
 	if (this.waitingStatus === true) {
 	    if (this.waitingActions.length > 0) {
-		var action = this.waitingActions[0].action;
-		var args = this.waitingActions[0].args;
+		var action = this.waitingActions[0];
+		var result = null;
 
-		if (typeof args == 'array') {
-		    this[action].apply(this, args);
+		action.dfd.notify({progress: 0, data: action.args});
+
+		try {
+		    if (typeof action.args == 'object') {
+			result = this[action.method].apply(this, action.args);
+		    }
+		    else {
+			result = this[action.method].call(this);
+		    }		    
 		}
-		else {
-		    this[action].call(this);
+		catch (error) {
+		    result = {error: error};
 		}
+
+		action.dfd.notify({progress: 100, data: result});
+		action.dfd.resolve(result);
+
 		this.waitingActions.splice(0, 1);
 
 		setTimeout(
 		    function() {
 			this.executeBufferedAction();
 		    }.bind(this),
-		    this.roundTime
+		    this.roundTime * action.round
 		);
 	    }
 	    else {
 		this.waitingStatus = false;
 	    }
-	}
-    };
-
-    /**
-     * Fill the tank.
-     *
-     * @this {Rover}
-     */
-    nsRover.Rover.prototype.fillTank = function() {
-	if (arguments.callee.caller == this.executeBufferedAction) {
-	    this.tank = this.tankSize;
-	    
-	    this.publishEvent('actions.fillTank');
-	}
-	else {
-	    this.executeAction('fillTank', arguments);
-	}
-    };
-
-
-    /**
-     * Get the current position of the rover.
-     *
-     * @this {Rover}
-     * @return {object} An object of x and y position.
-     */
-    nsRover.Rover.prototype.getPosition = function() {
-	return {x: this.x, y: this.y };
-    }
-
-    /**
-     * Change rover direction.
-     *
-     * @this {Rover}
-     * @param  {[type]} direction [description]
-     * @return {[type]}           [description]
-     */
-    nsRover.Rover.prototype.setDirection = function(direction) {
-	if (arguments.callee.caller == this.executeBufferedAction) {
-	    for (var directionName in this.constructor.DIRECTION) {
-		var directionCode = this.constructor.DIRECTION[directionName];
-
-		if (directionCode == direction) {
-		    var lastDirection = this.direction;
-		    this.direction = directionCode;
-
-		    this.publishEvent('direction', {lastDirection: lastDirection});
-		    
-		    break;
-		}
-	    }
-	}
-	else {
-	    this.executeAction('setDirection', arguments);
 	}
     };
 
@@ -254,17 +217,98 @@
 
 	if (square) {
 	    /* Add square to memory. */
-	    this.memory.create(x, y, square.z, square.nature, 0);
+	    this.memory.create(x, y, square.z, square.type, 0);
 
 	    return {
 		x: x,
 		y: y,
 		z: square.z,
-		type: square.nature
+		type: square.type
 	    };
 	}
 
 	return null;
+    };
+
+    /**
+     * Calculate the slope between the current square and the destination square.
+     * 
+     * @param  {integer} currentZ      Current square elevation.
+     * @param  {integer} destinationZ  Destination square elevation.
+     * @param  {integer} distance      Distance between current and destination squares.
+     * @return {integer}      		   The slope (in %).
+     */
+    nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
+	return Math.round((destinationZ - currentZ) / distance);
+    };
+
+    /**
+     * Fill the tank.
+     *
+     * @this {Rover}
+     */
+    nsRover.Rover.prototype.fillTank = function() {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    this.tank = this.tankSize;
+	}
+	else {
+	    return this.executeAction('fillTank', null, 0)
+		.progress(function(data) {
+		    if (data.progress == 0) {
+			this.publishEvent('actions.fillTank.begin');
+		    }
+		    else if (data.progress == 100) {
+			this.publishEvent('actions.fillTank.end');
+		    }
+		}.bind(this));
+	}
+    };
+
+    /**
+     * Get the current position of the rover.
+     *
+     * @this {Rover}
+     * @return {object} An object of x and y position.
+     */
+    nsRover.Rover.prototype.getPosition = function() {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    return {x: this.x, y: this.y };
+	}
+	else {
+	    return this.executeAction('getPosition', null, 0);
+	}
+    }
+
+    /**
+     * Change rover direction.
+     *
+     * @this {Rover}
+     * @param  {[type]} direction [description]
+     * @return {[type]}           [description]
+     */
+    nsRover.Rover.prototype.setDirection = function(direction) {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    for (var directionName in this.constructor.DIRECTION) {
+		var directionCode = this.constructor.DIRECTION[directionName];
+
+		if (directionCode == direction) {
+		    var lastDirection = this.direction;
+		    this.direction = directionCode;
+
+		    return {lastDirection: lastDirection};
+		}
+	    }
+	}
+	else {
+	    return this.executeAction('setDirection', arguments, 0).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('direction.begin', data.data);
+		}
+		if (data.progress == 100) {
+		    this.publishEvent('direction.end', data.data);
+		}
+	    }.bind(this));
+	}
     };
 
     /**
@@ -274,18 +318,14 @@
      * @param  {integer} direction Direction of the rover.
      * @param  {integer} distance  Distance to seek.
      */
-    nsRover.Rover.prototype.move = function(distance) {
+    nsRover.Rover.prototype.move = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
-	    if (distance < 1 || distance > 2) {
-		throw new Error('Distance can only be set to 1 or 2.');
-	    }
-
 	    /* Retrieve the current direction of the rover to move on. */
             var direction = this.direction;
 
 	    //var square = this.getSquare(direction, distance);
 	    var currentSquare = this.getSquare(direction, 0);
-	    var destinationSquare = this.getSquare(direction, distance);
+	    var destinationSquare = this.getSquare(direction, 1);
 
 	    // If the rover is still within the limits of the map
 	    if (destinationSquare !== null) {
@@ -301,7 +341,7 @@
 		    if (directionCode == direction) {
 			for (var moveCostName in this.constructor.MOVE_COST) {
 			    var moveCost = this.constructor.MOVE_COST[directionName],
-			    tankCost = (moveCost * distance);
+			    tankCost = (moveCost * 1);
 			    // The distance cost plus the tank cost from the elevation
 			    // Not activated yet because there is no test on slope (see above)
 			    // elevationCost = tankCost * (1 + slope);
@@ -309,7 +349,7 @@
 			    // Calculate the cost of travel and removes from tank
 			    if (tankCost <= this.tank) {
 				// If the slope is <= 150%
-				var slope = this.calculateSlop(lastZ, destinationSquare.z, distance);
+				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
 
 				if (slope <= 150) {			
 				    // Move the rover to the destination square
@@ -320,14 +360,13 @@
 
 				    this.moves++;
 
-				    this.publishEvent('move', {
+				    return {
 					direction: direction,
-					distance: distance,
 					lastX: lastX,
 					lastY: lastY,
 					newX: this.x,
 					newY: this.y
-				    });
+				    };
 				}
 				else {
 				    throw new Error('Slope is too important.');
@@ -347,7 +386,14 @@
 	    }
 	}
 	else {
-	    this.executeAction('move', arguments);
+	    return this.executeAction('move', arguments, 1).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('move.begin', data.data);
+		}
+		else if (data.progress == 100) {
+		    this.publishEvent('move.end', data.data);
+		}
+	    }.bind(this));
 	}
     };
 
@@ -363,30 +409,31 @@
 		throw new Error('The map is undiscovered here.');
 	    }
 	    else {
-		if (distance == 0 || distance == 1) {
-		    this.publishEvent('scanElevation', {
-			direction: direction,
-			distance: distance,
-			elevation: square.z
-		    });
-		}
-		else if (distance >= 2) {
+		if (distance >= 2) {
 		    var scanCost = 0.1 * distance;
 
 		    if (scanCost <= this.tank) {
 			this.tank -= scanCost;
-
-			this.publishEvent('scanElevation', {
-			    direction: direction,
-			    distance: distance,
-			    elevation: square.z
-			});
 		    }
+		}
+
+		return {
+		    direction: direction,
+		    distance: distance,
+		    elevation: square.z
 		}
 	    }
 	}
 	else {
-	    this.executeAction('scanElevation', arguments);
+	    return this.executeAction('scanElevation', arguments, 0).progress(function(data) {
+		console.log(data);
+		if (data.progress == 0) {
+		    this.publishEvent('scanElevation.begin');
+		}
+		else if (data.progress == 100) {
+		    this.publishEvent('scanElevation.end', data.data);
+		}
+	    }.bind(this));
 	}
     };
 
@@ -410,48 +457,31 @@
 
 		if (distance == 0 && this.tank >= 0.1) {
 		    this.tank -= 0.1;
-
-		    this.publishEvent('scanMaterial', {
-			direction: direction,
-			distance: distance,
-			type: square.type
-		    });
 		}
 		else if (distance == 1 && this.tank >= 0.2) {
 		    this.tank -= 0.2;
-
-		    this.publishEvent('scanMaterial', {
-			direction: direction,
-			distance: distance,
-			type: square.type
-		    });
 		}
 		else if (distance == 2 && this.tank >= 0.4) {
 		    this.tank -= 0.4;
+		}
 
-		    this.publishEvent('scanMaterial', {
-			direction: direction,
-			distance: distance,
-			type: square.type
-		    });
+		return {
+		    direction: direction,
+		    distance: distance,
+		    type: square.type
 		}
 	    }
 	}
 	else {
-	    this.executeAction('scanMaterial', arguments);
+	    return this.executeAction('scanMaterial', arguments, 0).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('scanMaterial.begin');
+		}
+		else if (data.progress == 100) {
+		    this.publishEvent('scanMaterial.end', data.data);
+		}
+	    }.bind(this));
 	}
-    };
-
-    /**
-     * Calculate the slope between the current square and the destination square.
-     * 
-     * @param  {integer} currentZ      Current square elevation.
-     * @param  {integer} destinationZ  Destination square elevation.
-     * @param  {integer} distance      Distance between current and destination squares.
-     * @return {integer}      		   The slope (in %).
-     */
-    nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
-	return Math.round((destinationZ - currentZ) / distance);
     };
 
     nsRover.Rover.prototype.deploySolarPanels = function() {
@@ -462,11 +492,16 @@
 	    if (this.tank > this.tankSize) {
 		this.tank = this.tankSize;
 	    }
-
-	    this.publishEvent('actions.deploySolarPanels');
 	}
 	else {
-	    this.executeAction('deploySolarPanels', arguments);
+	    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('actions.deploySolarPanels.begin');
+		}
+		else if (data.progress == 100) {
+		    this.publishEvent('actions.deploySolarPanels.end');
+		}
+	    }.bind(this));
 	}
     };
 })();
