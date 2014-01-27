@@ -41,9 +41,42 @@
 	this.voyage(destination);
     };
 
+    nsVoyager.Voyager.prototype.voyageTest = function(destination) {
+	this.speculator.rover.fillTank().then(function() {
+	    console.log('reservoir pleins !');
+	});
+	this.speculator.rover.getPosition().then(function(position) {
+	    console.log(position);
+	});
+	this.speculator.rover.setDirection(nsRover.Rover.DIRECTION.WEST).then(function(direction) {
+	    console.log(direction);
+	});
+	this.speculator.rover.move().then(function(data) {
+	    console.log(data);
+	});
+	this.speculator.rover.scanMaterial(nsRover.Rover.DIRECTION.SOUTH, 1).then(function(data) {
+	    console.log(data);
+	});
+	this.speculator.rover.scanElevation(nsRover.Rover.DIRECTION.NORTH, 1).then(function(data) {
+	    console.log(data);
+	});
+	this.speculator.rover.deploySolarPanels().then(function(data) {
+	    console.log(data);
+	});
+	this.speculator.rover.getPosition().then(function(position) {
+	    console.log(position);
+	});
+    };
+
     nsVoyager.Voyager.prototype.voyage = function(destination) {
-	var currentDirection, invertedDirection, randPosition;
-	var position = { x: this.speculator.rover.x, y: this.speculator.rover.y };
+	var currentPosition, invertedDirection, randPosition;
+	var rover = this.speculator.rover;
+	var position = { x: rover.x, y: rover.y };
+
+	if (rover.x == destination.x && rover.y == destination.y) {
+	    return true;
+	}
+
 	var xDirection = nsRover.Rover.DIRECTION.WEST;
 	var yDirection = nsRover.Rover.DIRECTION.SOUTH;
 
@@ -69,39 +102,19 @@
 	    invertedDirection = xDirection;
 	}
 
-	var result = false;
-	var canContinue = true;
-	var oldPosition = {x: this.speculator.rover.x, y: this.speculator.rover.y};
-	while (canContinue) {
-	    var rover = this.speculator.rover;
-
-	    if (rover.x == destination.x && rover.y == destination.y) {
-		result = true;
-		break;
-	    }
-
-	    oldPosition = {x: rover.x, y: rover.y};
-
-	    this.speculator.rover.setDirection(this.speculator.getDirectionFromPoint(destination.x, destination.y));
-
-	    try {
-		this.speculator.rover.move(1);
-	    }
-	    catch (e) {
-		console.log(e);
-	    }
-
-	    if (rover.x == oldPosition.x && rover.y == oldPosition.y) {
-		break;
-	    }
-	}
-
-	if (result == true) {
-	    console.log('Mission successfull !');
-	}
-	else {
-	    console.log('Mission failed !');
-	}
+	this.speculator.getDirectionFromPoint(destination.x, destination.y).then(function(data) {
+	    this.speculator.rover.setDirection(data).then(function(data) {
+		var rover = this.speculator.rover;
+		try {
+		    rover.move().then(function() {
+			this.voyage(destination);
+		    }.bind(this));
+		}
+		catch(error) {
+		    console.log(error);
+		}
+	    }.bind(this));
+	}.bind(this));
     };
 
     /* Add the voyager module to Speculator3000. */
