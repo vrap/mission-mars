@@ -152,16 +152,6 @@
 	var speculator = new nsSpeculator.S3000(rover);
 
 	speculator.enableModule('voyager');
-
-	rover.setDirection(nsRover.Rover.DIRECTION.SOUTH);
-	
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-	
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-        console.log('STARTING VOYAGER');
-
         speculator.start({x: 10, y: 20});
 	console.log(rover.memory.readAll());
 })();
