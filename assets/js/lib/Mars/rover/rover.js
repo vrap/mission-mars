@@ -69,6 +69,7 @@
 	NORTH_WEST: 7
     };
 
+    /* Energy cost for each movements (direction). */
     nsRover.Rover.MOVE_COST = {
 	NORTH: 1,
 	NORTH_EAST: 1.4,
@@ -80,15 +81,29 @@
 	NORTH_WEST: 1.4
     };
 
+    /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
 	BELOW: 0.1,
 	NEIGHBOR: 0.2,
 	REMOTE: 0.4
     };
 
+    /**
+     * Execute an action of the rover.
+     * When you try to run a method of the Rover, this one is redirected to
+     * "executeAction" that return a deferred and add the action to a buffer.
+     * Each actions in the buffer will be executed one after another and the
+     * associated callback will be resolved (or reject).
+     *
+     * @this {Rover}
+     * @param {string} action Name of the method to call.
+     * @param {array} [args] An array of args passed to the action.
+     * @param {integer} [round=0] Number of round that take to the rover to execute the action.
+     */
     nsRover.Rover.prototype.executeAction = function(action, args, round) {
 	var defer = Q.defer();
 
+	/* Create an object of that contain all informations about the action. */
 	var bufferedAction = {
 	    dfd: defer,
 	    method: action,
@@ -96,24 +111,40 @@
 	    round: (isNaN(parseInt(round))) ? 0 : parseInt(round)
 	}
 
+	/* Add the action to the buffer. */
 	this.waitingActions.push(bufferedAction);
 
+	/* If the buffer is not currently executed, execute it. */
 	if (this.waitingStatus === false) {
 	    this.waitingStatus = true;
 	    Q.nextTick(function() { this.executeBufferedAction() }.bind(this));
 	}
 
+	/* Return the promise. */
 	return defer.promise;
     };
 
+    /**
+     * Execute an action from the buffer.
+     * Check if an action is in the buffer and execute it. Wait for the time
+     * round of the action and retry to call the action from the buffer.
+     *
+     * @this {Rover}
+     */
     nsRover.Rover.prototype.executeBufferedAction = function() {
+	/* If the buffer is not currently being to be executed stop here. */
 	if (this.waitingStatus === true) {
+	    /* If some actions are waiting inside the buffer. */
 	    if (this.waitingActions.length > 0) {
+		/* Retrieve the first action (oldest) of the buffer. */
 		var action = this.waitingActions[0];
+		/* Initialize the result of the action to null. */
 		var result = null;
 
+		/* Notify the deferred associated with the action that she's begining. */
 		action.dfd.notify({progress: 0, data: action.args});
 
+		/* Try to call the action and store the returned result. */
 		try {
 		    if (typeof action.args == 'object') {
 			result = this[action.method].apply(this, action.args);
@@ -126,11 +157,17 @@
 		    result = {error: error};
 		}
 
+		/**
+		 * Notify the deferred that the action has been runned with the
+		 * returned data and resolve the deferred.
+		 */
 		action.dfd.notify({progress: 100, data: result});
 		action.dfd.resolve(result);
 
+		/* Remove the action from the buffer. */
 		this.waitingActions.splice(0, 1);
 
+		/* Call again this function after waiting the number of round. */
 		setTimeout(
 		    function() {
 			this.executeBufferedAction();
