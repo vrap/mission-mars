@@ -52,6 +52,13 @@ var scripts = [
 
       return false;
     }
+    if (true === document.querySelector('#voyager').checked) {
+      document.querySelector('#voyager-settings').style.display = 'block';
+      document.querySelector('#explorer-settings').style.display = 'none';
+    } else if(true === document.querySelector('#explorer').checked) {
+      document.querySelector('#voyager-settings').style.display = 'none';
+      document.querySelector('#explorer-settings').style.display = 'block';
+    }
     document.querySelector('#st-control-4').checked = true;
   };
 
@@ -173,6 +180,13 @@ var scripts = [
 				// When reader has finished
 				// Save file in an input hidden
 	  		document.getElementById('json').value = evt.target.result;
+        if (true === document.querySelector('#voyager').checked) {
+          document.querySelector('#voyager-settings').style.display = 'block';
+          document.querySelector('#explorer-settings').style.display = 'none';
+        } else if(true === document.querySelector('#explorer').checked) {
+          document.querySelector('#voyager-settings').style.display = 'none';
+          document.querySelector('#explorer-settings').style.display = 'block';
+        }
         document.querySelector('#st-control-4').checked = true;
 			};
 			reader.readAsText(file);
