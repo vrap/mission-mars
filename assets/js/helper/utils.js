@@ -1,4 +1,66 @@
 /**
+ * Return offset top of element
+ */
+function getElementTop( elem ) 
+{
+
+    yPos = elem.offsetTop;
+    tempEl = elem.offsetParent;
+
+    while ( tempEl != null ) 
+    {
+        yPos += tempEl.offsetTop;
+        tempEl = tempEl.offsetParent;
+    }  
+
+    return yPos;
+}   
+
+/**
+ * Return offset left of element
+ */
+function getElementLeft( elem ) 
+{
+
+    xPos = elem.offsetLeft;
+    tempEl = elem.offsetParent; 		
+
+    while ( tempEl != null ) 
+    {
+        xPos += tempEl.offsetLeft;
+        tempEl = tempEl.offsetParent;
+    }   		
+    return xPos;
+}
+
+/**
+ * Return bool if element has class
+ */
+function hasClass(elem, className) {
+    return elem.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(elem.className);
+}
+
+/**
+ * Remove Classe of element
+ */
+function removeClass(elem, classN){
+	var myClassName=classN;
+	elem.className=elem.className.replace(myClassName,'');
+}
+
+/**
+* Adding a class of element
+*/
+function addClass(elem, classN){
+	var myClassName= classN;
+	elem.className=elem.className.replace(myClassName,'');
+	elem.className = elem.className + myClassName;
+}
+
+
+
+
+/**
  * Return a random integer between min and max
  */
 function getRandomInt(min, max) {
@@ -51,4 +113,17 @@ function drawCircle (x_center, y_center, rayon, z, elements) {
  */
 function degToRad (degrees) {
 	return degrees * Math.PI/180;
+}
+
+/**
+ * Add script at the end of the body
+ */
+function createScript (script) {
+  var s = document.createElement('script');
+  s.src = script;
+  document.body.appendChild(s);
+}
+
+function isPositiveInteger(n) {
+  return (!isNaN(n) && parseInt(n) >= 0);
 }

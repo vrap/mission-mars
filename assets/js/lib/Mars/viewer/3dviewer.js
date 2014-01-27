@@ -5,7 +5,8 @@
  */
 (function() {
 	var nsViewer = using('mars.viewer'),
-	 	nsMaterials = using('mars.common.material');
+	 	nsMaterials = using('mars.common.material'),
+    nsRover = using('mars.rover');
 
 	// Init materials
 	var rock = new nsMaterials.Rock (),
@@ -35,7 +36,7 @@
 		this.scene = new THREE.Scene();
 		// Load every parts of the viewer
 		this._loadLight();
-		this._loadCamera(-(0.75*this.viewer.map.getWidth()), 4, 0);
+		this._loadCamera(0, 5, 0); // Init camera's position on case 0-0
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
@@ -74,10 +75,10 @@
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 1;
-    this.controls.lookSpeed = 0.001;
-    this.controls.lookVertical = true;
-    // Control camera if user wants it.
-    this.controls.activeLook = this.options.cameraControl;
+	    this.controls.lookSpeed = 0.001;
+	    this.controls.lookVertical = true;
+	    // Control camera if user wants it.
+	    this.controls.activeLook = this.options.cameraControl;
 	};
 
 	/**
@@ -102,7 +103,6 @@
 		this.camera.position.y = y; // Up - Down
 		this.camera.position.z = z; // Right - Left
 		this.camera.setLens( 50 );
-		this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
 		this.scene.add(this.camera);
 	};
 
@@ -160,7 +160,7 @@
 
 		// create skybox mesh
 		var skybox = new THREE.Mesh(
-		  new THREE.CubeGeometry(1000, 1000, 1000),
+		  new THREE.CubeGeometry(this.viewer.map.getWidth()*2, this.viewer.map.getWidth()*2, this.viewer.map.getWidth()*2),
 		  skyBoxMaterial
 		);
 
@@ -179,12 +179,12 @@
 		var types = [];
 		// Materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(this.options.wireframe, false);
-		materials[sand.id] = sand.getColor(this.options.wireframe, false);
-		materials[ore.id] = ore.getColor(this.options.wireframe, false);
-		materials[iron.id] = iron.getColor(this.options.wireframe, false);
-		materials[ice.id] = ice.getColor(this.options.wireframe, false);
-		materials[other.id] = other.getColor(this.options.wireframe, false);
+		materials[rock.id] = rock.getColor(this.options.wireframe, true);
+		materials[sand.id] = sand.getColor(this.options.wireframe, true);
+		materials[ore.id] = ore.getColor(this.options.wireframe, true);
+		materials[iron.id] = iron.getColor(this.options.wireframe, true);
+		materials[ice.id] = ice.getColor(this.options.wireframe, true);
+		materials[other.id] = other.getColor(this.options.wireframe, true);
 		
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
@@ -202,7 +202,12 @@
 		// Init the mesh
 		var material = new THREE.MeshFaceMaterial( materials );
 		this.mesh = new THREE.Mesh(this.geometry, material); 
-		this.mesh.rotation.x = Math.PI / 180 * (-90);
+		this.mesh.rotation.x = degToRad(90);
+    this.mesh.rotation.y = degToRad(180);
+    this.mesh.rotation.z = degToRad(-90);
+    this.mesh.position.x = 0.75*this.viewer.map.getWidth();
+    this.mesh.position.y = 0;
+    this.mesh.position.z = -this.viewer.map.getHeight();
 
 		this.scene.add(this.mesh);
 	};
@@ -226,30 +231,70 @@
 	};
 
 	/**
-	 * Move camera in the direction wanted.
+	 * Move camera's vision in the direction wanted.
 	 */
-	nsViewer.Viewer3D.prototype.move = function(direction) {
+	nsViewer.Viewer3D.prototype.setVision = function(direction) {
 		switch(direction){
-			case 'straight': 
-				this.camera.position.x++; 
+			case nsRover.Rover.DIRECTION.NORTH:
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(180));
 				break;
-			case 'back': 
-				this.camera.position.x--;
+			case nsRover.Rover.DIRECTION.SOUTH:
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(0));
 				break;
-			case 'left':
-				this.camera.position.z++; 
+			case nsRover.Rover.DIRECTION.WEST:
 				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(90));
 				break;
-			case 'right': 
-				this.camera.position.z--; 
+			case nsRover.Rover.DIRECTION.EAST:
 				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
 				break;
-			case 'up':
-				this.camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degToRad(45));
+			case nsRover.Rover.DIRECTION.NORTH_EAST:
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
 				break;
-			case 'down': 
-				this.camera.rotateOnAxis((new THREE.Vector3(1, 0, 0)).normalize(), degToRad(-45));
+			case nsRover.Rover.DIRECTION.NORTH_WEST:
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(135));
 				break;
+      case nsRover.Rover.DIRECTION.SOUTH_EAST:
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-45));
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH_WEST:
+        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(45));
+        break;
 		}
+	};
+
+  /**
+   * Change camera's position in the direction wanted.
+   */
+  nsViewer.Viewer3D.prototype.move = function(direction) {
+    switch(direction){
+      case nsRover.Rover.DIRECTION.NORTH:
+        this.camera.position.z++;
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH:
+        this.camera.position.z--;
+        break;
+      case nsRover.Rover.DIRECTION.WEST:
+        this.camera.position.x--;
+        break;
+      case nsRover.Rover.DIRECTION.EAST:
+        this.camera.position.x++;
+        break;
+      case nsRover.Rover.DIRECTION.NORTH_EAST:
+        this.camera.position.z++;
+        this.camera.position.x++;
+        break;
+      case nsRover.Rover.DIRECTION.NORTH_WEST:
+        this.camera.position.z++;
+        this.camera.position.x--;
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH_EAST:
+        this.camera.position.z--;
+        this.camera.position.x++;
+        break;
+      case nsRover.Rover.DIRECTION.SOUTH_WEST:
+        this.camera.position.z--;
+        this.camera.position.x--;
+        break;
+    }
 	};
 })();

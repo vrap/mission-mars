@@ -6,30 +6,116 @@
 		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-		<!-- Home page with jSon upload and map generation -->
-		<section class="home">
-			<h1>Mission mars</h1>
-			<article class="container">
-				<footer>
-					<a href="javascript:void(0);" id="showUpload">Upload your map</a>
-					<br>
-					<div id="containerUpload">
-						<input type="hidden" id="json">
-						<input type="file" id="uploadedMap">
-						<br>
-						<a href="javascript:void(0);" id="upload">Go</a>
-					</div>
-					<br>
-					<a href="javascript:void(0);" id="show">View our map</a>
-				</footer>
-			</article>
-		</section>
 
-		<!-- Map view -->
-		<div class="view">
-			<!-- viewer 3D -->
-			<div id="render"></div>
-			<!-- viewer 2D -->
+    <div class="st-container">
+    <!-- Bottom menu -->
+    <input type="radio" name="radio-set" checked="checked" id="st-control-1"/>
+    <a href="javascript: void(0);">Home</a>
+    <input type="radio" name="radio-set" id="st-control-2"/>
+    <a href="javascript: void(0);">Type of map</a>
+    <input type="radio" name="radio-set" id="st-control-3"/>
+    <a href="javascript: void(0);"><span id="text-map">Map</span></a>
+    <input type="radio" name="radio-set" id="st-control-4"/>
+    <a href="javascript: void(0);">Scenario</a>
+    <input type="radio" name="radio-set" id="st-control-5"/>
+    <a>Go !</a>
+
+    <div class="st-scroll">
+
+      <!-- Home -->
+      <section class="st-panel" id="st-panel-1">
+        <h2>Mission Mars</h2>
+        <p>
+          Project explaination
+          <br>
+          <a class="btn-link" href="javascript: void(0);" id="start">Start</a>
+        </p>
+      </section>
+
+      <!-- Choice between an existing map or generate one -->
+      <section class="st-panel" id="st-panel-2">
+        <div class="st-deco" data-icon="1"></div>
+        <h2>Choose your type of map</h2>
+        <p>
+          <a href="javascript: void(0);" class="btn-link" id="import">Import your map</a>
+          <br>
+          <a href="javascript: void(0);" class="btn-link" id="generate">Generate new map</a>
+        </p>
+      </section>
+
+      <!-- Interface in function of precedent choice -->
+      <section class="st-panel" id="st-panel-3">
+        <div class="st-deco" data-icon="2"></div>
+        <div id="block-upload">
+          <h2>Upload your map</h2>
+          <p>
+            <input type="hidden" id="json">
+            <input type="file" id="uploadedMap">
+            <br>
+            <a href="javascript: void(0);" id="upload" class="btn-link">Choose your scenario</a>
+          </p>
+        </div>
+        <div id="block-generate">
+          <h2>Generate a new map</h2>
+          <p>
+            <b>Size:</b> <input type="text" size="1" maxlength="3" id="map-size" placeholder="XXX" value="100"> cases.
+            <br/>
+            <a href="javascript: void(0);" id="scenario" class="btn-link">Choose your scenario</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- Scenario choice -->
+      <section class="st-panel" id="st-panel-4">
+        <div class="st-deco" data-icon="3"></div>
+        <h2>Choose your game scenario</h2>
+        <p>
+          <span class="grid50">
+            <i class="flaticon-radar5"></i><br>
+            <input type="radio" id="explorer" name="scenario"><label for="explorer">Explorer</label>
+            <br>
+            <br>
+            <span id="explorer-settings">
+              <b>Energy:</b> <input type="text" size="1" maxlength="5" id="explorer-energy" placeholder="XXX"><br/>
+              <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="explorer-startX" placeholder="X">
+              y:<input type="text" size="1" maxlength="3" id="explorer-startY" placeholder="Y">
+            </span>
+          </span>
+          <span class="grid50">
+            <i class="flaticon-push19"></i><br>
+            <input type="radio" id="voyager" name="scenario" checked="checked"><label for="voyager">Voyager</label>
+            <br><br>
+            <span id="voyager-settings">
+              <b>Energy:</b> <input type="text" size="1" maxlength="5" id="voyager-energy" placeholder="XXX" value="100"><br/>
+              <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="voyager-startX" placeholder="X" value="1">
+              y:<input type="text" size="1" maxlength="3" id="voyager-startY" placeholder="Y" value="1"><br>
+              <b>End  :</b> x: <input type="text" size="1" maxlength="3" id="voyager-endX" placeholder="X" value="20">
+              y:<input type="text" size="1" maxlength="3" id="voyager-endY" placeholder="Y" value="20">
+            </span>
+          </span>
+          <br>
+          <a class="btn-link" href="javascript: void(0);" id="view">Go !</a>
+        </p>
+      </section>
+      </div><!-- // st-scroll -->
+    </div><!-- // st-container -->
+
+    <!-- Viewer -->
+    <div class="view">
+    <!-- viewer Full Map 3D -->
+    		<div id="bloc-over-full">
+				<div id="bloc-fullMap">
+					<i class="glyphicon glyphicon-close"></i>
+					<canvas id="fullmap">
+					    Canvas not supported.
+					</canvas>
+				</div>
+			</div>
+      <!-- viewer 3D -->
+      <div id="render"></div>
+      		<!-- viewer 2D -->
+			<div id="bloc-panel-minimap"></div>
+			<div id="bloc-panel-minimap-hover"></div>
 			<div id="panel-minimap">
 				<div id="bloc-minimap">
 					<canvas id="minimap">
@@ -37,24 +123,61 @@
 			    </canvas>
 				</div>
 			</div>
+			
 			<!-- controls -->
-			<div id="panel-control" class="closed">
+			<div id="panel-control" class="hide">
+				<div class="control-bloc">
+					<h3>Wireframe</h3>
+					<a href="#" id="w1" class="btn-link no-shadow">On</a>
+					<a href="#" id="w2" class="btn-link no-shadow active">Off</a>
+				</div>
+				<div class="control-bloc">
+					<h3>Fog</h3>
+					<a href="#" type="button" class="btn-link no-shadow" id="more"> + </a>
+					<a href="#" type="button" class="btn-link no-shadow" id="less"> - </a>
+				</div>
+				<div class="control-bloc">
+					<h3>Camera</h3>
+					<a href="#" id="c1" class="btn-link no-shadow">On</a>
+					<a href="#" id="c2" class="btn-link no-shadow active">Off</a>
+				</div>
+				<div class="control-bloc">
+					<a id="download" href='#' class="btn-link">Download map</a>
+				</div>
+			</div>
+
+			<div id="panel-infos">
+				
+				<div id="bloc-battery" class="info-bloc"><i class='glyphicon glyphicon-battery'></i><span id="battery"></span></div>
+				<div id="bloc-position" class="info-bloc"><i class='glyphicon glyphicon-position'></i><span id="position"></span></div>
+				<div id="bloc-material" class="info-bloc"><i class='glyphicon glyphicon-material'></i><span id="material"></span></div>
+				<div id="bloc-move" class="info-bloc"><i class='glyphicon glyphicon-move'></i><span id="move"></span></div>
+				
+				<div id="display-control" class="info-bloc btn-panel">
+					<i class='glyphicon glyphicon-seetings'></i>
+				</div>
+
+			</div>
+
+			<!-- controls -->
+<!-- 			<div id="panel-control" class="closed">
 				<div id="controls-header"><img src="assets/img/cog.png" width="38px"></div>
 				<div id="controls" class="hide">
 					<form name="controlsForm">
 						<div>
 							<h3>Wireframe</h3>
-							<input type="radio" id="w1" name="wireframe"><label for="w1"><span></span>On</label>
-							<input type="radio" id="w2" name="wireframe" checked><label for="w2"><span></span>Off</label>
+							<input type="radio" id="w1" name="wireframe" class="custom-radio"><label for="w1"><span></span>On</label>
+							<input type="radio" id="w2" name="wireframe" checked class="custom-radio"><label for="w2"><span></span>Off</label>
 						</div>
 						<div>
 							<h3>Fog</h3>
-							<input type="button" class="btn-control" value=" + " id="more"> <input type="button" class="btn-control" value=" - " id="less">
+							<input type="button" class="btn-control" value=" + " id="more">
+							<input type="button" class="btn-control" value=" - " id="less">
 						</div>
 						<div>
 							<h3>Control camera</h3>
-							<input type="radio" id="c1" name="camera"><label for="c1"><span></span>On</label>
-							<input type="radio" id="c2" name="camera" checked><label for="c2"><span></span>Off</label>
+							<input type="radio" id="c1" name="camera" class="custom-radio"><label for="c1"><span></span>On</label>
+							<input type="radio" id="c2" name="camera" checked class="custom-radio"><label for="c2"><span></span>Off</label>
 						</div>
 						<div>
 							<h3>Download map</h3>
@@ -62,22 +185,17 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			<!-- console -->
-			<div id="panel-console" class="closed">
-				<form action="#" id="form-commande">
-					<input type="text" name="commande" id="commande" autocomplete="off" placeholder="Tape a command here !">
-				</form>
-			</div>
+			</div> -->
+      <!-- console -->
+      <div id="panel-console" class="closed">
+        <form action="#" id="form-commande">
+          <input type="text" name="commande" id="commande" autocomplete="off" placeholder="Tape a command here !">
+        </form>
+      </div>
 
-			<input type="hidden" id="battery-level" value="100">
-			<input type="hidden" id="rock-counter" value="0">
-			<input type="hidden" id="sand-counter" value="0">
-			<input type="hidden" id="ore-counter" value="0">
-			<input type="hidden" id="iron-counter" value="0">
-			<input type="hidden" id="ice-counter" value="0">
-			<input type="hidden" id="other-counter" value="0">
+      <ul id="panel-response-console">
 
+<<<<<<< HEAD
 			<ul id="panel-response-console">
 				
 			</ul>
@@ -136,6 +254,62 @@
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/voyager.js" defer></script>
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/crawler.js" defer></script>
 		<script type="text/javascript" src="assets/js/lib/Mars/rover/Memory/memory.js" defer></script>
+=======
+      </ul>
+    </div>
 
+
+    <!-- Console -->
+    <script type="text/javascript" src="assets/js/consoleInvader.js"></script>
+
+    <!-- Script for UI and UX -->
+    <script type="text/javascript" src="assets/js/interface.js"></script>
+
+    <!-- Helpers -->
+    <script type="text/javascript" src="assets/js/helper/namespace.js"></script>
+    <script type="text/javascript" src="assets/js/helper/utils.js"></script>
+    <script type="text/javascript" src="assets/js/helper/requestAnimationFrame.js"></script>
+    <script type="text/javascript" src="assets/js/helper/FileSaver.js"></script>
+
+    <!-- Threejs library -->
+    <script type="text/javascript" src="assets/js/lib/three/Three.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/three/controls/FirstPersonControls.js" defer></script>
+
+    <!-- Mars common libraries -->
+    <script type="text/javascript" src="assets/js/lib/Mars/common/observer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/mapManager.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/map.js" defer></script>
+
+    <!-- Mars materials -->
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/rock.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ice.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/iron.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/ore.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/sand.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/common/materials/other.js" defer></script>
+
+    <!-- Mars Editors and elements -->
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/elementModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/craterModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/hillModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/element/ravineModel.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/editor/terrainGenerator.js" defer></script>
+
+    <!-- Mars viewer -->
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/viewer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/2dviewer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/3dviewer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/viewer/interface.js" defer></script>
+
+    <!-- Rover invader -->
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/rover.js" defer></script>
+>>>>>>> dev
+
+    <!-- Speculator3000 -->
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/s3000.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/explorer.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/voyager.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Speculator3000/Module/crawler.js" defer></script>
+    <script type="text/javascript" src="assets/js/lib/Mars/rover/Memory/memory.js" defer></script>
 	</body>
 </html>

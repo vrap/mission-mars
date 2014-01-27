@@ -347,7 +347,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 
 			for (var i = 0; i < nbElement; i++) {
 				sizeX = getRandomInt(10, 200);
-      	sizeY = getRandomInt(10, 200);
+      	sizeY = sizeX;
       	posX  = getRandomInt(0, this._width);
       	posY  = getRandomInt(0, this._height);
       	temp = element.create(sizeX, sizeY, element._allowedMaterials);
