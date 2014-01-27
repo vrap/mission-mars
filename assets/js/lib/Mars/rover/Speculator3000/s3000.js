@@ -212,7 +212,7 @@
 
 		this.rover.getPosition().then(function(data) {
 			var currentDirection = this.rover.direction;
-			var currentPosition = data.data;
+			var currentPosition = data;
 			var sideDirection = null;
 			var topDirection  = null;
 
