@@ -283,8 +283,8 @@
      * Change rover direction.
      *
      * @this {Rover}
-     * @param  {[type]} direction [description]
-     * @return {[type]}           [description]
+     * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
+     * @return {object} An object containing the last direction.
      */
     nsRover.Rover.prototype.setDirection = function(direction) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
@@ -315,22 +315,18 @@
      * Move the rover to a distance and direction relatively to the current position.
      * 
      * @this {Rover}
-     * @param  {integer} direction Direction of the rover.
-     * @param  {integer} distance  Distance to seek.
+     * @return {object} Return an object with the last position and the new one.
      */
     nsRover.Rover.prototype.move = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    /* Retrieve the current direction of the rover to move on. */
             var direction = this.direction;
 
-	    //var square = this.getSquare(direction, distance);
 	    var currentSquare = this.getSquare(direction, 0);
 	    var destinationSquare = this.getSquare(direction, 1);
 
-	    // If the rover is still within the limits of the map
+	    /* If the rover is still within the limits of the map. */
 	    if (destinationSquare !== null) {
-		//var lastX = this.x;
-		//var lastY = this.y;
 		var lastX = currentSquare.x;
 		var lastY = currentSquare.y;
 		var lastZ = currentSquare.z;
@@ -345,19 +341,19 @@
 			    // Not activated yet because there is no test on slope (see above)
 			    // elevationCost = tankCost * (1 + slope);
 
-			    // Calculate the cost of travel and removes from tank
+			    /* Calculate the cost of travel and removes from tank. */
 			    if (moveCost <= this.tank) {
-				// If the slope is <= 150%
+				/* If the slope is <= 150%. */
 				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
 
-				if (slope <= 150) {			
-				    // Move the rover to the destination square
+				if (slope <= 150) {
+				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
 
-				    this.tank -= moveCost;
-
+				    /* Increase movements and remove the energy. */
 				    this.moves++;
+				    this.tank -= moveCost;
 
 				    return {
 					direction: direction,
@@ -396,6 +392,15 @@
 	}
     };
 
+    /**
+     * Scan the elevation of a square at a distance and direction.
+     *
+     * @this {Rover}
+     * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
+     * @param {integer} distance The distance to scan the square.
+     * @param {object} An object with the elevation of the scanned square.
+     * @todo Retrieve the elevation of the square between the targeted one and the rover square when scanning at a distance of 2.
+     */
     nsRover.Rover.prototype.scanElevation = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    if (distance < 0 || distance > 2) {
@@ -436,6 +441,15 @@
 	}
     };
 
+    /**
+     * Scan the material of a square at a distance and direction.
+     *
+     * @this {Rover}
+     * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
+     * @param {integer} distance The distance to scan the square.
+     * @param {object} An object with the type of the scanned square.
+     * @todo Retrieve the elevation of the square between the targeted one and the rover square when scanning at a distance of 2.
+     */
     nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    if (distance < 0 || distance > 2) {
@@ -483,6 +497,11 @@
 	}
     };
 
+    /**
+     * Deploy solar panel to regain some energy.
+     *
+     * @this {Rover}
+     */
     nsRover.Rover.prototype.deploySolarPanels = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    this.tank  += (this.panelsCost * 2);
