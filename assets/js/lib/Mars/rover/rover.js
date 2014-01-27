@@ -341,13 +341,12 @@
 		    if (directionCode == direction) {
 			for (var moveCostName in this.constructor.MOVE_COST) {
 			    var moveCost = this.constructor.MOVE_COST[directionName],
-			    tankCost = (moveCost * 1);
 			    // The distance cost plus the tank cost from the elevation
 			    // Not activated yet because there is no test on slope (see above)
 			    // elevationCost = tankCost * (1 + slope);
 
 			    // Calculate the cost of travel and removes from tank
-			    if (tankCost <= this.tank) {
+			    if (moveCost <= this.tank) {
 				// If the slope is <= 150%
 				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
 
@@ -356,7 +355,7 @@
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
 
-				    this.tank -= tankCost;
+				    this.tank -= moveCost;
 
 				    this.moves++;
 
