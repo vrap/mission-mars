@@ -283,6 +283,7 @@
      * Fill the tank.
      *
      * @this {Rover}
+     * @todo Fill the tank with an amount of energy as a percent of the total.
      */
     nsRover.Rover.prototype.fillTank = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
