@@ -235,7 +235,9 @@ h5 {
 }
 
 .st-panel{
-  background: #fff;
+  background: url('../img/home/Home.jpg') no-repeat bottom center;
+  background-size: cover;
+  width: 100%;
   overflow: hidden;
 }
 
