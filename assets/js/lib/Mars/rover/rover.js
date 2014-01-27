@@ -374,7 +374,7 @@
 
 		    if (directionCode == direction) {
 			for (var moveCostName in this.constructor.MOVE_COST) {
-			    var moveCost = this.constructor.MOVE_COST[directionName],
+			    var moveCost = this.constructor.MOVE_COST[directionName];
 			    // The distance cost plus the tank cost from the elevation
 			    // Not activated yet because there is no test on slope (see above)
 			    // elevationCost = tankCost * (1 + slope);
