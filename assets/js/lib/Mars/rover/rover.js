@@ -468,7 +468,6 @@
 	}
 	else {
 	    return this.executeAction('scanElevation', arguments, 0).progress(function(data) {
-		console.log(data);
 		if (data.progress == 0) {
 		    this.publishEvent('scanElevation.begin');
 		}
