@@ -21,6 +21,7 @@
 	 */
 	nsViewer.Viewer3D = function(viewer, element, options) {
 		this.viewer = viewer;
+    this.MAP_RATIO = 1.5;
 		this.element = element;
 		this.options = (options) ? options : {};
 		this.options.wireframe = this.options.wireframe || false;
@@ -36,7 +37,7 @@
 		this.scene = new THREE.Scene();
 		// Load every parts of the viewer
 		this._loadLight();
-    this._loadCamera(-1.25*this.viewer.map.getWidth(), 5, -0.35*this.viewer.map.getHeight()); // Init camera's position on point North West
+    this._loadCamera(0, 5, 0); // Init camera's position on point North West
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
@@ -71,8 +72,8 @@
 	 */
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		this.controls = new THREE.MarsFirstPersonControls(this.camera, this.renderer.domElement);
-		this.controls.movementSpeed = 0.1;
-    this.controls.lookSpeed = 0.001;
+		this.controls.movementSpeed = 0.01;
+    this.controls.lookSpeed = 0.0005;
     this.controls.lookVertical = false;
     this.controls.activeLook = true;
     this.controls.control = this.options.cameraControl;
@@ -111,8 +112,8 @@
 		// Init plane
 		this.geometry = new THREE.PlaneGeometry(
 			// Size
-			1.5*(this.viewer.map.getWidth()),
-			1.5*(this.viewer.map.getHeight()),
+			this.MAP_RATIO*(this.viewer.map.getWidth()),
+      this.MAP_RATIO*(this.viewer.map.getHeight()),
 			// Vertices
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
@@ -210,9 +211,7 @@
 	 * Renders the scene
 	 */
 	nsViewer.Viewer3D.prototype.render = function() {
-		if(this.options.cameraControl) {
-			this.controls.update(1);
-		}
+		this.controls.update(1);
 		this.renderer.render(this.scene, this.camera);
 	};
 
@@ -228,267 +227,62 @@
    * Change camera's position in the direction wanted.
    */
   nsViewer.Viewer3D.prototype.move = function(direction) {
-
-	};
-
-  /**
-   * Turn camera to the corresponding direction
-   * @param direction current direction
-   * @param lastDirection previous direction
-   */
-  nsViewer.Viewer3D.prototype.setVision = function(direction, lastDirection) {
-     this.controls.mouseX = this._calcVisionAngular(direction, lastDirection);
-  };
-
-  /**
-   * Calc the angular between two directions
-   * @param direction
-   * @param lastDirection
-   * @returns {number} vision angular
-   * @private
-   */
-  nsViewer.Viewer3D.prototype._calcVisionAngular = function (direction, lastDirection) {
-    switch(direction){
-      case nsRover.Rover.DIRECTION.NORTH:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return 0;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return -45;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return 135;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.SOUTH:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return 0;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return -45;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.WEST:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return 0;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-             return -45;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return 45;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.EAST:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return 0;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return -45;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return -135;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.NORTH_EAST:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return -45;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return 0;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return 180;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.NORTH_WEST:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return -45;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-             return 0;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return 90;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return -45;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return 0;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return -90;
-            break;
-          default :
-            return 0;
-        }
-      break;
-      case nsRover.Rover.DIRECTION.SOUTH_WEST:
-        switch(lastDirection){
-          case nsRover.Rover.DIRECTION.NORTH:
-            return -135;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH:
-            return 45;
-            break;
-          case nsRover.Rover.DIRECTION.WEST:
-             return -45;
-            break;
-          case nsRover.Rover.DIRECTION.EAST:
-            return 135;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_EAST:
-            return 180;
-            break;
-          case nsRover.Rover.DIRECTION.NORTH_WEST:
-            return -90;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_EAST:
-            return 90;
-            break;
-          case nsRover.Rover.DIRECTION.SOUTH_WEST:
-            return 0;
-            break;
-          default :
-            return 0;
-        }
-      break;
+    if(false === this.options.cameraControl) {
+      switch(direction){
+        case nsRover.Rover.DIRECTION.NORTH:
+          this.controls.moveForward = true;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.SOUTH:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = true;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.WEST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = true;
+          break;
+        case nsRover.Rover.DIRECTION.EAST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = true;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.NORTH_EAST:
+          this.controls.moveForward = true;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = true;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.NORTH_WEST:
+          this.controls.moveForward = true;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = true;
+          break;
+        case nsRover.Rover.DIRECTION.SOUTH_EAST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = true;
+          this.controls.moveRight = true;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.SOUTH_WEST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = true;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = true;
+          break;
+        default :
+          this.controls.moveForward = false;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = false;
+      }
     }
-  };
+	};
 })();
