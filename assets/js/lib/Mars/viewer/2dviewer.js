@@ -113,7 +113,7 @@
 
 		/* Listen to rover events. */
 		var observable = new nsCommon.Observable();
-		observable.subscribe('rover.move', function(data) {
+		observable.subscribe('rover.move.end', function(data) {
 			this.drawRover(data);
 			this.moveMap(data);
 		}.bind(this));

@@ -131,7 +131,7 @@
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 
-	observable.subscribe('rover.scanMaterial', function(data) {
+	observable.subscribe('rover.scanMaterial.end', function(data) {
 		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
 		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
 		//viewer.viewers[renderDiv].move(data.rover.moves);
@@ -157,7 +157,7 @@
 				break;
 		}
 	});
-	observable.subscribe('rover.scanElevation', function(data) {
+	observable.subscribe('rover.scanElevation.end', function(data) {
 		// Change camera elevation
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
@@ -165,17 +165,17 @@
     viewer.viewers[renderDiv].camera.position.x += data.rover.x;
     viewer.viewers[renderDiv].camera.position.z -= data.rover.y;
 	});
-	observable.subscribe('rover.actions.fillTank', function(data) {
+	observable.subscribe('rover.actions.fillTank.end', function(data) {
 		//console.log('tank is filled', data);
 	});
-	observable.subscribe('rover.actions.deploySolarPanels', function(data) {
+	observable.subscribe('rover.actions.deploySolarPanels.end', function(data) {
 		//console.log('panels are deployed', data);
 	});
-  observable.subscribe('rover.direction', function(data) {
+  observable.subscribe('rover.direction.end', function(data) {
     // Set camera vision.
     viewer.viewers[renderDiv].setVision(data.lastDirection);
   });
-  observable.subscribe('rover.move', function(data) {
+  observable.subscribe('rover.move.end', function(data) {
     // Set camera position.
     viewer.viewers[renderDiv].move(data.direction);
     console.log(viewer.viewers[renderDiv].camera.position);
@@ -199,21 +199,11 @@
     endY = parseInt(document.querySelector('#voyager-endY').value);
   }
 	var memory = new nsMemory.Memory();
-    var rover = new nsRover.Rover(map, 50, 50, 100, memory);
+	var rover = new nsRover.Rover(map, 50, 50, 100, memory);
 	var speculator = new nsSpeculator.S3000(rover);
 
 	speculator.enableModule('voyager');
+        speculator.start({x: 10, y: 20});
 
-	rover.setDirection(nsRover.Rover.DIRECTION.SOUTH);
-	
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-	
-	rover.move(2);
-	rover.scanElevation(rover.constructor.DIRECTION.NORTH, 1);
-    console.log('STARTING VOYAGER');
-
-    speculator.start({x: 10, y: 20});
 	console.log(rover.memory.readAll());
-
 })();
