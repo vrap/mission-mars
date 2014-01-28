@@ -252,4 +252,8 @@
 
 		return defer.promise;
 	};
+
+	nsSpeculator.S3000.prototype.fullScan = function() {
+		this.rover.fullScan();
+    };
 })();

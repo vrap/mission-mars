@@ -540,23 +540,32 @@
      * @this {Rover}
      */
     nsRover.Rover.prototype.deploySolarPanels = function() {
-	if (arguments.callee.caller == this.executeBufferedAction) {
-	    this.tank  += (this.panelsCost * 2);
-	    this.moves += this.panelsCost;
+		if (arguments.callee.caller == this.executeBufferedAction) {
+		    this.tank  += (this.panelsCost * 2);
+		    this.moves += this.panelsCost;
 
-	    if (this.tank > this.tankSize) {
-		this.tank = this.tankSize;
-	    }
-	}
-	else {
-	    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
-		if (data.progress == 0) {
-		    this.publishEvent('actions.deploySolarPanels.begin');
+		    if (this.tank > this.tankSize) {
+			this.tank = this.tankSize;
+		    }
 		}
-		else if (data.progress == 100) {
-		    this.publishEvent('actions.deploySolarPanels.end');
+		else {
+		    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
+			if (data.progress == 0) {
+			    this.publishEvent('actions.deploySolarPanels.begin');
+			}
+			else if (data.progress == 100) {
+			    this.publishEvent('actions.deploySolarPanels.end');
+			}
+		    }.bind(this));
 		}
-	    }.bind(this));
-	}
+	};
+
+	nsRover.Rover.prototype.fullScan = function() {
+        for (var key in this.constructor.DIRECTION) {
+            this.scanElevation(key, 1);
+            // TODO : si on fait scan materiel de 2, on connait 1
+            //this.scanMaterial(key, 1);
+            this.scanMaterial(key, 2);
+        }
     };
 })();

@@ -186,9 +186,9 @@
     endX = parseInt(document.querySelector('#voyager-endX').value);
     endY = parseInt(document.querySelector('#voyager-endY').value);
   }
-	var memory = new nsMemory.Memory();
-	var rover = new nsRover.Rover(map, 50, 50, 100, memory);
-	var speculator = new nsSpeculator.S3000(rover);
+	//var memory = new nsMemory.Memory();
+    //var rover = new nsRover.Rover(map, 20, 20, 100, memory);
+	//var speculator = new nsSpeculator.S3000(rover);
 
 	/* Voyager
 	speculator.enableModule('voyager');
@@ -196,6 +196,6 @@
 
 	console.log(rover.memory.readAll()); */
 
-	speculator.enableModule('explorer');
-	speculator.start();
+	//speculator.enableModule('explorer');
+	//speculator.start();
 })();
