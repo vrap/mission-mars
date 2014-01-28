@@ -38,6 +38,7 @@
     nsVoyager.Voyager.prototype.start = function() {
 	var destination = arguments[0][0];
 
+        this.speculator.observer.publish('s3000.module.start.begin');
 	this.voyage(destination);
     };
 
@@ -74,7 +75,9 @@
 	var position = { x: rover.x, y: rover.y };
 
 	if (rover.x == destination.x && rover.y == destination.y) {
-	    return true;
+            this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+
+	    return;
 	}
 
 	var xDirection = nsRover.Rover.DIRECTION.WEST;
