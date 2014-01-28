@@ -60,10 +60,10 @@
 	/* Load map in 3d viewer. */
 	var viewer = new nsViewer.Viewer(map);
 
-	viewer.load2D(render2dDiv);
+	viewer.load2D(render2dDiv,'',true);
 
 	var viewerFul = new nsViewer.Viewer(map);
-	viewerFul.load2D(renderFull2dDiv);
+	viewerFul.load2D(renderFull2dDiv, '' ,false);
 
 	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
 

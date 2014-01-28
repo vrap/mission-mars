@@ -120,7 +120,7 @@
 
 	nsViewer.Interface.prototype._pushBattery = function(){
 
-		this.observable.subscribe('rover.move', function(data){
+		this.observable.subscribe('rover.move.end', function(data){
 
 			var tank = Math.round(data.rover.tank * data.rover.tankSize / 100);
 
@@ -140,7 +140,7 @@
 	}
 	nsViewer.Interface.prototype._pushMove = function(){
 		
-		this.observable.subscribe('rover.move', function(data){
+		this.observable.subscribe('rover.move.end', function(data){
 			this.elementMove.innerHTML = data.rover.moves;
 		}.bind(this));
 
