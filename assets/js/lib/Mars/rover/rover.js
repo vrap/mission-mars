@@ -1,395 +1,562 @@
 (function() {
-	var nsRover  = using('mars.rover');
-	var nsCommon = using('mars.common');
+    var nsRover  = using('mars.rover');
+    var nsCommon = using('mars.common');
 
-	/**
-	 * Represent a Rover.
-	 * 
-	 * @param  {mars.common.Map} map A map object where the rover need to spawn.
-	 * @param  {integer} x X position of the rover when spawning.
-	 * @param  {integer} y Y position of the rover when spawning
-	 * @param  {integer} tankSize Define the energy limit that the rover can handle.
-	 */
-	nsRover.Rover = function(map, x, y, tankSize, memory) {
-		/* Check if the map is in the good format. */
-		if (! (map instanceof nsCommon.Map)) {
-			throw new Error('Map need to be an instance of Map.');
-		}
-
-		this.map = map;
-
-		/* Define spawn position of the rover */
-		this.x = (parseInt(x) >= 0) ? parseInt(x) : 0;
-		this.y = (parseInt(y) >= 0) ? parseInt(y) : 0;
-
-		/* Define tankSize and default energy level of the rover. */
-		this.tankSize = (parseInt(tankSize) >= 0) ? parseInt(tankSize) : 0;
-		this.tank     = this.tankSize;
-
-		/* Define the default direction of the Rover to North. */
-		this.direction = nsRover.Rover.DIRECTION.NORTH;
-
-		/* Retrieve an instance of the Observable. */
-		this.observer = new nsCommon.Observable();
-
-		/* Publish a spawn event. */
-		this.publishEvent('spawn');
-
-		/* Number of movements. */
-		this.moves = 0;
-
-		/* Cost of deploying solar panels. */
-		this.panelsCost = 5;
-
-		this.memory = memory;
-
-		var spawnSquare = this.map.getSquare(x, y);
-
-		if (spawnSquare) {
-			/* Add square to memory. */
-			this.memory.create(x, y, spawnSquare.z, spawnSquare.type, 0);
-		}
-	};
-
-	/* Constant that represent the list of possible directions. */
-	nsRover.Rover.DIRECTION = {
-		NORTH: 0,
-		NORTH_EAST: 1,
-		EAST: 2,
-		SOUTH_EAST: 3,
-		SOUTH: 4,
-		SOUTH_WEST: 5,
-		WEST: 6,
-		NORTH_WEST: 7
-	};
-
-	nsRover.Rover.MOVE_COST = {
-		NORTH: 1,
-		NORTH_EAST: 1.4,
-		EAST: 1,
-		SOUTH_EAST: 1.4,
-		SOUTH: 1,
-		SOUTH_WEST: 1.4,
-		WEST: 1,
-		NORTH_WEST: 1.4
-	};
-
-	nsRover.Rover.SENSOR_COST = {
-		BELOW: 0.1,
-		NEIGHBOR: 0.2,
-		REMOTE: 0.4
-	};
-
-	/**
-	 * Fill the tank.
-	 *
-	 * @this {Rover}
-	 */
-	nsRover.Rover.prototype.fillTank = function() {
-		this.tank = this.tankSize;
-
-		this.publishEvent('actions.fillTank');
-	};
-
-
-	/**
-	 * Get the current position of the rover.
-	 *
-	 * @this {Rover}
-	 * @return {object} An object of x and y position.
-	 */
-	nsRover.Rover.prototype.getPosition = function() {
-	    return {x: this.x, y: this.y };
+    /**
+     * Represent a Rover.
+     * 
+     * @param  {mars.common.Map} map A map object where the rover need to spawn.
+     * @param  {integer} x X position of the rover when spawning.
+     * @param  {integer} y Y position of the rover when spawning
+     * @param  {integer} tankSize Define the energy limit that the rover can handle.
+     */
+    nsRover.Rover = function(map, x, y, tankSize, memory) {
+	/* Check if the map is in the good format. */
+	if (! (map instanceof nsCommon.Map)) {
+	    throw new Error('Map need to be an instance of Map.');
 	}
 
-	/**
-	 * Change rover direction.
-	 *
-	 * @this {Rover}
-	 * @param  {[type]} direction [description]
-	 * @return {[type]}           [description]
-	 */
-	nsRover.Rover.prototype.setDirection = function(direction) {
+	this.map = map;
+
+	/* Define spawn position of the rover */
+	this.x = (parseInt(x) >= 0) ? parseInt(x) : 0;
+	this.y = (parseInt(y) >= 0) ? parseInt(y) : 0;
+
+	/* Define tankSize and default energy level of the rover. */
+	this.tankSize = (parseInt(tankSize) >= 0) ? parseInt(tankSize) : 0;
+	this.tank     = this.tankSize;
+
+	/* Define the default direction of the Rover to North. */
+	this.direction = nsRover.Rover.DIRECTION.NORTH;
+
+	/* Retrieve an instance of the Observable. */
+	this.observer = new nsCommon.Observable();
+
+	/* Publish a spawn event. */
+	this.publishEvent('spawn');
+
+	/* Number of movements. */
+	this.moves = 0;
+
+	/* Cost of deploying solar panels. */
+	this.panelsCost = 5;
+
+	/* Define the duration of a round. */
+	this.roundTime = 1000;
+
+	this.waitingStatus = false;
+	this.waitingActions = [];
+
+	this.memory = memory;
+
+	var spawnSquare = this.map.getSquare(x, y);
+
+	if (spawnSquare) {
+	    /* Add square to memory. */
+	    this.memory.create(x, y, spawnSquare.z, spawnSquare.type, 0);
+	}
+    };
+
+    /* Constant that represent the list of possible directions. */
+    nsRover.Rover.DIRECTION = {
+	NORTH: 0,
+	NORTH_EAST: 1,
+	EAST: 2,
+	SOUTH_EAST: 3,
+	SOUTH: 4,
+	SOUTH_WEST: 5,
+	WEST: 6,
+	NORTH_WEST: 7
+    };
+
+    /* Energy cost for each movements (direction). */
+    nsRover.Rover.MOVE_COST = {
+	NORTH: 1,
+	NORTH_EAST: 1.4,
+	EAST: 1,
+	SOUTH_EAST: 1.4,
+	SOUTH: 1,
+	SOUTH_WEST: 1.4,
+	WEST: 1,
+	NORTH_WEST: 1.4
+    };
+
+    /* Energy cost for each distance of sensor. */
+    nsRover.Rover.SENSOR_COST = {
+	BELOW: 0.1,
+	NEIGHBOR: 0.2,
+	REMOTE: 0.4
+    };
+
+    /**
+     * Execute an action of the rover.
+     * When you try to run a method of the Rover, this one is redirected to
+     * "executeAction" that return a deferred and add the action to a buffer.
+     * Each actions in the buffer will be executed one after another and the
+     * associated callback will be resolved (or reject).
+     *
+     * @this {Rover}
+     * @param {string} action Name of the method to call.
+     * @param {array} [args] An array of args passed to the action.
+     * @param {integer} [round=0] Number of round that take to the rover to execute the action.
+     */
+    nsRover.Rover.prototype.executeAction = function(action, args, round) {
+	var defer = Q.defer();
+
+	/* Create an object of that contain all informations about the action. */
+	var bufferedAction = {
+	    dfd: defer,
+	    method: action,
+	    args: args,
+	    round: (isNaN(parseInt(round))) ? 0 : parseInt(round)
+	}
+
+	/* Add the action to the buffer. */
+	this.waitingActions.push(bufferedAction);
+
+	/* If the buffer is not currently executed, execute it. */
+	if (this.waitingStatus === false) {
+	    this.waitingStatus = true;
+	    Q.nextTick(function() { this.executeBufferedAction() }.bind(this));
+	}
+
+	/* Return the promise. */
+	return defer.promise;
+    };
+
+    /**
+     * Execute an action from the buffer.
+     * Check if an action is in the buffer and execute it. Wait for the time
+     * round of the action and retry to call the action from the buffer.
+     *
+     * @this {Rover}
+     */
+    nsRover.Rover.prototype.executeBufferedAction = function() {
+	/* If the buffer is not currently being to be executed stop here. */
+	if (this.waitingStatus === true) {
+	    /* If some actions are waiting inside the buffer. */
+	    if (this.waitingActions.length > 0) {
+		/* Retrieve the first action (oldest) of the buffer. */
+		var action = this.waitingActions[0];
+		/* Initialize the result of the action to null. */
+		var result = null;
+
+		/* Notify the deferred associated with the action that she's begining. */
+		action.dfd.notify({progress: 0, data: action.args});
+
+		/* Try to call the action and store the returned result. */
+		try {
+		    if (typeof action.args == 'object') {
+			result = this[action.method].apply(this, action.args);
+		    }
+		    else {
+			result = this[action.method].call(this);
+		    }		    
+		}
+		catch (error) {
+		    result = {error: error};
+		}
+
+		/**
+		 * Notify the deferred that the action has been runned with the
+		 * returned data and resolve the deferred.
+		 */
+		action.dfd.notify({progress: 100, data: result});
+		action.dfd.resolve(result);
+
+		/* Remove the action from the buffer. */
+		this.waitingActions.splice(0, 1);
+
+		/* Call again this function after waiting the number of round. */
+		setTimeout(
+		    function() {
+			this.executeBufferedAction();
+		    }.bind(this),
+		    this.roundTime * action.round
+		);
+	    }
+	    else {
+		this.waitingStatus = false;
+	    }
+	}
+    };
+
+    /**
+     * Publish an event.
+     * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
+     *
+     * @this {Rover}
+     * @param  {string} channel Subchannel where the event need to be published. (The channel will be prefixed by "rover.").
+     * @param  {object} options An object containing the params to sends when publishing the event.
+     */
+    nsRover.Rover.prototype.publishEvent = function(channel, options) {
+	/* Initialize default options. */
+	options = (options && Object.keys(options).length > 0) ? options : {};
+	channel = 'rover.' + channel;
+
+	/* Add rover instance to the options. */
+	options.rover = this;
+
+	/* Add channel name to the options. */
+	options.channel = channel;
+
+	/* Publish the event. */
+	this.observer.publish(channel, [options]);
+
+	/* Debug. */
+	console.debug('Publish event : ', channel, options);
+    };
+
+    /**
+     * Retrieve a square at a distance and direction relatively to the current position.
+     *
+     * @this {Rover}
+     * @param  {integer} direction Direction of the rover.
+     * @param  {integer} distance  Distance to seek.
+     * @return {object}            Return an object containing informations about the square if exist; null otherwise.
+     */
+    nsRover.Rover.prototype.getSquare = function(direction, distance) {
+	var x = this.x;
+	var y = this.y;
+
+	switch (direction) {
+	case this.constructor.DIRECTION.NORTH:
+	    y += distance;
+	    break;
+	case this.constructor.DIRECTION.NORTH_EAST:
+	    y += distance;
+	    x += distance;
+	    break;
+	case this.constructor.DIRECTION.NORTH_WEST:
+	    y += distance;
+	    x -= distance;
+	    break;
+	case this.constructor.DIRECTION.SOUTH:
+	    y -= distance;
+	    break;
+	case this.constructor.DIRECTION.SOUTH_EAST:
+	    y -= distance;
+	    x += distance;
+	    break;
+	case this.constructor.DIRECTION.SOUTH_WEST:
+	    y -= distance;
+	    x -= distance;
+	    break;
+	case this.constructor.DIRECTION.EAST:
+	    x += distance;
+	    break;
+	case this.constructor.DIRECTION.WEST:
+	    x -= distance;
+	    break;
+	}
+
+	var square = this.map.getSquare(x, y);
+
+	if (square) {
+	    /* Add square to memory. */
+	    this.memory.create(x, y, square.z, square.type, 0);
+
+	    return {
+		x: x,
+		y: y,
+		z: square.z,
+		type: square.type
+	    };
+	}
+
+	return null;
+    };
+
+    /**
+     * Calculate the slope between the current square and the destination square.
+     * 
+     * @param  {integer} currentZ      Current square elevation.
+     * @param  {integer} destinationZ  Destination square elevation.
+     * @param  {integer} distance      Distance between current and destination squares.
+     * @return {integer}      		   The slope (in %).
+     */
+    nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
+	return Math.round((destinationZ - currentZ) / distance);
+    };
+
+    /**
+     * Fill the tank.
+     *
+     * @this {Rover}
+     * @todo Fill the tank with an amount of energy as a percent of the total.
+     */
+    nsRover.Rover.prototype.fillTank = function() {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    this.tank = this.tankSize;
+	}
+	else {
+	    return this.executeAction('fillTank', null, 0)
+		.progress(function(data) {
+		    if (data.progress == 0) {
+			this.publishEvent('actions.fillTank.begin');
+		    }
+		    else if (data.progress == 100) {
+			this.publishEvent('actions.fillTank.end');
+		    }
+		}.bind(this));
+	}
+    };
+
+    /**
+     * Get the current position of the rover.
+     *
+     * @this {Rover}
+     * @return {object} An object of x and y position.
+     */
+    nsRover.Rover.prototype.getPosition = function() {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    return {x: this.x, y: this.y };
+	}
+	else {
+	    return this.executeAction('getPosition', null, 0);
+	}
+    }
+
+    /**
+     * Change rover direction.
+     *
+     * @this {Rover}
+     * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
+     * @return {object} An object containing the last direction.
+     */
+    nsRover.Rover.prototype.setDirection = function(direction) {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    for (var directionName in this.constructor.DIRECTION) {
+		var directionCode = this.constructor.DIRECTION[directionName];
+
+		if (directionCode == direction) {
+		    var lastDirection = this.direction;
+		    this.direction = directionCode;
+
+		    return {lastDirection: lastDirection};
+		}
+	    }
+	}
+	else {
+	    return this.executeAction('setDirection', arguments, 0).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('direction.begin', data.data);
+		}
+		if (data.progress == 100) {
+		    this.publishEvent('direction.end', data.data);
+		}
+	    }.bind(this));
+	}
+    };
+
+    /**
+     * Move the rover to a distance and direction relatively to the current position.
+     * 
+     * @this {Rover}
+     * @return {object} Return an object with the last position and the new one.
+     */
+    nsRover.Rover.prototype.move = function() {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    /* Retrieve the current direction of the rover to move on. */
+            var direction = this.direction;
+
+	    var currentSquare = this.getSquare(direction, 0);
+	    var destinationSquare = this.getSquare(direction, 1);
+
+	    /* If the rover is still within the limits of the map. */
+	    if (destinationSquare !== null) {
+		var lastX = currentSquare.x;
+		var lastY = currentSquare.y;
+		var lastZ = currentSquare.z;
+
 		for (var directionName in this.constructor.DIRECTION) {
-			var directionCode = this.constructor.DIRECTION[directionName];
+		    var directionCode = this.constructor.DIRECTION[directionName];
 
-			if (directionCode == direction) {
-				var lastDirection = this.direction;
-				this.direction = directionCode;
+		    if (directionCode == direction) {
+			for (var moveCostName in this.constructor.MOVE_COST) {
+			    var moveCost = this.constructor.MOVE_COST[directionName];
+			    // The distance cost plus the tank cost from the elevation
+			    // Not activated yet because there is no test on slope (see above)
+			    // elevationCost = tankCost * (1 + slope);
 
-				this.publishEvent('direction', {lastDirection: lastDirection});
-				
+			    /* Calculate the cost of travel and removes from tank. */
+			    if (moveCost <= this.tank) {
+				/* If the slope is <= 150%. */
+				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
+
+				if (slope <= 150) {
+				    /* Move the rover to the destination square. */
+				    this.x = destinationSquare.x;
+				    this.y = destinationSquare.y;
+
+				    /* Increase movements and remove the energy. */
+				    this.moves++;
+				    this.tank -= moveCost;
+
+				    return {
+					direction: direction,
+					lastX: lastX,
+					lastY: lastY,
+					newX: this.x,
+					newY: this.y
+				    };
+				}
+				else {
+				    throw new Error('Slope is too important.');
+				}
+
 				break;
+			    }
+			    else {
+				throw new Error('You need more tank.');
+			    }
 			}
+		    }
 		}
-	};
+	    }
+	    else {
+		throw new Error('The map is undiscovered here.');
+	    }
+	}
+	else {
+	    return this.executeAction('move', arguments, 1).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('move.begin', data.data);
+		}
+		else if (data.progress == 100) {
+		    this.publishEvent('move.end', data.data);
+		}
+	    }.bind(this));
+	}
+    };
 
-	/**
-	 * Publish an event.
-	 * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
-	 *
-	 * @this {Rover}
-	 * @param  {string} channel Subchannel where the event need to be published. (The channel will be prefixed by "rover.").
-	 * @param  {object} options An object containing the params to sends when publishing the event.
-	 */
-	nsRover.Rover.prototype.publishEvent = function(channel, options) {
-		/* Initialize default options. */
-		options = (options && Object.keys(options).length > 0) ? options : {};
-		channel = 'rover.' + channel;
+    /**
+     * Scan the elevation of a square at a distance and direction.
+     *
+     * @this {Rover}
+     * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
+     * @param {integer} distance The distance to scan the square.
+     * @param {object} An object with the elevation of the scanned square.
+     * @todo Retrieve the elevation of the square between the targeted one and the rover square when scanning at a distance of 2.
+     */
+    nsRover.Rover.prototype.scanElevation = function(direction, distance) {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    if (distance < 0 || distance > 2) {
+		throw new Error('Distance can only be set to 0 or 2.');
+	    }
 
-		/* Add rover instance to the options. */
-		options.rover = this;
+	    var square = this.getSquare(direction, distance);
 
-		/* Add channel name to the options. */
-		options.channel = channel;
+	    if (square === null) {
+		throw new Error('The map is undiscovered here.');
+	    }
+	    else {
+		if (distance >= 2) {
+		    var scanCost = 0.1 * distance;
 
-		/* Publish the event. */
-		this.observer.publish(channel, [options]);
-
-		/* Debug. */
-		console.debug('Publish event : ', channel, options);
-	};
-
-	/**
-	 * Retrieve a square at a distance and direction relatively to the current position.
-	 *
-	 * @this {Rover}
-	 * @param  {integer} direction Direction of the rover.
-	 * @param  {integer} distance  Distance to seek.
-	 * @return {object}            Return an object containing informations about the square if exist; null otherwise.
-	 */
-	nsRover.Rover.prototype.getSquare = function(direction, distance) {
-		var x = this.x;
-		var y = this.y;
-
-		switch (direction) {
-			case this.constructor.DIRECTION.NORTH:
-				y += distance;
-			break;
-			case this.constructor.DIRECTION.NORTH_EAST:
-				y += distance;
-				x += distance;
-			break;
-			case this.constructor.DIRECTION.NORTH_WEST:
-				y += distance;
-				x -= distance;
-			break;
-			case this.constructor.DIRECTION.SOUTH:
-				y -= distance;
-			break;
-			case this.constructor.DIRECTION.SOUTH_EAST:
-				y -= distance;
-				x += distance;
-			break;
-			case this.constructor.DIRECTION.SOUTH_WEST:
-				y -= distance;
-				x -= distance;
-			break;
-			case this.constructor.DIRECTION.EAST:
-				x += distance;
-			break;
-			case this.constructor.DIRECTION.WEST:
-				x -= distance;
-			break;
+		    if (scanCost <= this.tank) {
+			this.tank -= scanCost;
+		    }
 		}
 
-		var square = this.map.getSquare(x, y);
+		return {
+		    direction: direction,
+		    distance: distance,
+		    elevation: square.z
+		}
+	    }
+	}
+	else {
+	    return this.executeAction('scanElevation', arguments, 0).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('scanElevation.begin');
+		}
+		else if (data.progress == 100) {
+		    this.publishEvent('scanElevation.end', data.data);
+		}
+	    }.bind(this));
+	}
+    };
 
-		if (square) {
-			/* Add square to memory. */
-			this.memory.create(x, y, square.z, square.nature, 0);
+    /**
+     * Scan the material of a square at a distance and direction.
+     *
+     * @this {Rover}
+     * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
+     * @param {integer} distance The distance to scan the square.
+     * @param {object} An object with the type of the scanned square.
+     * @todo Retrieve the elevation of the square between the targeted one and the rover square when scanning at a distance of 2.
+     */
+    nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    if (distance < 0 || distance > 2) {
+		throw new Error('Distance can only be set to 0 or 2.');
+	    }
 
-			return {
-				x: x,
-				y: y,
-				z: square.z,
-				type: square.nature
-			};
+	    var square = this.getSquare(direction, distance);
+
+	    if (square === null) {
+		throw new Error('The map is undiscovered here.');
+	    }
+	    else {
+		// If the current square is ice
+		// TODO: update freely the memory
+		if (square.type == 4) {
+		    this.fillTank();
 		}
 
-		return null;
-	};
-
-	/**
-	 * Move the rover to a distance and direction relatively to the current position.
-	 * 
-	 * @this {Rover}
-	 * @param  {integer} direction Direction of the rover.
-	 * @param  {integer} distance  Distance to seek.
-	 */
-	nsRover.Rover.prototype.move = function(distance) {
-		if (distance < 1 || distance > 2) {
-			throw new Error('Distance can only be set to 1 or 2.');
+		if (distance == 0 && this.tank >= 0.1) {
+		    this.tank -= 0.1;
+		}
+		else if (distance == 1 && this.tank >= 0.2) {
+		    this.tank -= 0.2;
+		}
+		else if (distance == 2 && this.tank >= 0.4) {
+		    this.tank -= 0.4;
 		}
 
-	        /* Retrieve the current direction of the rover to move on. */
-                var direction = this.direction;
-
-		//var square = this.getSquare(direction, distance);
-		var currentSquare = this.getSquare(direction, 0);
-		var destinationSquare = this.getSquare(direction, distance);
-
-		// If the rover is still within the limits of the map
-		if (destinationSquare !== null) {
-			//var lastX = this.x;
-			//var lastY = this.y;
-			var lastX = currentSquare.x;
-			var lastY = currentSquare.y;
-			var lastZ = currentSquare.z;
-
-			for (var directionName in this.constructor.DIRECTION) {
-				var directionCode = this.constructor.DIRECTION[directionName];
-
-				if (directionCode == direction) {
-					for (var moveCostName in this.constructor.MOVE_COST) {
-						var moveCost = this.constructor.MOVE_COST[directionName],
-							tankCost = (moveCost * distance);
-							// The distance cost plus the tank cost from the elevation
-							// Not activated yet because there is no test on slope (see above)
-							// elevationCost = tankCost * (1 + slope);
-
-						// Calculate the cost of travel and removes from tank
-						if (tankCost <= this.tank) {
-							// If the slope is <= 150%
-							var slope = this.calculateSlop(lastZ, destinationSquare.z, distance);
-
-							if (slope <= 150) {			
-								// Move the rover to the destination square
-								this.x = destinationSquare.x;
-								this.y = destinationSquare.y;
-
-								this.tank -= tankCost;
-
-								this.moves++;
-
-								this.publishEvent('move', {
-									direction: direction,
-									distance: distance,
-									lastX: lastX,
-									lastY: lastY,
-									newX: this.x,
-									newY: this.y
-								});
-							}
-							else {
-								throw new Error('Slope is too important.');
-							}
-
-							break;
-						}
-						else {
-							throw new Error('You need more tank.');
-						}
-					}
-				}
-			}
+		return {
+		    direction: direction,
+		    distance: distance,
+		    type: square.type
 		}
-		else {
-			throw new Error('The map is undiscovered here.');
+	    }
+	}
+	else {
+	    return this.executeAction('scanMaterial', arguments, 0).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('scanMaterial.begin');
 		}
-	};
-
-	nsRover.Rover.prototype.scanElevation = function(direction, distance) {
-		if (distance < 0 || distance > 2) {
-			throw new Error('Distance can only be set to 0 or 2.');
+		else if (data.progress == 100) {
+		    this.publishEvent('scanMaterial.end', data.data);
 		}
+	    }.bind(this));
+	}
+    };
 
-		var square = this.getSquare(direction, distance);
+    /**
+     * Deploy solar panel to regain some energy.
+     *
+     * @this {Rover}
+     */
+    nsRover.Rover.prototype.deploySolarPanels = function() {
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    this.tank  += (this.panelsCost * 2);
+	    this.moves += this.panelsCost;
 
-		if (square === null) {
-			throw new Error('The map is undiscovered here.');
+	    if (this.tank > this.tankSize) {
+		this.tank = this.tankSize;
+	    }
+	}
+	else {
+	    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('actions.deploySolarPanels.begin');
 		}
-		else {
-			if (distance == 0 || distance == 1) {
-				this.publishEvent('scanElevation', {
-					direction: direction,
-					distance: distance,
-					elevation: square.z
-				});
-			}
-			else if (distance >= 2) {
-				var scanCost = 0.1 * distance;
-
-				if (scanCost <= this.tank) {
-					this.tank -= scanCost;
-
-					this.publishEvent('scanElevation', {
-						direction: direction,
-						distance: distance,
-						elevation: square.z
-					});
-				}
-			}
+		else if (data.progress == 100) {
+		    this.publishEvent('actions.deploySolarPanels.end');
 		}
-	};
-
-	nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
-		if (distance < 0 || distance > 2) {
-			throw new Error('Distance can only be set to 0 or 2.');
-		}
-
-		var square = this.getSquare(direction, distance);
-
-		if (square === null) {
-			throw new Error('The map is undiscovered here.');
-		}
-		else {
-			// If the current square is ice
-			// TODO: update freely the memory
-			if (square.type == 4) {
-				this.fillTank();
-			}
-
-			if (distance == 0 && this.tank >= 0.1) {
-				this.tank -= 0.1;
-
-				this.publishEvent('scanMaterial', {
-					direction: direction,
-					distance: distance,
-					type: square.type
-				});
-			}
-			else if (distance == 1 && this.tank >= 0.2) {
-				this.tank -= 0.2;
-
-				this.publishEvent('scanMaterial', {
-					direction: direction,
-					distance: distance,
-					type: square.type
-				});
-			}
-			else if (distance == 2 && this.tank >= 0.4) {
-				this.tank -= 0.4;
-
-				this.publishEvent('scanMaterial', {
-					direction: direction,
-					distance: distance,
-					type: square.type
-				});
-			}
-		}
-	};
-
-	/**
-	 * Calculate the slope between the current square and the destination square.
-	 * 
-	 * @param  {integer} currentZ      Current square elevation.
-	 * @param  {integer} destinationZ  Destination square elevation.
-	 * @param  {integer} distance      Distance between current and destination squares.
-	 * @return {integer}      		   The slope (in %).
-	 */
-	nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
-		return Math.round((destinationZ - currentZ) / distance);
-	};
-
-	nsRover.Rover.prototype.deploySolarPanels = function() {
-		this.tank  += (this.panelsCost * 2);
-		this.moves += this.panelsCost;
-
-		if (this.tank > this.tankSize) {
-			this.tank = this.tankSize;
-		}
-
-		this.publishEvent('actions.deploySolarPanels');
-	};
+	    }.bind(this));
+	}
+    };
 })();
