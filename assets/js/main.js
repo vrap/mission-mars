@@ -161,12 +161,16 @@
 	});
   observable.subscribe('rover.direction.end', function(data) {
     // Set camera vision.
-    viewer.viewers[renderDiv].setVision(data.lastDirection);
+    viewer.viewers[renderDiv].setVision(data.rover.direction, data.lastDirection);
+    // Comparer last direction et direction choisi.
+    // Savoir si la différence est à droite ou gauche
+    // Tourner la caméra dans le bon sens
   });
   observable.subscribe('rover.move.end', function(data) {
     // Set camera position.
-    viewer.viewers[renderDiv].move(data.direction);
-    console.log(viewer.viewers[renderDiv].camera.position);
+
+    // Avancer.
+    // Quand mission terminée : viewer.viewers[renderDiv].controls.freeze = true;
   });
 
 	/* Rover tests. */
