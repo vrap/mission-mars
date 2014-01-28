@@ -94,7 +94,6 @@
 			}
 			viewer._loadFog();
 		};
-
 	}
 
 	nsViewer.Interface.prototype._displayCamera = function(){
@@ -107,7 +106,6 @@
 			viewer._loadControls();
 			addClass(this, ' active');
 			removeClass(cameraOff, 'active');
-
 		};
 
 		this.elements.control.cameraOff.onclick = function (){
@@ -116,7 +114,6 @@
 			console.log(wireframeOn);
 			addClass(this, ' active');
 			removeClass(cameraOn, 'active');
-
 		};
 
 	}
