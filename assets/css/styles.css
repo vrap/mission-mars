@@ -55,6 +55,7 @@
   content: "\e006";
 }
 .flaticon-remove11:before {
+	font-size: 40px;
   content: "\e007";
 }
 .flaticon-screwdriver3:before {
@@ -595,7 +596,20 @@ h5 {
 #bloc-fullMap{
 	width: 800px;
 	height: 500px;
-	overflow: auto;
+	overflow: hidden;
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+#fullmap{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+#fullmap:hover{
+	cursor: move;
+
 }
 
 #bloc-over-full:after{
@@ -615,10 +629,12 @@ h5 {
 }
 
 #bloc-fullMap .glyphicon-close{
+	width: 0;
+	height: 0;
 	cursor: pointer;
 	position: absolute;
-	top: 13px;
-	left: 13px;
+	top: -10px;
+	left: -20px;
 	z-index: 1001;
 }
 
@@ -768,7 +784,7 @@ h5 {
 	margin-right: 0px;
 }
 .glyphicon-close{
-	background-color: blue;
+	/*background-color: blue;*/
 }
 
 

@@ -141,6 +141,7 @@
 		  './assets/img/sky/3.jpg'
 		];
 
+
 		var cubemap = THREE.ImageUtils.loadTextureCube(urls); // load textures
 		cubemap.format = THREE.RGBFormat;
 
