@@ -6,13 +6,15 @@
 	 * [ description]
 	 * @return {[type]}         [description]
 	 */
-	nsViewer.Viewer2D = function(viewer, element, options) {
+	nsViewer.Viewer2D = function(viewer, element, options, moved) {
 		this.viewer = viewer;
 		this.element = element;
 		this.options = (options) ? options : {};
 		this.context = element.getContext('2d');
 		this.position = {x:0, y:0};
 		this.valPixel = 10;
+
+		this.moved = moved;
 
 		this.init();
 	};
@@ -23,6 +25,13 @@
 		// Taille du canvas
 		this.element.width = this.viewer.map.getWidth() * this.valPixel;
 		this.element.height = this.viewer.map.getHeight()* this.valPixel;
+
+		if(!this.moved){
+			
+			this.element.style.top = 0  + 'px';
+			this.element.style.left = 0 + 'px';
+			
+		}
 
 		this.initRover();
 
@@ -75,32 +84,32 @@
 
 		switch (data.direction) {
 			case 0: //<= NORTH
-				this.position.y += data.distance * this.valPixel;
+				this.position.y += 1 * this.valPixel;
 			break;
 			case 1: //<= NORTH_EAST
-				this.position.y += data.distance * this.valPixel;
-				this.position.x -= data.distance * this.valPixel;
+				this.position.y += 1 * this.valPixel;
+				this.position.x -= 1 * this.valPixel;
 			break;
 			case 2: //<= EAST
-				this.position.x -= data.distance * this.valPixel;
+				this.position.x -= 1 * this.valPixel;
 			break;
 			case 3: //<= SOUTH_EAST
-				this.position.y -= data.distance * this.valPixel;
-				this.position.x -= data.distance * this.valPixel;
+				this.position.y -= 1 * this.valPixel;
+				this.position.x -= 1 * this.valPixel;
 			break;
 			case 4: //<= SOUTH
-				this.position.y -= data.distance * this.valPixel;
+				this.position.y -= 1 * this.valPixel;
 			break;
 			case 5: //<= SOUTH_WEST
-				this.position.y -= data.distance * this.valPixel;
-				this.position.x += data.distance * this.valPixel;
+				this.position.y += 1 * this.valPixel;
+				this.position.x += 1 * this.valPixel;
 			break;
 			case 6: //<= WEST
-				this.position.x += data.distance * this.valPixel;
+				this.position.x += 1 * this.valPixel;
 			break;
 			case 7: //<= NORTH_WEST
-				this.position.y += data.distance * this.valPixel;
-				this.position.x += data.distance * this.valPixel;
+				this.position.y += 1 * this.valPixel;
+				this.position.x += 1 * this.valPixel;
 			break;
 		}
 
@@ -111,11 +120,15 @@
 
 	nsViewer.Viewer2D.prototype.listenRover = function(){
 
+		console.log('BOMMMMM' + this.moved);
 		/* Listen to rover events. */
 		var observable = new nsCommon.Observable();
 		observable.subscribe('rover.move.end', function(data) {
 			this.drawRover(data);
-			this.moveMap(data);
+			if(this.moved){
+				this.moveMap(data);
+			}
+			
 		}.bind(this));
 
 	}
