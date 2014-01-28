@@ -172,31 +172,36 @@
 	 * When the tank is in a low energy state, deploy solar panels to regain the energy.
 	 */
 	nsSpeculator.S3000.prototype.onLowTankEvent = function() {
-		this.rover.deploySolarPanels();
+		return this.rover.deploySolarPanels();
 	};
 
        /**
         * Retrieve the available sided direction of the rover when it is blocked.
         */
 	nsSpeculator.S3000.prototype.getSideDirection = function() {
+		var defer = Q.defer();
+
 		switch (this.rover.direction) {
 			case this.rover.constructor.DIRECTION.NORTH:
 			case this.rover.constructor.DIRECTION.SOUTH:
-			return [
-				this.rover.constructor.DIRECTION.EAST,
-				this.rover.constructor.DIRECTION.WEST
-			];
+				defer.resolve([
+					this.rover.constructor.DIRECTION.EAST,
+					this.rover.constructor.DIRECTION.WEST
+				]);
 			break;
 			case this.rover.constructor.DIRECTION.EAST:
 			case this.rover.constructor.DIRECTION.WEST:
-				return [
+				defer.resolve([
 					this.rover.constructor.DIRECTION.NORTH,
 					this.rover.constructor.DIRECTION.SOUTH
-				];
+				]);
+			break;
+			default:
+				defer.reject();
 			break;
 		}
 
-		return null;
+		return defer.promise;
 	};
 
        /**
@@ -254,6 +259,15 @@
 	};
 
 	nsSpeculator.S3000.prototype.fullScan = function() {
-		this.rover.fullScan();
-    };
+		return this.rover.fullScan();
+	};
+
+	nsSpeculator.S3000.prototype.moveAndScan = function() {
+		var deferreds = []
+
+		deferreds.push(this.rover.move());
+		deferreds.push(this.fullScan());
+
+		return Q.all(deferreds);
+	};
 })();
