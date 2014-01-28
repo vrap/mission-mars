@@ -540,32 +540,40 @@
      * @this {Rover}
      */
     nsRover.Rover.prototype.deploySolarPanels = function() {
-		if (arguments.callee.caller == this.executeBufferedAction) {
-		    this.tank  += (this.panelsCost * 2);
-		    this.moves += this.panelsCost;
+	if (arguments.callee.caller == this.executeBufferedAction) {
+	    this.tank  += (this.panelsCost * 2);
+	    this.moves += this.panelsCost;
 
-		    if (this.tank > this.tankSize) {
-			this.tank = this.tankSize;
-		    }
+	    if (this.tank > this.tankSize) {
+		this.tank = this.tankSize;
+	    }
+	}
+	else {
+	    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
+		if (data.progress == 0) {
+		    this.publishEvent('actions.deploySolarPanels.begin');
 		}
-		else {
-		    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
-			if (data.progress == 0) {
-			    this.publishEvent('actions.deploySolarPanels.begin');
-			}
-			else if (data.progress == 100) {
-			    this.publishEvent('actions.deploySolarPanels.end');
-			}
-		    }.bind(this));
+		else if (data.progress == 100) {
+		    this.publishEvent('actions.deploySolarPanels.end');
 		}
-	};
+	    }.bind(this));
+	}
+    };
 
-	nsRover.Rover.prototype.fullScan = function() {
-        for (var key in this.constructor.DIRECTION) {
-            this.scanElevation(key, 1);
-            // TODO : si on fait scan materiel de 2, on connait 1
-            //this.scanMaterial(key, 1);
-            this.scanMaterial(key, 2);
+    /**
+     * Scan materials and elevations.
+     *
+     * @this {Rover}
+     * @todo Manage a scan material of 2 square which let us knowing the first square.
+     */
+    nsRover.Rover.prototype.fullScan = function() {
+	var deferreds = []
+
+        for (var direction in this.constructor.DIRECTION) {
+            deferreds.push(this.scanElevation(direction, 1));
+            deferreds.push(this.scanMaterial(direction, 2));
         }
+
+	return Q.all(deferreds);
     };
 })();
