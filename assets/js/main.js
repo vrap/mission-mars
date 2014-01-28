@@ -109,6 +109,18 @@
 	var elemementViewer = viewer.viewers[renderDiv];
 	var interfaces = new nsViewer.Interface(elemements, elemementViewer);
 
+
+	dragable('fullmap', 'fullmap');
+
+
+
+	// document.querySelector('#fullmap').onmousedown = function(){
+	// 	this.onmousemove = function(){
+	// 		console.log(getElementTop(this));
+	// 	}
+		
+	// }
+
 	document.querySelector('#bloc-panel-minimap-hover').onclick = function (){
 		document.querySelector('#bloc-over-full').className = 'show';
 	}

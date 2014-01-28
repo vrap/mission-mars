@@ -143,6 +143,7 @@
 		  './assets/img/sky/3.jpg'
 		];
 
+
 		var cubemap = THREE.ImageUtils.loadTextureCube(urls); // load textures
 		cubemap.format = THREE.RGBFormat;
 
@@ -203,11 +204,11 @@
 		var material = new THREE.MeshFaceMaterial( materials );
 		this.mesh = new THREE.Mesh(this.geometry, material); 
 		this.mesh.rotation.x = degToRad(90);
-    this.mesh.rotation.y = degToRad(180);
-    this.mesh.rotation.z = degToRad(-90);
-    this.mesh.position.x = 0.75*this.viewer.map.getWidth();
-    this.mesh.position.y = 0;
-    this.mesh.position.z = -this.viewer.map.getHeight();
+	    this.mesh.rotation.y = degToRad(180);
+	    this.mesh.rotation.z = degToRad(-90);
+	    this.mesh.position.x = 0.75*this.viewer.map.getWidth();
+	    this.mesh.position.y = 0;
+	    this.mesh.position.z = -this.viewer.map.getHeight();
 
 		this.scene.add(this.mesh);
 	};
