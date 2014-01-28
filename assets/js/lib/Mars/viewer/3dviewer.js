@@ -70,12 +70,13 @@
 	 * Inits viewer controls
 	 */
 	nsViewer.Viewer3D.prototype._loadControls = function() {
-		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
+		this.controls = new THREE.MarsFirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 0.1;
     this.controls.lookSpeed = 0.001;
     this.controls.lookVertical = false;
     // Control camera if user wants it.
     this.controls.activeLook = this.options.cameraControl;
+//    this.controls.activeLook = true;
 	};
 
 	/**
@@ -221,38 +222,6 @@
 	nsViewer.Viewer3D.prototype.animate = function() {
 		requestAnimationFrame(function() { this.animate(); }.bind(this));
 		this.render();
-	};
-
-	/**
-	 * Move camera's vision in the direction wanted.
-	 */
-	nsViewer.Viewer3D.prototype.setVision = function(direction) {
-		switch(direction){
-			case nsRover.Rover.DIRECTION.NORTH:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(180));
-				break;
-			case nsRover.Rover.DIRECTION.SOUTH:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(0));
-				break;
-			case nsRover.Rover.DIRECTION.WEST:
-				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(90));
-				break;
-			case nsRover.Rover.DIRECTION.EAST:
-				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
-				break;
-			case nsRover.Rover.DIRECTION.NORTH_EAST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
-				break;
-			case nsRover.Rover.DIRECTION.NORTH_WEST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(135));
-				break;
-      case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-45));
-        break;
-      case nsRover.Rover.DIRECTION.SOUTH_WEST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(45));
-        break;
-		}
 	};
 
   /**
