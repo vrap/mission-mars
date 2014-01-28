@@ -74,9 +74,8 @@
 		this.controls.movementSpeed = 0.1;
     this.controls.lookSpeed = 0.001;
     this.controls.lookVertical = false;
-    // Control camera if user wants it.
-    this.controls.activeLook = this.options.cameraControl;
-//    this.controls.activeLook = true;
+    this.controls.activeLook = true;
+    this.controls.control = this.options.cameraControl;
 	};
 
 	/**
@@ -228,71 +227,267 @@
    * Change camera's position in the direction wanted.
    */
   nsViewer.Viewer3D.prototype.move = function(direction) {
+
+	};
+
+  /**
+   * Turn camera to the corresponding direction
+   * @param direction current direction
+   * @param lastDirection previous direction
+   */
+  nsViewer.Viewer3D.prototype.setVision = function(direction, lastDirection) {
+     this.controls.mouseX = this._calcVisionAngular(direction, lastDirection);
+  };
+
+  /**
+   * Calc the angular between two directions
+   * @param direction
+   * @param lastDirection
+   * @returns {number} vision angular
+   * @private
+   */
+  nsViewer.Viewer3D.prototype._calcVisionAngular = function (direction, lastDirection) {
     switch(direction){
       case nsRover.Rover.DIRECTION.NORTH:
-          this.controls.moveForward = true;
-          this.controls.moveBackward = false;
-          this.controls.moveLeft = false;
-          this.controls.moveRight = false;
-          this.controls.moveUp = false;
-          this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return 0;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return -45;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return 135;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.SOUTH:
-        this.controls.moveForward = false;
-        this.controls.moveBackward = true;
-        this.controls.moveLeft = false;
-        this.controls.moveRight = false;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return 0;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return -45;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.WEST:
-        this.controls.moveForward = false;
-        this.controls.moveBackward = false;
-        this.controls.moveLeft = true;
-        this.controls.moveRight = false;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return 0;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+             return -45;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return 45;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.EAST:
-        this.controls.moveForward = false;
-        this.controls.moveBackward = false;
-        this.controls.moveLeft = false;
-        this.controls.moveRight = true;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return 0;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return -45;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return -135;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.NORTH_EAST:
-        this.controls.moveForward = true;
-        this.controls.moveBackward = false;
-        this.controls.moveLeft = false;
-        this.controls.moveRight = true;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return -45;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return 0;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return 180;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.NORTH_WEST:
-        this.controls.moveForward = true;
-        this.controls.moveBackward = false;
-        this.controls.moveLeft = true;
-        this.controls.moveRight = false;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return -45;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+             return 0;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return 90;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        this.controls.moveForward = false;
-        this.controls.moveBackward = true;
-        this.controls.moveLeft = false;
-        this.controls.moveRight = true;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return -45;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return 0;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return -90;
+            break;
+          default :
+            return 0;
+        }
+      break;
       case nsRover.Rover.DIRECTION.SOUTH_WEST:
-        this.controls.moveForward = false;
-        this.controls.moveBackward = true;
-        this.controls.moveLeft = true;
-        this.controls.moveRight = false;
-        this.controls.moveUp = false;
-        this.controls.moveDown = false;
-        break;
+        switch(lastDirection){
+          case nsRover.Rover.DIRECTION.NORTH:
+            return -135;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH:
+            return 45;
+            break;
+          case nsRover.Rover.DIRECTION.WEST:
+             return -45;
+            break;
+          case nsRover.Rover.DIRECTION.EAST:
+            return 135;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_EAST:
+            return 180;
+            break;
+          case nsRover.Rover.DIRECTION.NORTH_WEST:
+            return -90;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_EAST:
+            return 90;
+            break;
+          case nsRover.Rover.DIRECTION.SOUTH_WEST:
+            return 0;
+            break;
+          default :
+            return 0;
+        }
+      break;
     }
-	};
+  };
 })();
