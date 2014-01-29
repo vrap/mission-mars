@@ -42,33 +42,6 @@
 	this.voyage(destination);
     };
 
-    nsVoyager.Voyager.prototype.voyageTest = function(destination) {
-	this.speculator.rover.fillTank().then(function() {
-	    console.log('reservoir pleins !');
-	});
-	this.speculator.rover.getPosition().then(function(position) {
-	    console.log(position);
-	});
-	this.speculator.rover.setDirection(nsRover.Rover.DIRECTION.WEST).then(function(direction) {
-	    console.log(direction);
-	});
-	this.speculator.rover.move().then(function(data) {
-	    console.log(data);
-	});
-	this.speculator.rover.scanMaterial(nsRover.Rover.DIRECTION.SOUTH, 1).then(function(data) {
-	    console.log(data);
-	});
-	this.speculator.rover.scanElevation(nsRover.Rover.DIRECTION.NORTH, 1).then(function(data) {
-	    console.log(data);
-	});
-	this.speculator.rover.deploySolarPanels().then(function(data) {
-	    console.log(data);
-	});
-	this.speculator.rover.getPosition().then(function(position) {
-	    console.log(position);
-	});
-    };
-
     nsVoyager.Voyager.prototype.voyage = function(destination) {
 	var currentPosition, invertedDirection, randPosition;
 	var rover = this.speculator.rover;
