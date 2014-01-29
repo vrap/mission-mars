@@ -27,7 +27,7 @@
 		this.element.height = this.viewer.map.getHeight()* this.valPixel;
 
 		if(!this.moved){
-			
+
 			this.element.style.top = 0  + 'px';
 			this.element.style.left = 0 + 'px';
 			
@@ -38,12 +38,12 @@
 		//dessin de la grille
 		for(var x = 0; x < this.viewer.map.getWidth(); x++){
 			for(var y = 0; y < this.viewer.map.getHeight(); y++ ){
-				color= {red: 122, green: 122, blue: 122, opacity: 1};
+				color= {red: 110, green: 110, blue: 110, opacity: 1};
 				var elevevation =  this.viewer.map._squares[x][y].z;
 
-				color.blue -= elevevation*3;
-				color.green -= elevevation*3;
-				color.red -= elevevation*3;
+				color.blue += elevevation*3;
+				color.green += elevevation*3;
+				color.red += elevevation*3;
 
 				this.context.fillStyle = 'rgba('+ color.red + ','+ color.green + ','+ color.blue + ','+ color.opacity +')';
 				this.context.fillRect(x * this.valPixel, y * this.valPixel, this.valPixel, this.valPixel);

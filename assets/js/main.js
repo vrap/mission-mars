@@ -109,8 +109,8 @@
 	var elemementViewer = viewer.viewers[renderDiv];
 	var interfaces = new nsViewer.Interface(elemements, elemementViewer);
 
-
-	dragable('fullmap', 'fullmap');
+	var drag = new nsViewer.Drag();
+	drag.dragable('fullmap', 'fullmap');
 
 
 
