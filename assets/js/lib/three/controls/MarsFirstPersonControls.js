@@ -122,19 +122,18 @@ THREE.MarsFirstPersonControls = function ( object, domElement ) {
 	};
 
 	this.onMouseMove = function ( event ) {
-    if(this.control) {
-      if ( this.domElement === document ) {
+    if ( this.domElement === document ) {
 
-        this.mouseX = event.pageX - this.viewHalfX;
-        this.mouseY = event.pageY - this.viewHalfY;
+      this.mouseX = event.pageX - this.viewHalfX;
+      this.mouseY = event.pageY - this.viewHalfY;
 
-      } else {
+    } else {
 
-        this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
-        this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
+      this.mouseX = event.pageX - this.domElement.offsetLeft - this.viewHalfX;
+      this.mouseY = event.pageY - this.domElement.offsetTop - this.viewHalfY;
 
-      }
     }
+
 	};
 
 	this.onKeyDown = function ( event ) {
@@ -233,7 +232,8 @@ THREE.MarsFirstPersonControls = function ( object, domElement ) {
 
 		}
 
-		this.lon += this.mouseX * actualLookSpeed;
+    this.lon += this.mouseX * actualLookSpeed;
+
 		if( this.lookVertical ) this.lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
 
 		this.lat = Math.max( - 85, Math.min( 85, this.lat ) );

@@ -67,7 +67,8 @@
 	        offsetY = y;
 	      }
 	      return false;
-	    }
+	    }.bind(this);
+
 	    var start_drag = function (e) {
 
 	      e = e || window.event;
@@ -82,7 +83,8 @@
 	      }
 	      document.body.onmousemove = mouseMoveHandler;
 	      return false;
-	    }
+	    }.bind(this);
+
 	    var stop_drag = function () {
 	      drag=false;      
 
@@ -92,7 +94,8 @@
 	        mousemoveTemp = null;
 	      }
 	      return false;
-	    }
+	    }.bind(this);
+
 	    p.onmousedown = start_drag;
 	    p.onmouseup = stop_drag;
 	  }
