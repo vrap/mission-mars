@@ -86,6 +86,10 @@
 				solar = false;
 
 			} else {
+        setTimeout(function () {
+          this.viewer.move('stop');
+        }.bind(this), 1000);
+
         this.viewer.move(data.direction);
       }
 
