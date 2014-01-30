@@ -14,13 +14,10 @@
 		this.elementPosition = elements.elementPosition;
 		this.elementMaterial = elements.elementMaterial;
 		this.elementMove = elements.elementMove;
-
 		this.elementControl = elements.elementControl;
-
 		this.elementMiniMap = elements.elementMiniMap;
-
 		this.observable = new nsCommon.Observable();
-
+		
 		this.init();
 	
 
@@ -199,6 +196,11 @@
 			var tank = Math.round(data.rover.tank * 100 / data.rover.tankSize);
 
 			this.elementBattery.innerHTML = tank + '%';
+
+			if(tank < 30){
+				addClass(elementBattery, 'warning');
+			}
+
 		}.bind(this));
 	};
 
