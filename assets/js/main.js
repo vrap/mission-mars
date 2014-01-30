@@ -126,7 +126,11 @@
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-
+    var ratio = viewer.viewers[renderDiv].MAP_RATIO,
+        init_x = (-ratio/2)*map.getWidth(),
+        init_z = (-ratio/2)*map.getHeight();
+    viewer.viewers[renderDiv].camera.position.x = init_x + ratio*data.rover.x;
+    viewer.viewers[renderDiv].camera.position.z = init_z + ratio*data.rover.y;
 	});
 	observable.subscribe('rover.actions.fillTank.end', function(data) {
 

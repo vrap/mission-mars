@@ -49,11 +49,6 @@
 
     // On spawn, positioning camera
 		this.observable.subscribe('rover.spawn', function(data){
-      var ratio = this.viewer.MAP_RATIO,
-          init_x = (-ratio/2)*this.viewer.viewer.map.getWidth(),
-          init_z = (-ratio/2)*this.viewer.viewer.map.getHeight();
-      this.viewer.camera.position.x = init_x + data.rover.x;
-      this.viewer.camera.position.z = init_z + data.rover.y;
 
 			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
 			 	bloc += 'Hi Dude! I\'m speculator 3000 and I\'ve just been spawn!';
