@@ -15,8 +15,6 @@
 
 	var renderFull2dDiv = document.querySelector('#fullmap');
 
-	var roverInformations = document.querySelector('#rover-informations');
-
 	/* Generate a map. */
 	var map,
 			terrain;
@@ -57,37 +55,32 @@
 		map = new nsCommon.Map(terrain);
 	}
 	
-	/* Load map in 3d viewer. */
+	/* Load map in viewer. */
+  // Init viewer
 	var viewer = new nsViewer.Viewer(map);
-
+  // Load map in 2D
 	viewer.load2D(render2dDiv,'',true);
-
+  // Load map in full screen 2D viewer
 	var viewerFul = new nsViewer.Viewer(map);
 	viewerFul.load2D(renderFull2dDiv, '' ,false);
-
+  // Load map in 3D
 	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
 
 	/* Load infos of robot */
-	var elementBattery = document.querySelector('#battery');
-	var elementPosition = document.querySelector('#position');
-	var elementMaterial = document.querySelector('#material');
-	var elementMove = document.querySelector('#move');
-	var elementMiniMap = document.querySelector('#bloc-panel-minimap-hover');
-
-	var elementControl = document.querySelector('#display-control');
-
-	var wireframeOn = document.querySelector('#w1');
-	var wireframeOff = document.querySelector('#w2');
-
-	var moreFog = document.querySelector('#more');
-	var lessFog = document.querySelector('#less');
-
-	var cameraOn = document.querySelector('#c1');
-	var cameraOff = document.querySelector('#c2');
-
-	var downloadMap = document.querySelector('#download');
-
-	var blocPop = document.querySelector('#bloc-pop');
+	var elementBattery = document.querySelector('#battery'),
+	 elementPosition = document.querySelector('#position'),
+	 elementMaterial = document.querySelector('#material'),
+	 elementMove = document.querySelector('#move'),
+	 elementMiniMap = document.querySelector('#bloc-panel-minimap-hover'),
+	 elementControl = document.querySelector('#display-control'),
+	 wireframeOn = document.querySelector('#w1'),
+   wireframeOff = document.querySelector('#w2'),
+	 moreFog = document.querySelector('#more'),
+	 lessFog = document.querySelector('#less'),
+	 cameraOn = document.querySelector('#c1'),
+	 cameraOff = document.querySelector('#c2'),
+	 downloadMap = document.querySelector('#download'),
+	 blocPop = document.querySelector('#bloc-pop');
 
 	var elemements = {
 		'elementBattery' : elementBattery,
@@ -109,20 +102,11 @@
 		pop : {'blocPop' : blocPop, 'classPop' : 'pop'}
 	}
 	
-	var elemementViewer = viewer.viewers[renderDiv];
-	var interfaces = new nsViewer.Interface(elemements, elemementViewer);
+	var elemementViewer = viewer.viewers[renderDiv],
+	  interfaces = new nsViewer.Interface(elemements, elemementViewer);
 
 	var drag = new nsViewer.Drag();
 	drag.dragable('fullmap', 'fullmap');
-
-
-
-	// document.querySelector('#fullmap').onmousedown = function(){
-	// 	this.onmousemove = function(){
-	// 		console.log(getElementTop(this));
-	// 	}
-		
-	// }
 
 	document.querySelector('#bloc-panel-minimap-hover').onclick = function (){
 		document.querySelector('#bloc-over-full').className = 'show';
@@ -135,53 +119,26 @@
 	var observable = new nsCommon.Observable();
 
 	observable.subscribe('rover.scanMaterial.end', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		//viewer.viewers[renderDiv].move(data.rover.moves);
-		console.log('material found', data);
-		switch(data.type) {
-			case 0:
-				document.querySelector('#rock-counter').value++;
-				break;
-			case 1:
-				document.querySelector('#sand-counter').value++;
-				break;
-			case 2:
-				document.querySelector('#ore-counter').value++;
-				break;
-			case 3:
-				document.querySelector('#iron-counter').value++;
-				break;
-			case 4:
-				document.querySelector('#ice-counter').value++;
-				break;
-			case 5:
-				document.querySelector('#other-counter').value++;
-				break;
-		}
+
 	});
 	observable.subscribe('rover.scanElevation.end', function(data) {
 		// Change camera elevation
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
-    var ratio = viewer.viewers[renderDiv].MAP_RATIO,
-        init_x = (-ratio/2)*map.getWidth(),
-        init_z = (-ratio/2)*map.getHeight();
-    viewer.viewers[renderDiv].camera.position.x = init_x + data.rover.x;
-    viewer.viewers[renderDiv].camera.position.z = init_z + data.rover.y;
+
 	});
 	observable.subscribe('rover.actions.fillTank.end', function(data) {
-		//console.log('tank is filled', data);
+
 	});
 	observable.subscribe('rover.actions.deploySolarPanels.end', function(data) {
-		//console.log('panels are deployed', data);
+
 	});
   observable.subscribe('rover.direction.end', function(data) {
 
   });
   observable.subscribe('rover.move.end', function(data) {
-    viewer.viewers[renderDiv].move(data.direction);
+
   });
 
 	/* Rover tests. */
@@ -201,8 +158,7 @@
     endX = parseInt(document.querySelector('#voyager-endX').value);
     endY = parseInt(document.querySelector('#voyager-endY').value);
   }
-
-  	var energy = parseInt(document.querySelector('#voyager-energy').value);
+  var energy = parseInt(document.querySelector('#voyager-energy').value);
 
 	var memory = new nsMemory.Memory();
 	var rover = new nsRover.Rover(map, startX, startY, energy, memory);

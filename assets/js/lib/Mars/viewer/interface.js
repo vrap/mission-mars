@@ -34,7 +34,6 @@
 		this._pushBattery();
 		this._pushPosition();
 		this._pushMove();
-		this._extendMiniMap();
 		this._displayWireframe();
 		this._displayFog();
 		this._displayCamera();
@@ -42,15 +41,23 @@
 		this._pop();
 	};
 
+  /**
+   * Events from rover
+   */
 	nsViewer.Interface.prototype._pop = function(){
 		
 		var solar = false;
 		var finishX = '';
 		var finishY = '';
-		var start = true;
 
+    // On spawn, positioning camera
 		this.observable.subscribe('rover.spawn', function(data){
-			
+      var ratio = this.viewer.MAP_RATIO,
+          init_x = (-ratio/2)*this.viewer.viewer.map.getWidth(),
+          init_z = (-ratio/2)*this.viewer.viewer.map.getHeight();
+      this.viewer.camera.position.x = init_x + data.rover.x;
+      this.viewer.camera.position.z = init_z + data.rover.y;
+
 			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
 			 	bloc += 'Hi Dude! I\'m speculator 3000 and I\'ve just been spawn!';
 			 	bloc += '</div>';
@@ -59,19 +66,7 @@
 
 		}.bind(this));
 
-		if(start){
-			this.observable.subscribe('rover.move.end', function(data){
-
-				finishX = data;
-				console.log('bimm');
-				console.log(finishX);
-
-				start = false;
-
-			}.bind(this));
-
-		}
-
+    // On solar panels deploying, stop move
 		this.observable.subscribe('rover.actions.deploySolarPanels.begin', function(data){
 			
 			if(!solar){
@@ -80,12 +75,13 @@
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
+        this.viewer.move('stop');
 				solar = true;
 			}
-			
 
 		}.bind(this));
 
+    // When rover move
 		this.observable.subscribe('rover.move.end', function(data){
 			
 			if(solar){
@@ -97,21 +93,28 @@
 				this.elements.pop.blocPop.innerHTML = bloc;
 				solar = false;
 
-			}
-			
+			} else {
+        this.viewer.move(data.direction);
+      }
 
 		}.bind(this));
 
-	}
+	};
 
+  /**
+   * Download JSon of map
+   */
 	nsViewer.Interface.prototype._downloadMap = function(){
 
 		this.elements.control.downloadMap.onclick = function (){
 			var blob = new Blob(this.elements.control.terrain, {type: "octet/stream"});
 			saveAs(blob, "map.json");
 		}.bind(this);
-	}
+	};
 
+  /**
+   * Wireframe gestion
+   */
 	nsViewer.Interface.prototype._displayWireframe = function(){
 
 		viewer = this.viewer;
@@ -134,8 +137,11 @@
 
 		};
 
-	}
+	};
 
+  /**
+   * Fog gestion
+   */
 	nsViewer.Interface.prototype._displayFog = function(){
 
 		viewer = this.viewer;
@@ -156,8 +162,11 @@
 			}
 			viewer._loadFog();
 		};
-	}
+	};
 
+  /**
+   * Camera control gestion
+   */
 	nsViewer.Interface.prototype._displayCamera = function(){
 
 		viewer = this.viewer;
@@ -178,8 +187,11 @@
 			removeClass(cameraOn, 'active');
 		};
 
-	}
+	};
 
+  /**
+   * Display battery percentage
+   */
 	nsViewer.Interface.prototype._pushBattery = function(){
 
 		this.observable.subscribe('rover.move.end', function(data){
@@ -188,37 +200,34 @@
 
 			this.elementBattery.innerHTML = tank + '%';
 		}.bind(this));
+	};
 
-	}
+  /**
+   * Information of robot position
+   */
 	nsViewer.Interface.prototype._pushPosition = function(){
 
 		this.observable.subscribe('rover.*', function(data){
 			this.elementPosition.innerHTML = 'x: ' + data.rover.x + ' | ' + 'y: ' + data.rover.y;
 		}.bind(this));
 		
-	}
-	nsViewer.Interface.prototype._pushMaterial = function(){
-		
-	}
+	};
+
+  /**
+   * Count movements of robot and display it on interface
+   */
 	nsViewer.Interface.prototype._pushMove = function(){
-		
 		this.observable.subscribe('rover.move.end', function(data){
 			this.elementMove.innerHTML = data.rover.moves;
 		}.bind(this));
 
-	}
+	};
 
-	nsViewer.Interface.prototype._extendMiniMap = function(){
-
-		this.elementMiniMap.onclick = function (){
-			
-		}
-
-	}
-
+  /**
+   * Panel control display
+   */
 	nsViewer.Interface.prototype._displayControl = function(){
 
-		
 		this.elementControl.onclick = function(e){
 
 			var panelControl = document.querySelector('#panel-control');
@@ -241,13 +250,6 @@
 				panelControl.style.left = (left - 60) + 'px';
 
 			}
-			
-
 		};
-
-
-
 	}
-
-
 })();
