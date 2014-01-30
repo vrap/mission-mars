@@ -87,6 +87,8 @@
 
 	var downloadMap = document.querySelector('#download');
 
+	var blocPop = document.querySelector('#bloc-pop');
+
 	var elemements = {
 		'elementBattery' : elementBattery,
 		'elementPosition' : elementPosition,
@@ -103,7 +105,8 @@
 			'cameraOff' : cameraOff,
 			'downloadMap' : downloadMap,
 			'terrain' : [terrain]
-			}
+			},
+		pop : {'blocPop' : blocPop, 'classPop' : 'pop'}
 	}
 	
 	var elemementViewer = viewer.viewers[renderDiv];
@@ -198,8 +201,11 @@
     endX = parseInt(document.querySelector('#voyager-endX').value);
     endY = parseInt(document.querySelector('#voyager-endY').value);
   }
+
+  	var energy = parseInt(document.querySelector('#voyager-energy').value);
+
 	var memory = new nsMemory.Memory();
-	var rover = new nsRover.Rover(map, 50, 50, 100, memory);
+	var rover = new nsRover.Rover(map, startX, startY, energy, memory);
 	var speculator = new nsSpeculator.S3000(rover);
 
 	speculator.enableModule('voyager');

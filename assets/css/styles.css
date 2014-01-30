@@ -30,7 +30,7 @@
   font-family: Flaticon;
   font-size: 20px;
   font-style: normal;
-  margin-left: 20px;
+  /*margin-left: 20px;*/
 }.flaticon-adjustable:before {
    content: "\e000";
  }
@@ -59,7 +59,9 @@
   content: "\e007";
 }
 .flaticon-screwdriver3:before {
-  content: "\e008";
+	font-size: 31px;
+	content: "\e008";
+	line-height: 24px;
 }
 .flaticon-spam1:before {
   content: "\e009";
@@ -104,8 +106,13 @@ a{
 }
 
 .custom-radio:checked + label span {
-	background:url(../img/check_radio_sheet.png) -57px top no-repeat;
+	background:url('../img/check_radio_sheet.png') -57px top no-repeat;
 }
+
+.hidden{
+	display: none;
+}
+
 
 h1,
 h2,
@@ -115,14 +122,18 @@ h5 {
 	font-weight: lighter;
 }
 
-[draggable] {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  /* Required to make elements draggable in old WebKit */
-  -khtml-user-drag: element;
-  -webkit-user-drag: element;
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
+
+input[type="text"]{
+	border:0; 
+	/*padding:10px; */
+	font-size:1.2em; 
+	font-family: Arial, sans-serif; 
+	color:#1677ab;
+	background-color: transparent;
+	/*border:solid 1px #ccc;*/
+	border-bottom: 6px solid #81e8ff;
 }
 
 .clr{
@@ -323,7 +334,7 @@ h5 {
   line-height: 50px;
   margin: -70px 0 0 0;
   padding: 0;
-  top: 50%;
+  top: 40%;
   -webkit-backface-visibility: hidden;
 }
 
@@ -393,6 +404,10 @@ h5 {
   }
 }
 
+ .bloc-settings-input{
+ 	padding-left: 65px;
+ }
+
 .st-panel p {
   position: absolute;
   text-align: center;
@@ -401,12 +416,23 @@ h5 {
   color: #3c3c3c;
   z-index: 2;
   padding: 0;
-  width: 50%;
-  left: 25%;
-  top: 50%;
+  width: 80%;
+  left: 10%;
+  top: 40%;
   margin: 10px 0 0 0;
   -webkit-backface-visibility: hidden;
 }
+
+.st-panel span.bloc-menu{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; 
+	display: inline-block;
+	background-color: rgba(255, 255, 255, 0.5);
+	border: 10px solid #8e3236;
+	padding: 25px;
+}
+
+
 #st-control-1:checked ~ .st-scroll #st-panel-1 p,
 #st-control-2:checked ~ .st-scroll #st-panel-2 p,
 #st-control-3:checked ~ .st-scroll #st-panel-3 p,
@@ -418,6 +444,7 @@ h5 {
   -ms-animation: moveUp 0.6s ease-in-out 0.2s backwards;
   animation: moveUp 0.6s ease-in-out 0.2s backwards;
 }
+
 
 @-webkit-keyframes moveUp{
   0% {
@@ -548,6 +575,20 @@ h5 {
   text-transform: uppercase;
 }
 
+.btn-link.btn-round{
+	border-radius: 100%;
+	padding-top: 5px;
+	padding-bottom: 0px;
+	padding-left: 2px;
+	padding-right: 1px;
+	margin-top: 0;
+	line-height: 28px;
+}
+
+.btn-round.checked{
+	background-color:#4aafe6;
+}
+
 .btn-link.no-shadow{
 	-moz-box-shadow: 0px 0px 0px 0px #1677ab;
   	-webkit-box-shadow: 0px 0px 0px 0px #1677ab;
@@ -561,10 +602,15 @@ h5 {
 }
 
 .grid50 {
-  width: 50%;
+  width: 48%;
   min-height: 140px;
-  float: left;
-  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+  /*text-align: center;*/
+}
+.grid50:first-child{
+	margin-right: 2%;
 }
 
 #render{
@@ -633,8 +679,8 @@ h5 {
 	height: 0;
 	cursor: pointer;
 	position: absolute;
-	top: -10px;
-	left: -20px;
+	top: -3px;
+	left: 0px;
 	z-index: 1001;
 }
 
@@ -709,6 +755,25 @@ h5 {
 }
 
 /********
+* Pop
+*********/
+#bloc-pop{
+	position: fixed;
+	bottom: 90px;
+	left: 27px;
+	z-index: 1100;
+}
+.pop{
+	padding: 20px;
+	background-color: rgba(166, 107, 190, 0.6);
+	-webkit-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	-moz-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	-o-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	-ms-animation: moveUp 0.6s ease-in-out 0.2s backwards;
+	animation: moveUp 0.6s ease-in-out 0.2s backwards;
+}
+
+/********
 * Panel Infos
 *********/
 #panel-infos{
@@ -739,11 +804,15 @@ h5 {
 	border-right: 0;
 }*/
 
-#bloc-battery{}
+#bloc-battery{width: 80px;}
 #bloc-position{}
 #bloc-material{}
 #bloc-move{}
 #btn-control{}
+
+.btn-panel{
+	cursor: pointer;
+}
 
 .btn-panel:hover{
 	background-color: #653739;
@@ -811,6 +880,7 @@ h5 {
 	color: #4DD2F0;
 	font-size: 1em;
 	font-family: 'bpmonoregular';
+
 }
 
 #panel-console input[type="text"]:focus{
@@ -863,6 +933,8 @@ h5 {
 * Control panel
 *********/
 
+
+
 #panel-control{
 	z-index: 1100;
 	position: absolute;
@@ -874,9 +946,10 @@ h5 {
 }
 
 #panel-control h3{
-	font-weight: 900;
+	/*font-weight: 900;*/
 	margin: 0;
-	margin-bottom: 6px
+	margin-bottom: 6px;
+	color: #3c3c3c;
 }
 #panel-control .btn-link{
 	display: inline-block;

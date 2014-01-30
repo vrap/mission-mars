@@ -14,6 +14,12 @@
 		this.position = {x:0, y:0};
 		this.valPixel = 10;
 
+		this.stepX = 0;
+		this.stepY = 0;
+
+		this.roverInitx = 0;
+		this.roverInitY = 0;
+
 		this.moved = moved;
 
 		this.init();
@@ -73,8 +79,13 @@
 		var observable = new nsCommon.Observable();
 		observable.subscribe('rover.spawn', function(data) {
 
+			console.log(data.rover);
+
 			this.position.x -= data.rover.x * this.valPixel - 100;
 			this.position.y -= data.rover.y * this.valPixel - 100;
+			
+			this.roverInitx = data.rover.x;
+			this.roverInitY = data.rover.y;
 
 		}.bind(this));
 
@@ -82,51 +93,75 @@
 
 	nsViewer.Viewer2D.prototype.moveMap = function(data){
 
+
+
 		switch (data.direction) {
 			case 0: //<= NORTH
-				this.position.y += 1 * this.valPixel;
+			console.log(data.direction);
+				this.position.y -= 1 * this.valPixel;
+				this.stepY++;
 			break;
 			case 1: //<= NORTH_EAST
-				this.position.y += 1 * this.valPixel;
+			console.log(data.direction);
+				this.position.y -= 1 * this.valPixel;
 				this.position.x -= 1 * this.valPixel;
+				this.stepY++;
+				this.stepX++;
 			break;
 			case 2: //<= EAST
+			console.log(data.direction);
 				this.position.x -= 1 * this.valPixel;
 			break;
 			case 3: //<= SOUTH_EAST
+			console.log(data.direction);
 				this.position.y -= 1 * this.valPixel;
 				this.position.x -= 1 * this.valPixel;
+				this.stepY++;
+				this.stepX++;
 			break;
 			case 4: //<= SOUTH
+			console.log(data.direction);
 				this.position.y -= 1 * this.valPixel;
+				this.stepY++;
 			break;
 			case 5: //<= SOUTH_WEST
+			console.log(data.direction);
 				this.position.y += 1 * this.valPixel;
 				this.position.x += 1 * this.valPixel;
+				this.stepY++;
+				this.stepX++;
 			break;
 			case 6: //<= WEST
+			console.log(data.direction);
 				this.position.x += 1 * this.valPixel;
 			break;
 			case 7: //<= NORTH_WEST
-				this.position.y += 1 * this.valPixel;
+			console.log(data.direction);
+				this.position.y -= 1 * this.valPixel;
 				this.position.x += 1 * this.valPixel;
+				this.stepY++;
+				this.stepX++;
 			break;
 		}
+		if(this.stepY > 9 || data.rover.y > 9){
+			this.element.style.top = this.position.y  + 'px';
+		}
 
-		this.element.style.top = this.position.y  + 'px';
-		this.element.style.left = this.position.x + 'px';
-
+		if(this.stepX > 9 || data.rover.x > 9 ){
+			this.element.style.left = this.position.x + 'px';
+		}
+		
 	}
 
 	nsViewer.Viewer2D.prototype.listenRover = function(){
 
-		console.log('BOMMMMM' + this.moved);
 		/* Listen to rover events. */
 		var observable = new nsCommon.Observable();
 		observable.subscribe('rover.move.end', function(data) {
 			this.drawRover(data);
 			if(this.moved){
 				this.moveMap(data);
+				
 			}
 			
 		}.bind(this));

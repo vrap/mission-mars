@@ -58,9 +58,12 @@
         <div id="block-generate">
           <h2>Generate a new map</h2>
           <p>
-            <b>Size:</b> <input type="text" size="1" maxlength="3" id="map-size" placeholder="XXX" value="100"> cases by side
+            <span class="bloc-menu"><b>Size:</b>
+            <input type="text" size="1" maxlength="3" id="map-size" placeholder="XXX" value="100"> cases by side
             (the map is a square).
             <br/>
+            </span>
+            <br>
             <a href="javascript: void(0);" id="scenario" class="btn-link">Choose your scenario</a>
           </p>
         </div>
@@ -71,22 +74,21 @@
         <div class="st-deco" data-icon="3"></div>
         <h2>Choose your game scenario</h2>
         <p>
-          <span class="grid50">
-            <i class="flaticon-radar5"></i><br>
-            <input type="radio" id="explorer" name="scenario"><label for="explorer">Explorer</label>
+          <span class="grid50 bloc-menu">
+            <i  class="flaticon-radar5 btn-link btn-round " id="to-check-explorer"></i>
+            <input type="radio" id="explorer" name="scenario" class="hidden"><label for="explorer"><b>Explorer</b></label>
             <br>
-            <br>
-            <span id="explorer-settings">
+            <span id="explorer-settings" class="bloc-settings-input">
               <b>Energy:</b> <input type="text" size="1" maxlength="5" id="explorer-energy" placeholder="XXX"><br/>
               <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="explorer-startX" placeholder="X">
               y:<input type="text" size="1" maxlength="3" id="explorer-startY" placeholder="Y">
             </span>
           </span>
-          <span class="grid50">
-            <i class="flaticon-push19"></i><br>
-            <input type="radio" id="voyager" name="scenario" checked="checked"><label for="voyager">Voyager</label>
-            <br><br>
-            <span id="voyager-settings">
+          <span class="grid50 bloc-menu">
+            <i class="flaticon-push19 btn-link btn-round checked" id="to-check-voyager"></i>
+            <input type="radio" id="voyager" name="scenario" checked="checked" class="hidden"><label for="voyager"><b>Voyager</b></label>
+            <br>
+            <span id="voyager-settings" class="bloc-settings-input">
               <b>Energy:</b> <input type="text" size="1" maxlength="5" id="voyager-energy" placeholder="XXX" value="100"><br/>
               <b>Start:</b> x: <input type="text" size="1" maxlength="3" id="voyager-startX" placeholder="X" value="1">
               y:<input type="text" size="1" maxlength="3" id="voyager-startY" placeholder="Y" value="1"><br>
@@ -125,6 +127,13 @@
 				</div>
 			</div>
 			
+			<div id="bloc-pop">
+				<div class="pop">
+					Hello I'm Speculator 3000
+				</div>
+
+			</div>
+
 			<!-- controls -->
 			<div id="panel-control" class="hide">
 				<div class="control-bloc">
@@ -155,7 +164,7 @@
 				<div id="bloc-move" class="info-bloc"><i class='glyphicon glyphicon-move'></i><span id="move"></span></div>
 				
 				<div id="display-control" class="info-bloc btn-panel">
-					<i class='glyphicon glyphicon-seetings'></i>
+					<i class='flaticon-screwdriver3'></i>
 				</div>
 
 			</div>

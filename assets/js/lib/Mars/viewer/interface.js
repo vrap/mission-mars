@@ -22,8 +22,7 @@
 		this.observable = new nsCommon.Observable();
 
 		this.init();
-
-		
+	
 
 	};
 
@@ -40,7 +39,70 @@
 		this._displayFog();
 		this._displayCamera();
 		this._downloadMap();
+		this._pop();
 	};
+
+	nsViewer.Interface.prototype._pop = function(){
+		
+		var solar = false;
+		var finishX = '';
+		var finishY = '';
+		var start = true;
+
+		this.observable.subscribe('rover.spawn', function(data){
+			
+			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
+			 	bloc += 'Hi Dude! I\'m speculator 3000 and I\'ve just been spawn!';
+			 	bloc += '</div>';
+
+			this.elements.pop.blocPop.innerHTML = bloc;
+
+		}.bind(this));
+
+		if(start){
+			this.observable.subscribe('rover.move.end', function(data){
+
+				finishX = data;
+				console.log('bimm');
+				console.log(finishX);
+
+				start = false;
+
+			}.bind(this));
+
+		}
+
+		this.observable.subscribe('rover.actions.deploySolarPanels.begin', function(data){
+			
+			if(!solar){
+				var bloc = '<div class="'+ this.elements.pop.classPop +'" id="popSloar">';
+			 	bloc += 'Wait! I\'m deploying my solar panels, Man!';
+			 	bloc += '</div>';
+
+				this.elements.pop.blocPop.innerHTML = bloc;
+				solar = true;
+			}
+			
+
+		}.bind(this));
+
+		this.observable.subscribe('rover.move.end', function(data){
+			
+			if(solar){
+
+				var bloc = '<div class="'+ this.elements.pop.classPop +'">';
+			 	bloc += 'What a fucking sunny day ! I\'m ready to continue my exploration on this dumb planet';
+			 	bloc += '</div>';
+
+				this.elements.pop.blocPop.innerHTML = bloc;
+				solar = false;
+
+			}
+			
+
+		}.bind(this));
+
+	}
 
 	nsViewer.Interface.prototype._downloadMap = function(){
 
@@ -122,7 +184,7 @@
 
 		this.observable.subscribe('rover.move.end', function(data){
 
-			var tank = Math.round(data.rover.tank * data.rover.tankSize / 100);
+			var tank = Math.round(data.rover.tank * 100 / data.rover.tankSize);
 
 			this.elementBattery.innerHTML = tank + '%';
 		}.bind(this));
