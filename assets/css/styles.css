@@ -101,12 +101,12 @@ a{
 	height:19px;
 	margin:-1px 4px 0 0;
 	vertical-align:middle;
-	background:url(../img/check_radio_sheet.png) -38px top no-repeat;
+	background:url(../img/icons/check_radio_sheet.png) -38px top no-repeat;
 	cursor:pointer;
 }
 
 .custom-radio:checked + label span {
-	background:url('../img/check_radio_sheet.png') -57px top no-repeat;
+	background:url('../img/icons/check_radio_sheet.png') -57px top no-repeat;
 }
 
 .hidden{
