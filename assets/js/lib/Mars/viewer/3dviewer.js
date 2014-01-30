@@ -72,7 +72,7 @@
 	 */
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		this.controls = new THREE.MarsFirstPersonControls(this.camera, this.renderer.domElement);
-		this.controls.movementSpeed = 0.05;
+		this.controls.movementSpeed = 0.02;
     this.controls.lookSpeed = 0.0005;
     this.controls.lookVertical = false;
     this.controls.activeLook = true;
