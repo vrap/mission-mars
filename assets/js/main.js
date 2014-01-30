@@ -208,8 +208,10 @@
 	var rover = new nsRover.Rover(map, startX, startY, energy, memory);
 	var speculator = new nsSpeculator.S3000(rover);
 
-	speculator.enableModule('voyager');
-        speculator.start({x: 10, y: 20});
+	speculator.enableModule(module);
+	if(module == 'voyager'){
+        speculator.start({x: endX, y: endY});
+	}
 
 	console.log(rover.memory.readAll());
 })();

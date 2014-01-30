@@ -121,7 +121,7 @@
 			break;
 			case 4: //<= SOUTH
 			console.log(data.direction);
-				this.position.y -= 1 * this.valPixel;
+				this.position.y += 1 * this.valPixel;
 				this.stepY++;
 			break;
 			case 5: //<= SOUTH_WEST
