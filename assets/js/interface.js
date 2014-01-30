@@ -63,7 +63,7 @@ var scripts = [
       		removeClass(document.querySelector('#to-check-explorer'), 'checked');
       	}
       	
-	}
+	};
 	document.querySelector('#to-check-explorer').onclick = function(){
 		document.querySelector('#explorer').checked = true;
 		document.querySelector('#voyager-settings').style.display = 'none';
@@ -72,7 +72,7 @@ var scripts = [
       		addClass(this, 'checked');
       		removeClass(document.querySelector('#to-check-voyager'), 'checked');
       	}
-	}
+	};
 
 
     if (true === document.querySelector('#voyager').checked) {
@@ -162,35 +162,6 @@ var scripts = [
       return false;
     }
   };
-
-	/**
-	 * Open and close control panel
-	 */
-	// document.querySelector('#controls-header').onclick = function () {
-	// 	if (document.querySelector('#panel-control').className == 'closed') {
-	// 		document.querySelector('#controls').className = 'show';
-	// 		document.querySelector('#panel-control').className = 'opened';
-	// 	} else if (document.querySelector('#panel-control').className == 'opened') {
-	// 		document.querySelector('#controls').className = 'hide';
-	// 		document.querySelector('#panel-control').className = 'closed';
-	// 	}
-	// };
-
-	/**
-	 * Console intialization
-	 */
-	var askConcoleElement = document.querySelector('#form-commande');
-	var responseConsoleElement = document.querySelector('#panel-response-console');
-	var consoleInvader = new ConsoleInvader(askConcoleElement, responseConsoleElement);
-
-	/**
-	 * Response on the console
-	 */
-	document.querySelector('#form-commande').onsubmit = function(e){
-		e.preventDefault();
-		var commande = this.elements["commande"];
-		consoleInvader.getCommande(commande);
-	};
 
 	/**
 	 * Read JSon and save it in an input hidden
