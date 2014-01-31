@@ -135,7 +135,7 @@
 	 */
 	nsSpeculator.S3000.prototype.onEvent = function(event) {
 		if (this.callModuleEvent('onEvent', event) !== false) {
-			if (event.channel != 'rover.actions.deploySolarPanels') {
+			if (event.channel != 'rover.actions.deploySolarPanels.begin' && event.channel != 'rover.actions.deploySolarPanels.end') {
 				if (this.rover.tank < this.sizeAlert) {
 					if (this.callModuleEvent('onLowTankEvent') !== false) {
 						this.onLowTankEvent();
