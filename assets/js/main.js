@@ -4,7 +4,6 @@
 	var nsViewer = using('mars.viewer');
 	var nsEditor = using('mars.editor');
 	var nsRover = using('mars.rover');
-	var nsMemory = using('mars.rover.memory');
 	var nsSpeculator = using('mars.rover.speculator3000');
 	var nsMaterial = using('mars.common.material');
 	var nsElements = using('mars.editor.element');
@@ -153,8 +152,7 @@
 	endX = parseInt(document.querySelector('#voyager-endX').value);
 	endY = parseInt(document.querySelector('#voyager-endY').value);
     }
-    var memory = new nsMemory.Memory();
-    var rover = new nsRover.Rover(map, 50, 50, 1000, memory);
+    var rover = new nsRover.Rover(map, 50, 50, 1000);
     var speculator = new nsSpeculator.S3000(rover);
 
     /* Voyager */

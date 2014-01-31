@@ -1,6 +1,7 @@
 (function() {
     var nsRover  = using('mars.rover');
     var nsCommon = using('mars.common');
+    var nsMemory = using('mars.rover.memory');
 
     /**
      * Represent a Rover.
@@ -10,7 +11,7 @@
      * @param  {integer} y Y position of the rover when spawning
      * @param  {integer} tankSize Define the energy limit that the rover can handle.
      */
-    nsRover.Rover = function(map, x, y, tankSize, memory) {
+    nsRover.Rover = function(map, x, y, tankSize) {
 	/* Check if the map is in the good format. */
 	if (! (map instanceof nsCommon.Map)) {
 	    throw new Error('Map need to be an instance of Map.');
@@ -47,7 +48,8 @@
 	this.waitingStatus = false;
 	this.waitingActions = [];
 
-	this.memory = memory;
+	/* Instanciate a memory object for the rover. */
+	this.memory = new nsMemory.Memory();
 
 	var spawnSquare = this.map.getSquare(x, y);
 
