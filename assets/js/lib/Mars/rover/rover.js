@@ -384,7 +384,7 @@
 
 							if (slope <= 150 && slope >= -150) {
 							    // The distance cost plus the tank cost from the elevation
-						    	var elevationCost = tankCost * (1 + slope);
+						    	var elevationCost = moveCost * (1 + slope);
 						    	var finalCost = elevationCost + moveCost;
 
 
