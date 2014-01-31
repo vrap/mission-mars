@@ -119,83 +119,50 @@
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 
-	observable.subscribe('rover.scanMaterial.end', function(data) {
-		roverInformations.innerHTML  = 'Energie : ' + data.rover.tank + '/' + data.rover.tankSize + "<br />";
-		roverInformations.innerHTML += 'Mouvements : ' + data.rover.moves;
-		//viewer.viewers[renderDiv].move(data.rover.moves);
-		console.log('material found', data);
-		switch(data.type) {
-			case 0:
-				document.querySelector('#rock-counter').value++;
-				break;
-			case 1:
-				document.querySelector('#sand-counter').value++;
-				break;
-			case 2:
-				document.querySelector('#ore-counter').value++;
-				break;
-			case 3:
-				document.querySelector('#iron-counter').value++;
-				break;
-			case 4:
-				document.querySelector('#ice-counter').value++;
-				break;
-			case 5:
-				document.querySelector('#other-counter').value++;
-				break;
-		}
-	});
-	observable.subscribe('rover.scanElevation.end', function(data) {
-		// Change camera elevation
-		viewer.viewers[renderDiv].camera.position.y += data.elevation;
-	});
-	observable.subscribe('rover.spawn', function(data) {
-    viewer.viewers[renderDiv].camera.position.x += data.rover.x;
-    viewer.viewers[renderDiv].camera.position.z -= data.rover.y;
-	});
-	observable.subscribe('rover.actions.fillTank.end', function(data) {
-		//console.log('tank is filled', data);
-	});
-	observable.subscribe('rover.actions.deploySolarPanels.end', function(data) {
-		//console.log('panels are deployed', data);
-	});
-  observable.subscribe('rover.direction.end', function(data) {
-    // Set camera vision.
-    viewer.viewers[renderDiv].setVision(data.lastDirection);
-  });
-  observable.subscribe('rover.move.end', function(data) {
-    // Set camera position.
-    viewer.viewers[renderDiv].move(data.direction);
-    console.log(viewer.viewers[renderDiv].camera.position);
-  });
+    observable.subscribe('rover.scanElevation.end', function(data) {
+	// Change camera elevation
+	viewer.viewers[renderDiv].camera.position.y += data.elevation;
+    });
+    observable.subscribe('rover.spawn', function(data) {
+	viewer.viewers[renderDiv].camera.position.x += data.rover.x;
+	viewer.viewers[renderDiv].camera.position.z -= data.rover.y;
+    });
+    observable.subscribe('rover.direction.end', function(data) {
+	// Set camera vision.
+	viewer.viewers[renderDiv].setVision(data.lastDirection);
+    });
+    observable.subscribe('rover.move.end', function(data) {
+	// Set camera position.
+	viewer.viewers[renderDiv].move(data.direction);
+    });
 
-	/* Rover tests. */
-  var module,
-      startX,
-      startY,
-      endX,
-      endY;
-  if(document.querySelector('#explorer').checked) {
-    module = 'explorer';
-    startX = parseInt(document.querySelector('#explorer-startX').value);
-    startY = parseInt(document.querySelector('#explorer-startY').value);
-  } else {
-    module = 'voyager';
-    startX = parseInt(document.querySelector('#voyager-startX').value);
-    startY = parseInt(document.querySelector('#voyager-startY').value);
-    endX = parseInt(document.querySelector('#voyager-endX').value);
-    endY = parseInt(document.querySelector('#voyager-endY').value);
-  }
-	var memory = new nsMemory.Memory();
-    var rover = new nsRover.Rover(map, 50, 50, 100, memory);
-	var speculator = new nsSpeculator.S3000(rover);
+    /* Rover tests. */
+    var module,
+    startX,
+    startY,
+    endX,
+    endY;
+    if(document.querySelector('#explorer').checked) {
+	module = 'explorer';
+	startX = parseInt(document.querySelector('#explorer-startX').value);
+	startY = parseInt(document.querySelector('#explorer-startY').value);
+    } else {
+	module = 'voyager';
+	startX = parseInt(document.querySelector('#voyager-startX').value);
+	startY = parseInt(document.querySelector('#voyager-startY').value);
+	endX = parseInt(document.querySelector('#voyager-endX').value);
+	endY = parseInt(document.querySelector('#voyager-endY').value);
+    }
+    var memory = new nsMemory.Memory();
+    var rover = new nsRover.Rover(map, 50, 50, 1000, memory);
+    var speculator = new nsSpeculator.S3000(rover);
 
-	/* Voyager */
-	speculator.enableModule('voyager');
-    speculator.start({ x: 80, y: 80 });
+    /* Voyager */
+    //speculator.enableModule('voyager');
+    //speculator.start({ x: 80, y: 80 });
 
-	//console.log(rover.memory.readAll());
+    console.log(rover.memory.readAll());
 
-	//speculator.enableModule('explorer');
-	//speculator.start();
+    speculator.enableModule('explorer');
+    speculator.start();
 })();
