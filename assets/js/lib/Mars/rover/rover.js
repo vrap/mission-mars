@@ -456,18 +456,23 @@
 		throw new Error('The map is undiscovered here.');
 	    }
 	    else {
-		if (distance == 2) {
-		    var scanCost = 0.1 * distance;
-
-		    if (scanCost <= this.tank) {
-			this.tank -= scanCost;
-		    }
+		if (this.memory.has(square.x, square.y, 'z')) {
+		    return this.memory.get(square.x, square.y);
 		}
+		else {
+		    if (distance == 2) {
+			var scanCost = 0.1 * distance;
 
-		return {
-		    direction: direction,
-		    distance: distance,
-		    elevation: square.z
+			if (scanCost <= this.tank) {
+			    this.tank -= scanCost;
+			}
+		    }
+
+		    return {
+			direction: direction,
+			distance: distance,
+			elevation: square.z
+		    }
 		}
 	    }
 	}
@@ -490,7 +495,7 @@
      * @param {integer} direction Need to be in nsRover.Rover.DIRECTION.
      * @param {integer} distance The distance to scan the square.
      * @param {object} An object with the type of the scanned square.
-     * @todo Retrieve the elevation of the square between the targeted one and the rover square when scanning at a distance of 2.
+     * @todo Retrieve the material of the square between the targeted one and the rover square when scanning at a distance of 2.
      */
     nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
@@ -508,20 +513,25 @@
 		    this.fillTank();
 		}
 
-		if (distance == 0 && this.tank >= 0.1) {
-		    this.tank -= 0.1;
+		if (this.memory.has(square.x, square.y, 'type')) {
+		    return this.memory.get(square.x, square.y);
 		}
-		else if (distance == 1 && this.tank >= 0.2) {
-		    this.tank -= 0.2;
-		}
-		else if (distance == 2 && this.tank >= 0.4) {
-		    this.tank -= 0.4;
-		}
+		else {
+		    if (distance == 0 && this.tank >= 0.1) {
+			this.tank -= 0.1;
+		    }
+		    else if (distance == 1 && this.tank >= 0.2) {
+			this.tank -= 0.2;
+		    }
+		    else if (distance == 2 && this.tank >= 0.4) {
+			this.tank -= 0.4;
+		    }
 
-		return {
-		    direction: direction,
-		    distance: distance,
-		    type: square.type
+		    return {
+			direction: direction,
+			distance: distance,
+			type: square.type
+		    }
 		}
 	    }
 	}
@@ -572,7 +582,9 @@
     nsRover.Rover.prototype.fullScan = function() {
 	var deferreds = []
 
-        for (var direction in this.constructor.DIRECTION) {
+        for (var directionName in this.constructor.DIRECTION) {
+	    var direction = this.constructor.DIRECTION[directionName];
+
             deferreds.push(this.scanElevation(direction, 1));
             deferreds.push(this.scanMaterial(direction, 2));
         }
