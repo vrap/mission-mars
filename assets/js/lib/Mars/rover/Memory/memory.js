@@ -1,175 +1,184 @@
 (function() {
-	var nsMemory = using('mars.rover.memory');
-	var nsCommon = using('mars.common');
+    var nsMemory = using('mars.rover.memory');
+    var nsCommon = using('mars.common');
 
+    /**
+     * Class constructor of the memory.
+     *
+     * @constructor
+     */
+    nsMemory.Memory = function() {
 	/**
-	 * Class constructor of the memory.
+ 	 * Pattern 
+ 	 * [
+ 	 *   	{ 
+ 	 *			x0, y0, z0, type0, status0
+ 	 *   	}
+ 	 * ]
+ 	 *
+	 * status: 0 (visited), 1 (inaccessible), -1 (yet unknown)
 	 */
-	nsMemory.Memory = function() {
-		/**
- 	 	 * Pattern 
- 	 	 * [
- 	 	 *   	{ 
- 	 	 *			x0, y0, z0, type0, status0
- 	 	 *   	}
- 	 	 * ]
- 	 	 *
-	 	 * status: 0 (visited), 1 (inaccessible), -1 (yet unknown)
-	 	 */
-		this.memory = new Array();
-	};
+	this.memory = new Array();
+    };
 
-	/**
-	 * Add a square in memory.
-	 * 
-	 * @param  {int}     x         position of the square.
-	 * @param  {int}     y         position of the square.
-	 * @param  {float}   z         elevation of the square.
-	 * @param  {int}     type      nature of the square.
-	 * @param  {int}     status    state of the squre (0 (visited), 1 (inaccessible), -1 (yet unknown)).
-	 * @return {boolean}           true if added, false otherwise.
-	 *
-	 * TODO: prefer square array in parameter?
-	 */
-	nsMemory.Memory.prototype.create = function(x, y, z, type, status) {
-		if (x < 0 || y < 0) {
-			throw new Error('X and Y can only be set superior to 0.');
+    /**
+     * Check if a square is in the memory of if a property of a square exist.
+     *
+     * @this {Memory}
+     * @param {integer} x Position of the square.
+     * @param {integer} y Position of the square.
+     * @param {string} [param] Name of the param to check if empty or not.
+     * @return {bool} Return true if the property or square exist; otherwise false.
+     */
+    nsMemory.Memory.prototype.has = function(x, y, param) {
+	var square = this.memory.filter(function(square) {
+	    return (square.x == x && square.y == y);
+	});
+
+	if (square.length > 0) {
+	    square = square[0];
+
+	    if (param) {
+		if (square[param]) {
+		    return true;
 		}
 
-		if (type < 0 || type > 6) {
-			throw new Error('Type can only be set between 1 and 6.');
-		}
+		return false;
+	    }
 
-		if (status != 0 && status != 1 && status != -1) {
-			throw new Error('Status can only be set between -1 and 1.');
-		}
+	    return true;
+	}
 
-		var memorySize = this.getSize();
-		var square     = {
-			x: x,
-			y: y,
-			z: z,
-			type: type,
-			status: status
-		};
+	return false;
+    };
 
-		this.memory.push(square);
+    /**
+     * Read a square stored in memory, find by x and y position.
+     * 
+     * @this {Memory}
+     * @param  {int}   x position of the square.
+     * @param  {int}   y position of the square.
+     * @return {array}   the square with all this properties.
+     */
+    nsMemory.Memory.prototype.get = function(x, y) {
+	if (this.has(x, y)) {
+	    var square = this.memory.filter(function(data) {
+		return (data.x == x && data.y == y);
+	    });
 
-		if (memorySize == this.getSize()) {
-			return false;
-		}
+	    if (square.length > 0) {
+		return square[0];
+	    }
+	}
 
-		return true;
-	};
+	return null;
+    };
 
-	/**
-	 * Read a square stored in memory, find by x and y position.
-	 * 
-	 * @param  {int}   x position of the square.
-	 * @param  {int}   y position of the square.
-	 * @return {array}   the square with all this properties.
-	 */
-	nsMemory.Memory.prototype.read = function(x, y) {
-		if (x < 0 || y < 0) {
-			throw new Error('X and Y can only be set superior to 0.');
-		}
+    /**
+     * Search a square in memory, find by x and y position, then update with
+     * new properties or create it if does not exist.
+     * 
+     * @this {Memory}
+     * @param  {integer}     x         position of the square.
+     * @param  {integer}     y         position of the square.
+     * @param  {integer}     z         elevation of the square.
+     * @param  {integer}     type      nature of the square.
+     * @param  {integer}     status    state of the squre (0 (visited), 1 (inaccessible), -1 (yet unknown)).
+     * @return {boolean}               Return the new/updated square.
+     */
+    nsMemory.Memory.prototype.createOrUpdate = function(x, y, z, type, status) {
+	if (x < 0 || y < 0) {
+	    throw new Error('X and Y can only be set superior to 0.');
+	}
 
-		return this.memory.filter(function(square) {
-  			return (square.x == x && square.y == y);
-		});
-	};
+	if (type < 0 || type > 6) {
+	    throw new Error('Type can only be set between 1 and 6.');
+	}
 
-	/**
-	 * Search a square in memory, find by x and y position, then update with new properties.
-	 * 
-	 * @param  {int}     x         position of the square.
-	 * @param  {int}     y         position of the square.
-	 * @param  {int}     z         elevation of the square.
-	 * @param  {int}     type      nature of the square.
-	 * @param  {int}     status    state of the squre (0 (visited), 1 (inaccessible), -1 (yet unknown)).
-	 * @return {boolean}           true if modified, false otherwise.
-	 */
-	nsMemory.Memory.prototype.update = function(x, y, z, type, status) {
-		if (x < 0 || y < 0) {
-			throw new Error('X and Y can only be set superior to 0.');
-		}
+	if (status != 0 && status != 1 && status != -1) {
+	    throw new Error('Status can only be set between -1 and 1.');
+	}
 
-		if (type < 0 || type > 6) {
-			throw new Error('Type can only be set between 1 and 6.');
-		}
+	var square = {};
 
-		if (status != 0 && status != 1 && status != -1) {
-			throw new Error('Status can only be set between -1 and 1.');
-		}
+	if (this.has(x, y)) {
+	    square = this.get(x, y);
 
-		this.memory = this.memory.filter(function(square) {
-    		if (square.x == x && square.y == y) {
-    			square.z         = z;
-    			square.type      = type;
-    			square.status    = status;
+	    square.z = z;
+	    square.type = type;
+	    square.status = status;
+	}
+	else {
+	    square.x = x;
+	    square.y = y;
+	    square.z = z;
+	    square.type = type;
+	    square.status = status;
 
-    			return true;
-    		}
-  		});
+	    this.memory.push(square);
+	}
 
-  		return false;
-	};
+	return square;
+    };
 
-	/**
-	 * Search and delete a square in memory, find by x and y position.
-	 * 
-	 * @param  {int}     x         position of the square.
-	 * @param  {int}     y         position of the square.
-	 * @return {boolean}           true if modified, false otherwise.
-	 */
-	nsMemory.Memory.prototype.delete = function(x, y) {
-		if (x < 0 || y < 0) {
-			throw new Error('X and Y can only be set superior to 0.');
-		}
+    /**
+     * Search and delete a square in memory, find by x and y position.
+     * 
+     * @this {Memory}
+     * @param  {integer}     x         position of the square.
+     * @param  {integer}     y         position of the square.
+     * @return {boolean}           true if modified, false otherwise.
+     */
+    nsMemory.Memory.prototype.delete = function(x, y) {
+	if (x < 0 || y < 0) {
+	    throw new Error('X and Y can only be set superior to 0.');
+	}
 
-		this.memory = this.memory.filter(function(square) {
-    		if (square.x == x && square.y == y) {
-    			square.z         = null;
-    			square.type      = null;
-    			square.status    = null;
+	if (this.has(x, y)) {
+	    var square = this.get(x, y);
+	    square.z = null;
+	    square.type = null;
+	    square.status = null;
 
-    			return true;
-    		}
-  		});
+	    return true;
+	}
 
-  		return false;
-	};
+	return false;
+    };
 
-	/**
-	 * Empty all memory.
-	 *
-	 * @return {boolean} true if memory is empty, false otherwise.
-	 */
-	nsMemory.Memory.prototype.reset = function() {
-		this.memory = new Array();
+    /**
+     * Empty all memory.
+     *
+     * @this {Memory}
+     * @return {boolean} true if memory is empty, false otherwise.
+     */
+    nsMemory.Memory.prototype.reset = function() {
+	this.memory = new Array();
 
-		if (this.getSize() != 0) {
-			return false;
-		}
+	if (this.getSize() != 0) {
+	    return false;
+	}
 
-		return true;
-	};
+	return true;
+    };
 
-	/**
-	 * Return the current size of memory.
-	 * 
-	 * @return {int} number of squares stored in memory.
-	 */
-	nsMemory.Memory.prototype.getSize = function() {
-		return this.memory.length;
-	};
+    /**
+     * Return the current size of memory.
+     * 
+     * @this {Memory}
+     * @return {integer} number of squares stored in memory.
+     */
+    nsMemory.Memory.prototype.getSize = function() {
+	return this.memory.length;
+    };
 
-	/**
-	 * Return all squares stored in memory.
-	 *
-	 * @return {array} array that contains all squares.
-	 */
-	nsMemory.Memory.prototype.readAll = function() {
-		return this.memory;
-	};
+    /**
+     * Return all squares stored in memory.
+     *
+     * @this {Memory}
+     * @return {array} array that contains all squares.
+     */
+    nsMemory.Memory.prototype.readAll = function() {
+	return this.memory;
+    };
 })();

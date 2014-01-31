@@ -53,7 +53,7 @@
 
 	if (spawnSquare) {
 	    /* Add square to memory. */
-	    this.memory.create(x, y, spawnSquare.z, spawnSquare.type, 0);
+	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, 0);
 	}
     };
 
@@ -254,7 +254,7 @@
 
 	if (square) {
 	    /* Add square to memory. */
-	    this.memory.create(x, y, square.z, square.type, 0);
+	    this.memory.createOrUpdate(x, y, square.z, square.type, 0);
 
 	    return {
 		x: x,
