@@ -197,7 +197,7 @@
 			this.elementBattery.innerHTML = tank + '%';
 
 			if(tank < 30){
-				addClass(elementBattery, 'warning');
+				addClass(this.elementBattery, 'warning');
 			}
 
 		}.bind(this));
