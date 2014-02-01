@@ -554,11 +554,11 @@
      */
     nsRover.Rover.prototype.deploySolarPanels = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
-	    this.tank  += (this.panelsCost * 2);
+	    this.tank  += Math.round(10 * this.tankSize /100)
 	    this.moves += this.panelsCost;
 
 	    if (this.tank > this.tankSize) {
-		this.tank = this.tankSize;
+		this.fillTank();
 	    }
 	}
 	else {
