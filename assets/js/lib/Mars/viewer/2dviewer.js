@@ -97,46 +97,38 @@
 
 		switch (data.direction) {
 			case 0: //<= NORTH
-			console.log(data.direction);
 				this.position.y -= 1 * this.valPixel;
 				this.stepY++;
 			break;
 			case 1: //<= NORTH_EAST
-			console.log(data.direction);
 				this.position.y -= 1 * this.valPixel;
 				this.position.x -= 1 * this.valPixel;
 				this.stepY++;
 				this.stepX++;
 			break;
 			case 2: //<= EAST
-			console.log(data.direction);
 				this.position.x -= 1 * this.valPixel;
 			break;
 			case 3: //<= SOUTH_EAST
-			console.log(data.direction);
 				this.position.y -= 1 * this.valPixel;
 				this.position.x -= 1 * this.valPixel;
 				this.stepY++;
 				this.stepX++;
 			break;
 			case 4: //<= SOUTH
-			console.log(data.direction);
 				this.position.y += 1 * this.valPixel;
 				this.stepY++;
 			break;
 			case 5: //<= SOUTH_WEST
-			console.log(data.direction);
 				this.position.y += 1 * this.valPixel;
 				this.position.x += 1 * this.valPixel;
 				this.stepY++;
 				this.stepX++;
 			break;
 			case 6: //<= WEST
-			console.log(data.direction);
 				this.position.x += 1 * this.valPixel;
 			break;
 			case 7: //<= NORTH_WEST
-			console.log(data.direction);
 				this.position.y -= 1 * this.valPixel;
 				this.position.x += 1 * this.valPixel;
 				this.stepY++;
