@@ -27,13 +27,13 @@
 	/**
 	 * Instancy a viewer if it's available
 	 */
-	nsViewer.Viewer.prototype.load = function(type, element, options) {
+	nsViewer.Viewer.prototype.load = function(type, element, options, moved) {
 		// Check if the viewer typr is available
 		if (this._allowedType.hasOwnProperty(type)) {
 			type = this._allowedType[type];
 			// When the viewer is not already loaded
 			if (!this.hasViewer(element)) {
-				this.viewers[element] = new nsViewer[type](this, element, options);
+				this.viewers[element] = new nsViewer[type](this, element, options, moved);
 				// Return new instance of viewer
 				return this.viewers[element];
 			}
@@ -43,8 +43,8 @@
 	/**
 	 * Load 2D Viewer
 	 */
-	nsViewer.Viewer.prototype.load2D = function(element, options) {
-		return this.load('2d', element, options);
+	nsViewer.Viewer.prototype.load2D = function(element, options, moved) {
+		return this.load('2d', element, options, moved);
 	};
 
 	/**

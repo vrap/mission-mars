@@ -14,8 +14,6 @@
 
 	var renderFull2dDiv = document.querySelector('#fullmap');
 
-	var roverInformations = document.querySelector('#rover-informations');
-
 	/* Generate a map. */
 	var map,
 			terrain;
@@ -56,35 +54,32 @@
 		map = new nsCommon.Map(terrain);
 	}
 	
-	/* Load map in 3d viewer. */
+	/* Load map in viewer. */
+  // Init viewer
 	var viewer = new nsViewer.Viewer(map);
-
-	viewer.load2D(render2dDiv);
-
+  // Load map in 2D
+	viewer.load2D(render2dDiv,'',true);
+  // Load map in full screen 2D viewer
 	var viewerFul = new nsViewer.Viewer(map);
-	viewerFul.load2D(renderFull2dDiv);
-
+	viewerFul.load2D(renderFull2dDiv, '' ,false);
+  // Load map in 3D
 	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
 
 	/* Load infos of robot */
-	var elementBattery = document.querySelector('#battery');
-	var elementPosition = document.querySelector('#position');
-	var elementMaterial = document.querySelector('#material');
-	var elementMove = document.querySelector('#move');
-	var elementMiniMap = document.querySelector('#bloc-panel-minimap-hover');
-
-	var elementControl = document.querySelector('#display-control');
-
-	var wireframeOn = document.querySelector('#w1');
-	var wireframeOff = document.querySelector('#w2');
-
-	var moreFog = document.querySelector('#more');
-	var lessFog = document.querySelector('#less');
-
-	var cameraOn = document.querySelector('#c1');
-	var cameraOff = document.querySelector('#c2');
-
-	var downloadMap = document.querySelector('#download');
+	var elementBattery = document.querySelector('#battery'),
+	 elementPosition = document.querySelector('#position'),
+	 elementMaterial = document.querySelector('#material'),
+	 elementMove = document.querySelector('#move'),
+	 elementMiniMap = document.querySelector('#bloc-panel-minimap-hover'),
+	 elementControl = document.querySelector('#display-control'),
+	 wireframeOn = document.querySelector('#w1'),
+   wireframeOff = document.querySelector('#w2'),
+	 moreFog = document.querySelector('#more'),
+	 lessFog = document.querySelector('#less'),
+	 cameraOn = document.querySelector('#c1'),
+	 cameraOff = document.querySelector('#c2'),
+	 downloadMap = document.querySelector('#download'),
+	 blocPop = document.querySelector('#bloc-pop');
 
 	var elemements = {
 		'elementBattery' : elementBattery,
@@ -102,11 +97,15 @@
 			'cameraOff' : cameraOff,
 			'downloadMap' : downloadMap,
 			'terrain' : [terrain]
-			}
+			},
+		pop : {'blocPop' : blocPop, 'classPop' : 'pop'}
 	}
 	
-	var elemementViewer = viewer.viewers[renderDiv];
-	var interfaces = new nsViewer.Interface(elemements, elemementViewer);
+	var elemementViewer = viewer.viewers[renderDiv],
+	  interfaces = new nsViewer.Interface(elemements, elemementViewer);
+
+	var drag = new nsViewer.Drag();
+	drag.dragable('fullmap', 'fullmap');
 
 	document.querySelector('#bloc-panel-minimap-hover').onclick = function (){
 		document.querySelector('#bloc-over-full').className = 'show';
@@ -118,49 +117,62 @@
 	/* Listen to rover events. */
 	var observable = new nsCommon.Observable();
 
-    observable.subscribe('rover.scanElevation.end', function(data) {
-	// Change camera elevation
-	viewer.viewers[renderDiv].camera.position.y += data.elevation;
-    });
-    observable.subscribe('rover.spawn', function(data) {
-	viewer.viewers[renderDiv].camera.position.x += data.rover.x;
-	viewer.viewers[renderDiv].camera.position.z -= data.rover.y;
-    });
-    observable.subscribe('rover.direction.end', function(data) {
-	// Set camera vision.
-	viewer.viewers[renderDiv].setVision(data.lastDirection);
-    });
-    observable.subscribe('rover.move.end', function(data) {
-	// Set camera position.
-	viewer.viewers[renderDiv].move(data.direction);
-    });
+	observable.subscribe('rover.scanMaterial.end', function(data) {
 
-    /* Rover tests. */
-    var module,
-    startX,
-    startY,
-    endX,
-    endY;
-    if(document.querySelector('#explorer').checked) {
-	module = 'explorer';
-	startX = parseInt(document.querySelector('#explorer-startX').value);
-	startY = parseInt(document.querySelector('#explorer-startY').value);
-    } else {
-	module = 'voyager';
-	startX = parseInt(document.querySelector('#voyager-startX').value);
-	startY = parseInt(document.querySelector('#voyager-startY').value);
-	endX = parseInt(document.querySelector('#voyager-endX').value);
-	endY = parseInt(document.querySelector('#voyager-endY').value);
-    }
-    var rover = new nsRover.Rover(map, 50, 50, 1000);
-    var speculator = new nsSpeculator.S3000(rover);
+	});
+	observable.subscribe('rover.scanElevation.end', function(data) {
+		// Change camera elevation
+		viewer.viewers[renderDiv].camera.position.y += data.elevation;
+	});
+	observable.subscribe('rover.spawn', function(data) {
+    var ratio = viewer.viewers[renderDiv].MAP_RATIO,
+        init_x = (-ratio/2)*map.getWidth(),
+        init_z = (-ratio/2)*map.getHeight();
+    viewer.viewers[renderDiv].camera.position.x = init_x + ratio*data.rover.x;
+    viewer.viewers[renderDiv].camera.position.z = init_z + ratio*data.rover.y;
+	});
+	observable.subscribe('rover.actions.fillTank.end', function(data) {
 
-    /* Voyager */
-    //speculator.enableModule('voyager');
-    //speculator.start({ x: 80, y: 80 });
+	});
+	observable.subscribe('rover.actions.deploySolarPanels.end', function(data) {
 
-    console.log(rover.memory.readAll());
+	});
+  observable.subscribe('rover.direction.end', function(data) {
 
-    speculator.enableModule('explorer');
-    speculator.start();
+  });
+  observable.subscribe('rover.move.end', function(data) {
+
+  });
+
+	/* Rover tests. */
+  var module,
+      startX,
+      startY,
+      endX,
+      endY;
+  if(document.querySelector('#explorer').checked) {
+    module = 'explorer';
+    startX = parseInt(document.querySelector('#explorer-startX').value);
+    startY = parseInt(document.querySelector('#explorer-startY').value);
+  } else {
+    module = 'voyager';
+    startX = parseInt(document.querySelector('#voyager-startX').value);
+    startY = parseInt(document.querySelector('#voyager-startY').value);
+    endX = parseInt(document.querySelector('#voyager-endX').value);
+    endY = parseInt(document.querySelector('#voyager-endY').value);
+  }
+  var energy = parseInt(document.querySelector('#voyager-energy').value);
+
+	var rover = new nsRover.Rover(map, startX, startY, energy);
+	var speculator = new nsSpeculator.S3000(rover);
+
+	speculator.enableModule(module);
+	if(module == 'voyager'){
+        speculator.start({x: endX, y: endY});
+	}
+	else {
+	    speculator.start();
+	}
+
+	console.log(rover.memory.readAll());
 })();

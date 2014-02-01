@@ -21,6 +21,7 @@
 	 */
 	nsViewer.Viewer3D = function(viewer, element, options) {
 		this.viewer = viewer;
+    this.MAP_RATIO = 1.5;
 		this.element = element;
 		this.options = (options) ? options : {};
 		this.options.wireframe = this.options.wireframe || false;
@@ -36,14 +37,12 @@
 		this.scene = new THREE.Scene();
 		// Load every parts of the viewer
 		this._loadLight();
-		this._loadCamera(0, 5, 0); // Init camera's position on case 0-0
+    this._loadCamera(0, 5, 0); // Init camera's position on point North West
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
 		this._loadMaterials();
-		if(this.options.cameraControl) {
-			this._loadControls();
-		}
+		this._loadControls();
 		this._loadFog();
 		// Run the refresh animation while.
 		this.animate();
@@ -64,7 +63,6 @@
 	 */
 	nsViewer.Viewer3D.prototype._loadRenderer = function() {
 		this.renderer = new THREE.WebGLRenderer();
-		this.renderer.rendererSize = {width: window.innerWidth, height: window.innerHeight, quality: 100, maxQuality: 400, minQuality: 20};
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.element.appendChild(this.renderer.domElement);
 	};
@@ -73,12 +71,12 @@
 	 * Inits viewer controls
 	 */
 	nsViewer.Viewer3D.prototype._loadControls = function() {
-		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
-		this.controls.movementSpeed = 1;
-	    this.controls.lookSpeed = 0.001;
-	    this.controls.lookVertical = true;
-	    // Control camera if user wants it.
-	    this.controls.activeLook = this.options.cameraControl;
+		this.controls = new THREE.MarsFirstPersonControls(this.camera, this.renderer.domElement);
+		this.controls.movementSpeed = 0.02;
+    this.controls.lookSpeed = 0.0005;
+    this.controls.lookVertical = false;
+    this.controls.activeLook = true;
+    this.controls.control = this.options.cameraControl;
 	};
 
 	/**
@@ -103,6 +101,7 @@
 		this.camera.position.y = y; // Up - Down
 		this.camera.position.z = z; // Right - Left
 		this.camera.setLens( 50 );
+    this.camera.lookAt(new THREE.Vector3(-1.2*this.viewer.map.getWidth(), 5, this.viewer.map.getHeight())); // Point South West
 		this.scene.add(this.camera);
 	};
 
@@ -113,8 +112,8 @@
 		// Init plane
 		this.geometry = new THREE.PlaneGeometry(
 			// Size
-			1.5*(this.viewer.map.getWidth()),
-			1.5*(this.viewer.map.getHeight()),
+			this.MAP_RATIO*(this.viewer.map.getWidth()),
+      this.MAP_RATIO*(this.viewer.map.getHeight()),
 			// Vertices
 			this.viewer.map.getWidth()-1,
 			this.viewer.map.getHeight()-1
@@ -142,6 +141,7 @@
 		  './assets/img/sky/1.jpg',
 		  './assets/img/sky/3.jpg'
 		];
+
 
 		var cubemap = THREE.ImageUtils.loadTextureCube(urls); // load textures
 		cubemap.format = THREE.RGBFormat;
@@ -179,13 +179,13 @@
 		var types = [];
 		// Materials
 		var materials = []; 
-		materials[rock.id] = rock.getColor(this.options.wireframe, true);
-		materials[sand.id] = sand.getColor(this.options.wireframe, true);
-		materials[ore.id] = ore.getColor(this.options.wireframe, true);
-		materials[iron.id] = iron.getColor(this.options.wireframe, true);
-		materials[ice.id] = ice.getColor(this.options.wireframe, true);
-		materials[other.id] = other.getColor(this.options.wireframe, true);
-		
+		materials[rock.id] = rock.getColor(this.options.wireframe, false);
+		materials[sand.id] = sand.getColor(this.options.wireframe, false);
+		materials[ore.id] = ore.getColor(this.options.wireframe, false);
+		materials[iron.id] = iron.getColor(this.options.wireframe, false);
+		materials[ice.id] = ice.getColor(this.options.wireframe, false);
+		materials[other.id] = other.getColor(this.options.wireframe, false);
+
 		// Save colors
 		for (var i = 0; i < this.viewer.map.getWidth()-1; i++) {
 			for (var j = 0; j < this.viewer.map.getHeight()-1; j++) {
@@ -201,13 +201,8 @@
 
 		// Init the mesh
 		var material = new THREE.MeshFaceMaterial( materials );
-		this.mesh = new THREE.Mesh(this.geometry, material); 
-		this.mesh.rotation.x = degToRad(90);
-    this.mesh.rotation.y = degToRad(180);
-    this.mesh.rotation.z = degToRad(-90);
-    this.mesh.position.x = 0.75*this.viewer.map.getWidth();
-    this.mesh.position.y = 0;
-    this.mesh.position.z = -this.viewer.map.getHeight();
+		this.mesh = new THREE.Mesh(this.geometry, material);
+    this.mesh.rotation.x = Math.PI / 180 * (-90);
 
 		this.scene.add(this.mesh);
 	};
@@ -216,9 +211,7 @@
 	 * Renders the scene
 	 */
 	nsViewer.Viewer3D.prototype.render = function() {
-		if(this.options.cameraControl) {
-			this.controls.update(1);
-		}
+		this.controls.update(1);
 		this.renderer.render(this.scene, this.camera);
 	};
 
@@ -230,71 +223,66 @@
 		this.render();
 	};
 
-	/**
-	 * Move camera's vision in the direction wanted.
-	 */
-	nsViewer.Viewer3D.prototype.setVision = function(direction) {
-		switch(direction){
-			case nsRover.Rover.DIRECTION.NORTH:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(180));
-				break;
-			case nsRover.Rover.DIRECTION.SOUTH:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(0));
-				break;
-			case nsRover.Rover.DIRECTION.WEST:
-				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(90));
-				break;
-			case nsRover.Rover.DIRECTION.EAST:
-				this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-90));
-				break;
-			case nsRover.Rover.DIRECTION.NORTH_EAST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-135));
-				break;
-			case nsRover.Rover.DIRECTION.NORTH_WEST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(135));
-				break;
-      case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(-45));
-        break;
-      case nsRover.Rover.DIRECTION.SOUTH_WEST:
-        this.camera.rotateOnAxis((new THREE.Vector3(0, 1, 0)).normalize(), degToRad(45));
-        break;
-		}
-	};
-
   /**
    * Change camera's position in the direction wanted.
    */
   nsViewer.Viewer3D.prototype.move = function(direction) {
-    switch(direction){
-      case nsRover.Rover.DIRECTION.NORTH:
-        this.camera.position.z++;
-        break;
-      case nsRover.Rover.DIRECTION.SOUTH:
-        this.camera.position.z--;
-        break;
-      case nsRover.Rover.DIRECTION.WEST:
-        this.camera.position.x--;
-        break;
-      case nsRover.Rover.DIRECTION.EAST:
-        this.camera.position.x++;
-        break;
-      case nsRover.Rover.DIRECTION.NORTH_EAST:
-        this.camera.position.z++;
-        this.camera.position.x++;
-        break;
-      case nsRover.Rover.DIRECTION.NORTH_WEST:
-        this.camera.position.z++;
-        this.camera.position.x--;
-        break;
-      case nsRover.Rover.DIRECTION.SOUTH_EAST:
-        this.camera.position.z--;
-        this.camera.position.x++;
-        break;
-      case nsRover.Rover.DIRECTION.SOUTH_WEST:
-        this.camera.position.z--;
-        this.camera.position.x--;
-        break;
+    if(false === this.options.cameraControl) {
+      switch(direction){
+        case nsRover.Rover.DIRECTION.NORTH:
+          this.controls.moveForward = true;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.SOUTH:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = true;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.WEST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = true;
+          break;
+        case nsRover.Rover.DIRECTION.EAST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = true;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.NORTH_EAST:
+          this.controls.moveForward = true;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = true;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.NORTH_WEST:
+          this.controls.moveForward = true;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = true;
+          break;
+        case nsRover.Rover.DIRECTION.SOUTH_EAST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = true;
+          this.controls.moveRight = true;
+          this.controls.moveLeft = false;
+          break;
+        case nsRover.Rover.DIRECTION.SOUTH_WEST:
+          this.controls.moveForward = false;
+          this.controls.moveBackward = true;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = true;
+          break;
+        default :
+          this.controls.moveForward = false;
+          this.controls.moveBackward = false;
+          this.controls.moveRight = false;
+          this.controls.moveLeft = false;
+      }
     }
 	};
 })();
