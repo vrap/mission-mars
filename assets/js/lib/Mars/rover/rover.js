@@ -43,7 +43,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 1000;
+	this.roundTime = 10;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -102,7 +102,7 @@
      * @param {array} [args] An array of args passed to the action.
      * @param {integer} [round=0] Number of round that take to the rover to execute the action.
      */
-    nsRover.Rover.prototype.executeAction = function(action, args, round) {
+    nsRover.Rover.prototype.executeAction = function(action, args, round, priority) {
 	var defer = Q.defer();
 
 	/* Create an object of that contain all informations about the action. */
@@ -114,7 +114,12 @@
 	}
 
 	/* Add the action to the buffer. */
-	this.waitingActions.push(bufferedAction);
+	if (priority == true) {
+	    this.waitingActions.unshift(bufferedAction);
+	}
+	else {
+	    this.waitingActions.push(bufferedAction);
+	}
 
 	/* If the buffer is not currently executed, execute it. */
 	if (this.waitingStatus === false) {
@@ -164,7 +169,13 @@
 		 * returned data and resolve the deferred.
 		 */
 		action.dfd.notify({progress: 100, data: result});
-		action.dfd.resolve(result);
+
+		if (result && result.error) {
+		    action.dfd.reject(result);
+		}
+		else {
+		    action.dfd.resolve(result);
+		}
 
 		/* Remove the action from the buffer. */
 		this.waitingActions.splice(0, 1);
@@ -382,8 +393,6 @@
 			    if (moveCost <= this.tank) {
 				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1 * 5);
 
-				console.log('slope : ' + slope);
-
 				if (slope <= 150 && slope >= -150) {
 				    // The distance cost plus the tank cost from the elevation
 				    var elevationCost = moveCost * (1 + slope);
@@ -552,7 +561,7 @@
      *
      * @this {Rover}
      */
-    nsRover.Rover.prototype.deploySolarPanels = function() {
+    nsRover.Rover.prototype.deploySolarPanels = function(priority) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    this.tank  += Math.round(10 * this.tankSize /100)
 	    this.moves += this.panelsCost;
@@ -562,7 +571,7 @@
 	    }
 	}
 	else {
-	    return this.executeAction('deploySolarPanels', arguments, 5).progress(function(data) {
+	    return this.executeAction('deploySolarPanels', arguments, 5, priority).progress(function(data) {
 		if (data.progress == 0) {
 		    this.publishEvent('actions.deploySolarPanels.begin');
 		}

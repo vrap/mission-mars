@@ -81,14 +81,14 @@
 	this.speculator.getDirectionFromPoint(destination.x, destination.y).then(function(data) {
 	    this.speculator.rover.setDirection(data).then(function(data) {
 		var rover = this.speculator.rover;
-		try {
-		    rover.move().then(function() {
+
+		rover.move().then(function() {
+		    this.voyage(destination);
+		}.bind(this), function() {
+		    this.speculator.rover.deploySolarPanels().then(function() {
 			this.voyage(destination);
 		    }.bind(this));
-		}
-		catch(error) {
-		    console.log(error);
-		}
+		}.bind(this));
 	    }.bind(this));
 	}.bind(this));
     };
