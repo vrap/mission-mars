@@ -289,7 +289,11 @@
      * @return {integer}      		   The slope (in %).
      */
     nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
-	return Math.round((destinationZ - currentZ) / distance);
+	if (!distance) {
+	    distance = 1;
+	}
+
+	return Math.abs(Math.round((destinationZ - currentZ) / (distance *5)));
     };
 
     /**
@@ -393,7 +397,7 @@
 			    if (moveCost <= this.tank) {
 				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1 * 5);
 
-				if (slope <= 150 && slope >= -150) {
+				if (slope >= 4) {
 				    // The distance cost plus the tank cost from the elevation
 				    var elevationCost = moveCost * (1 + slope);
 				    var finalCost = elevationCost + moveCost;
