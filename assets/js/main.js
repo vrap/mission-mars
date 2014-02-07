@@ -50,7 +50,7 @@
 				"model": elementRavine,
 				"number": 2
 			}],
-			mapSize, mapSize, -10, 10);
+			mapSize, mapSize, -50, 50);
 		map = new nsCommon.Map(terrain);
 	}
 	
