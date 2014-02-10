@@ -146,11 +146,6 @@
 			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
 				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
 
-				if(index < 20){
-					console.log(this.geometry.vertices[index]);
-				}
-				
-
 				this.positionMemory[i][j] = {
 					x : this.geometry.vertices[index].x,
 					y : this.geometry.vertices[index].y,
@@ -159,8 +154,6 @@
 				index++;
 			}
 		}
-
-		console.log(this.positionMemory);
 	}
 
 	/**
@@ -274,9 +267,6 @@
 
 	nsViewer.Viewer3D.prototype.move = function(data) {
 	    if (!data.error) {
-		console.log('in move');
-		console.log('direction = ' + data.direction);
-
 		var y = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
 		var newCoord = this.mapToThree(data.newX, data.newY);
 
