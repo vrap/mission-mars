@@ -58,7 +58,7 @@
 	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, 0);
 	}
     };
-
+    
     /* Constant that represent the list of possible directions. */
     nsRover.Rover.DIRECTION = {
 	NORTH: 0,
@@ -348,7 +348,7 @@
 	else {
 	    return this.executeAction('getPosition', null, 0);
 	}
-    }
+    };
 
     /**
      * Change rover direction.
@@ -391,7 +391,7 @@
     nsRover.Rover.prototype.move = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    /* Retrieve the current direction of the rover to move on. */
-            var direction = this.direction;
+	    var direction = this.direction;
 
 	    var currentSquare = this.getSquare(direction, 0);
 	    var destinationSquare = this.getSquare(direction, 1);
@@ -613,8 +613,8 @@
         for (var directionName in this.constructor.DIRECTION) {
 	    var direction = this.constructor.DIRECTION[directionName];
 
-            deferreds.push(this.scanElevation(direction, 1));
-            deferreds.push(this.scanMaterial(direction, 2));
+	    deferreds.push(this.scanElevation(direction, 1));
+	    deferreds.push(this.scanMaterial(direction, 2));
         }
 
 	return Q.all(deferreds);
