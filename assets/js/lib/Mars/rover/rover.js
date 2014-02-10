@@ -408,16 +408,15 @@
 		    if (directionCode == direction) {
 			for (var moveCostName in this.constructor.MOVE_COST) {
 			    var moveCost = this.constructor.MOVE_COST[directionName];
+			    var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
+
+			    // The distance cost plus the tank cost from the elevation
+			    var elevationCost = moveCost * (1 + slope);
+			    var finalCost = elevationCost + moveCost;
 
 			    /* Calculate the cost of travel and removes from tank. */
-			    if (moveCost <= this.tank) {
-				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
-
+			    if (finalCost <= this.tank) {
 				if (slope <= 4) {
-				    // The distance cost plus the tank cost from the elevation
-				    var elevationCost = moveCost * (1 + slope);
-				    var finalCost = elevationCost + moveCost;
-
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
