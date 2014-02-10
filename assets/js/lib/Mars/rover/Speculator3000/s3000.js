@@ -19,9 +19,6 @@
 		/* Retrieve an instance of the Observable. */
 		this.observer = new nsCommon.Observable();
 
-		/* Register to rover events. */
-		this.registerEvents();
-
 		/* Define default tank size alert. */
 		this.setTankSizeAlert(10);
 	};
@@ -117,32 +114,6 @@
 		}
 
 		return true;
-	};
-
-	/**
-	 * Register rovers events and call the onEvent method.
-	 */
-	nsSpeculator.S3000.prototype.registerEvents = function() {
-		this.observer.subscribe('rover.*', function(event) {
-			this.onEvent(event);
-		}.bind(this));
-	};
-
-	/**
-	 * Function called when a rover event is catched.
-	 *
-	 * @param  {object} event Contain data of the event.
-	 */
-	nsSpeculator.S3000.prototype.onEvent = function(event) {
-		if (this.callModuleEvent('onEvent', event) !== false) {
-			if (event.channel != 'rover.actions.deploySolarPanels.begin' && event.channel != 'rover.actions.deploySolarPanels.end') {
-				if (this.rover.tank < this.sizeAlert) {
-					if (this.callModuleEvent('onLowTankEvent') !== false) {
-						this.onLowTankEvent();
-					}
-				}
-			}
-		}
 	};
 
 	/**

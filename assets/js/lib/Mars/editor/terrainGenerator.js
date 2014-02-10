@@ -61,7 +61,7 @@ TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
 		for (var i = 0; i < this._width; i++) {
 			this._map[i] = new Array();
 			for (var j = 0; j < this._height; j++) {
-				this._map[i][j] = { z: 0,
+				this._map[i][j] = { z: getRandomInt(this._zMin, this._zMax),
 					type: this._getFloorType()
 				};
 			}
