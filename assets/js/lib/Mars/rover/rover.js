@@ -405,7 +405,7 @@
 			    if (moveCost <= this.tank) {
 				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
 
-				if (slope <= 4) {
+				if (slope <= 150) {
 				    // The distance cost plus the tank cost from the elevation
 				    var elevationCost = moveCost * (1 + slope);
 				    var finalCost = elevationCost + moveCost;
