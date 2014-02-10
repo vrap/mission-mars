@@ -272,7 +272,8 @@
 		this.render();
 	};
 
-	nsViewer.Viewer3D.prototype.move = function(data){
+	nsViewer.Viewer3D.prototype.move = function(data) {
+	    if (!data.error) {
 		console.log('in move');
 		console.log('direction = ' + data.direction);
 
@@ -282,6 +283,7 @@
 		this.targetPositionX = newCoord.x;
 		this.targetPositionZ = newCoord.z;
 		this.targetPositionY = y;
+	    }
 	}
 
   /**
