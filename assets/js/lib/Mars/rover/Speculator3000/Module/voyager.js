@@ -84,10 +84,23 @@
 
 		rover.move().then(function() {
 		    this.voyage(destination);
-		}.bind(this), function() {
-		    this.speculator.rover.deploySolarPanels().then(function() {
-			this.voyage(destination);
-		    }.bind(this));
+		}.bind(this), function(data) {
+		    if (data.error.message == 'You need more tank.') {
+			this.speculator.rover.deploySolarPanels().then(function() {
+			    this.voyage(destination);
+			}.bind(this));
+		    }
+		    else {
+			this.speculator.getSideDirection().done(function(directions) {
+			    var direction = directions[Math.floor(Math.random() * directions.length)];
+
+			    this.speculator.rover.setDirection(direction).then(function() {
+				this.speculator.rover.move().then(function() {
+				    this.voyage(destination);
+				}.bind(this));
+			    }.bind(this));
+			}.bind(this));
+		    }
 		}.bind(this));
 	    }.bind(this));
 	}.bind(this));

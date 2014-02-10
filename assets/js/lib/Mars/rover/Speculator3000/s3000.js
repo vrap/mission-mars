@@ -167,6 +167,30 @@
 					this.rover.constructor.DIRECTION.SOUTH
 				]);
 			break;
+			case this.rover.constructor.DIRECTION.NORTH_EAST:
+				defer.resolve([
+					this.rover.constructor.DIRECTION.NORTH,
+					this.rover.constructor.DIRECTION.EAST
+				]);
+			break;
+			case this.rover.constructor.DIRECTION.NORTH_WEST:
+				defer.resolve([
+					this.rover.constructor.DIRECTION.NORTH,
+					this.rover.constructor.DIRECTION.WEST
+				]);
+			break;
+			case this.rover.constructor.DIRECTION.SOUTH_EAST:
+				defer.resolve([
+					this.rover.constructor.DIRECTION.SOUTH,
+					this.rover.constructor.DIRECTION.EAST
+				]);
+			break;
+			case this.rover.constructor.DIRECTION.SOUTH_WEST:
+				defer.resolve([
+					this.rover.constructor.DIRECTION.SOUTH,
+					this.rover.constructor.DIRECTION.WEST
+				]);
+			break;
 			default:
 				defer.reject();
 			break;
