@@ -291,91 +291,9 @@
 	nsViewer.Viewer3D.prototype.move = function(data){
 		console.log('in move');
 		console.log('direction = ' + data.direction);
-		
-		var z = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
-		var d = 0.75 * this.viewer.map.getWidth() - (0.75 * this.viewer.map.getWidth()*2);
-		var ratio = 3.08;
 
-		// this.targetRotation = (-this.PI*6);
-		// this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-		// this.targetPositionY = z; // Up - Down
-		// this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-		this.targetPositionX = d + (data.newX + ratio); // Frontward - Backward
-		this.targetPositionY  = z; // Up - Down
-	    this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-   //  	switch (direction) {
-			// case nsRover.Rover.DIRECTION.NORTH:
-
-			// 	//this.targetRotationX = 0.06;
-			// 	// this.camera.position.x = d + data.newX ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.NORTH_EAST:
-
-			// 	// ok
-	  //       	//this.targetRotation = -2.403318379996192;
-			// 	this.targetPositionX = d + (data.newX + ratio); // Frontward - Backward
-			// 	this.targetPositionY  = z; // Up - Down
-	  //       	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.NORTH_WEST:
-
-			// 	this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.SOUTH:
-
-			// 	//this.camera.position.x = d + data.newX ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.SOUTH_EAST:
-
-			// 	this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.SOUTH_WEST:
-
-			// 	//this.targetRotation = 2.403318379996192;
-			// 	this.targetPositionX = d + (data.newX + ratio); // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-	  //       	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.EAST:
-
-			// 	// ok
-			// 	//this.targetRotation = -1.403318379996192 ;
-			// 	this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.WEST:
-
-			// 	//this.targetRotation = (-PI*2);
-			// 	this.targetPositionX = d + data.newX ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	//this.camera.position.z = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// }
-
-		
-
-		//this.camera.setRotateX( getRandomInt(1, 10) + 89 );
-		//this.camera.setRotateY( this.positionMemory[data.newX][data.newY].y + 89 );
-
+		var y = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
+		var newCoord = this.mapToThree(data.newX, data.newY);
 	}
 
   /**
