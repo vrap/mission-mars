@@ -67,7 +67,7 @@
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
-        this.viewer.move('stop');
+        		// this.viewer.move('stop');
 				solar = true;
 			}
 
@@ -87,10 +87,10 @@
 
 			} else {
         setTimeout(function () {
-          this.viewer.move('stop');
+          // this.viewer.move('stop');
         }.bind(this), 1000);
 
-        this.viewer.move(data.direction);
+        this.viewer.move(data);
       }
 
 		}.bind(this));
@@ -197,7 +197,7 @@
 			this.elementBattery.innerHTML = tank + '%';
 
 			if(tank < 30){
-				addClass(elementBattery, 'warning');
+				addClass(this.elementBattery, 'warning');
 			}
 
 		}.bind(this));

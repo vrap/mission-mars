@@ -16,6 +16,11 @@ function getElementTop( elem )
     return yPos;
 }   
 
+function radInDeg(deg){
+	return deg * (Math.PI/180);
+}
+
+
 /**
  * Return offset left of element
  */

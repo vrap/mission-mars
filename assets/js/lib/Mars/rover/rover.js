@@ -42,7 +42,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 1000;
+	this.roundTime = 15;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
