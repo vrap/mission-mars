@@ -12,7 +12,7 @@
 		this.options = (options) ? options : {};
 		this.context = element.getContext('2d');
 		this.position = {x:0, y:0};
-		this.valPixel = 10;
+		this.valPixel = 2;
 
 		this.stepX = 0;
 		this.stepY = 0;
@@ -77,8 +77,6 @@
 
 		var observable = new nsCommon.Observable();
 		observable.subscribe('rover.spawn', function(data) {
-
-			console.log(data.rover);
 
 			this.position.x -= data.rover.x * this.valPixel - 100;
 			this.position.y -= data.rover.y * this.valPixel - 100;
