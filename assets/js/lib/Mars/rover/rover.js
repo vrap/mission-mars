@@ -14,7 +14,7 @@
     nsRover.Rover = function(map, x, y, tankSize) {
 	/* Check if the map is in the good format. */
 	if (! (map instanceof nsCommon.Map)) {
-	    throw new Error('Map need to be an instance of Map.');
+	    throw new Error(nsRover.Rover.MESSAGE.E_INVALID_MAP);
 	}
 
 	this.map = map;
@@ -88,6 +88,15 @@
 	BELOW: 0.1,
 	NEIGHBOR: 0.2,
 	REMOTE: 0.4
+    };
+
+    /* Messages constants. */
+    nsRover.Rover.MESSAGE = {
+	E_NEED_MORE_TANK: 0,
+	E_SLOPE_IS_TOO_IMPORTANT: 1,
+	E_MAP_UNDISCOVERED: 2,
+	E_INVALID_DISTANCE: 3,
+	E_INVALID_MAP: 4
     };
 
     /**
@@ -426,20 +435,20 @@
 				    };
 				}
 				else {
-				    throw new Error('Slope is too important.');
+				    throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
 				}
 
 				break;
 			    }
 			    else {
-				throw new Error('You need more tank.');
+				throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 			    }
 			}
 		    }
 		}
 	    }
 	    else {
-		throw new Error('The map is undiscovered here.');
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	}
 	else {
@@ -466,13 +475,13 @@
     nsRover.Rover.prototype.scanElevation = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    if (distance < 0 || distance > 2) {
-		throw new Error('Distance can only be set to 0 or 2.');
+		throw new Error(nsRover.Rover.MESSAGE.E_INVALID_DISTANCE);
 	    }
 
 	    var square = this.getSquare(direction, distance);
 
 	    if (square === null) {
-		throw new Error('The map is undiscovered here.');
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	    else {
 		if (this.memory.has(square.x, square.y, 'z')) {
@@ -519,13 +528,13 @@
     nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    if (distance < 0 || distance > 2) {
-		throw new Error('Distance can only be set to 0 or 2.');
+		throw new Error(nsRover.Rover.MESSAGE.E_INVALID_DISTANCE);
 	    }
 
 	    var square = this.getSquare(direction, distance);
 
 	    if (square === null) {
-		throw new Error('The map is undiscovered here.');
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	    else {
 		if (square.type == 4) {
