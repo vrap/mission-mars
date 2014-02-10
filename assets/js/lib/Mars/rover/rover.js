@@ -416,7 +416,7 @@
 
 			    /* Calculate the cost of travel and removes from tank. */
 			    if (finalCost <= this.tank) {
-				if (slope <= 4) {
+				if (slope <= 1.5) {
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
