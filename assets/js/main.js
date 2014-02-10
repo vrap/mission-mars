@@ -64,7 +64,7 @@
 	var viewerFul = new nsViewer.Viewer(map);
 	viewerFul.load2D(renderFull2dDiv, '' ,false);
   // Load map in 3D
-	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false});
+	viewer.load3D(renderDiv, {fog: 0.002, wireframe: false, axis: true});
 
 	/* Load infos of robot */
 	var elementBattery = document.querySelector('#battery'),
