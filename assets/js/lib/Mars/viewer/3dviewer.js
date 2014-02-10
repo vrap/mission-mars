@@ -89,7 +89,7 @@
 	 */
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
-		this.controls.movementSpeed = 0.5;
+		this.controls.movementSpeed = 0.001;
     this.controls.lookSpeed = 0.001;
     this.controls.lookVertical = this.options.cameraControl;
     this.controls.activeLook = this.options.cameraControl;
@@ -114,9 +114,9 @@
 			1000
 		);
 
-		/*this.camera.position.x = 0;
+		this.camera.position.x = 0;
 		this.camera.position.y = 0;
-		this.camera.position.z = 0;*/
+		this.camera.position.z = 0;
 		this.camera.setLens( 50 );
 
 		this.scene.add(this.camera);
