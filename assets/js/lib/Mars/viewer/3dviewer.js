@@ -28,6 +28,7 @@
 		this.element = element;
 		this.options = (options) ? options : {};
 		this.options.wireframe = this.options.wireframe || false;
+		this.options.axis = this.options.axis || false;
 		this.options.cameraControl = this.options.cameraControl || false;
 		this.init();
 	};
@@ -38,40 +39,30 @@
 	nsViewer.Viewer3D.prototype.init = function() {
 		// Initialize the scene.
 		this.scene = new THREE.Scene();
+
 		// Load every parts of the viewer
 		this._loadLight();
-    	this._loadCamera(0, 5, 0); // Init camera's position on point North West
+		this._loadCamera();
 		this._loadRenderer();
 		this._loadSkyBox();
 		this._loadMap();
 		this._loadMaterials();
 		this._loadControls();
 		this._loadFog();
+
 		// Run the refresh animation while.
 		this.animate();
 
-		this.camera_x = 0;
-        this.camera_y = 0;
-        this.camera_z = 0;
-        //camera.lookAt(new THREE.Vector3( 0, 50, (longueur_mur/2) ));
+		if (this.options.axis == true) {
+			looker = new THREE.AxisHelper(5);
+			this.scene.add(looker);
 
-        this.camera.position.x = this.camera_x;
-        this.camera.position.y = this.camera_y;
-        this.camera.position.z = this.camera_z;
+			looker.material.linewidth = 3;
 
-        this.targetPositionX = this.camera_x;
-        this.targetPositionZ = this.camera_z;
-        this.targetPositionY = this.camera_y;
-
-        this.targetRotation = 0;
-        this.targetRotationX = 0.6;
-
-       	this.camera.rotation._x = 0;
-        this.camera.rotation._y = 0;
-        this.camera.rotation._z = 0;
-
-        this.PI = Math.PI;
-
+			looker.position.x = -(parseInt(this.viewer.map.getWidth() /2) * this.MAP_RATIO);
+			looker.position.y = 0;
+			looker.position.z = -(parseInt(this.viewer.map.getHeight() /2) * this.MAP_RATIO);
+		}
 	};
 
 	/**
@@ -101,7 +92,7 @@
 		this.controls.movementSpeed = 0.001;
 	    this.controls.lookSpeed = 0.001;
 	    //this.controls.lookVertical = false;
-	    this.controls.activeLook = true;
+	    this.controls.activeLook = false;
 	    this.controls.control = this.options.cameraControl;
 	};
 
@@ -116,21 +107,20 @@
 	/**
 	 * Add a camera
 	 */
-	nsViewer.Viewer3D.prototype._loadCamera = function(x, y, z) {
-
+	nsViewer.Viewer3D.prototype._loadCamera = function() {
 		this.camera = new THREE.PerspectiveCamera(
 			75,
 			window.innerWidth / window.innerHeight,
 			1,
 			1000
 		);
-		this.camera.position.x = -75; // Frontward - Backward
-		this.camera.position.y = 20; // Up - Down
-		this.camera.position.z = -75; // Right - Left
-		this.camera.setLens( 35 );
-    	//this.camera.lookAt(new THREE.Vector3(-1.2*this.viewer.map.getWidth(), 10, this.viewer.map.getHeight())); // Point South West
-		this.scene.add(this.camera);
 
+		this.camera.position.x = 0;
+		this.camera.position.y = 0;
+		this.camera.position.z = 0;
+		this.camera.setLens( 50 );
+
+		this.scene.add(this.camera);
 	};
 
 	/**
@@ -246,7 +236,7 @@
 		// Init the mesh
 		var material = new THREE.MeshFaceMaterial( materials );
 		this.mesh = new THREE.Mesh(this.geometry, material);
-    	this.mesh.rotation.x = Math.PI / 180 * (-90);
+		this.mesh.rotation.x = Math.PI / 180 * (-90);
 
 		this.scene.add(this.mesh);
 	};
@@ -256,28 +246,22 @@
 	 */
 	nsViewer.Viewer3D.prototype.render = function() {
 		this.controls.update(1);
-		
 
-		this.camera.position.x += ( this.targetPositionX - this.camera.position.x );
-		this.camera.position.z += ( this.targetPositionZ - this.camera.position.z );
-		this.camera.position.y += ( this.targetPositionY - this.camera.position.y );
-
-		//console.log(this.camera.rotation);
-		//this.camera.rotation._x += 0.23;
-		//console.log(this.camera.rotation._x);
-
-		// Le good
-		// this.camera.rotation.y = this.targetRotation;
-		// this.camera.rotation.x = 0.1111;
-		// this.camera.rotation.z = 0.1111;
-
-		//console.log(this.camera.rotation);
-		//this.camera._x = 0.23;
-		//this.camera.rotation.z = ( this.targetRotation - this.camera.rotation.y ) * 0.09;
-		//this.camera.rotation.x = this.targetRotationX;
+		this.camera.position.x = this.targetPositionX;
+		this.camera.position.z = this.targetPositionZ;
+		this.camera.position.y = this.targetPositionY;
+		this.camera.lookAt(new THREE.Vector3(this.targetPositionX, this.targetPositionY, this.targetPositionZ));
 
 		this.renderer.render(this.scene, this.camera);
+	};
 
+	nsViewer.Viewer3D.prototype.mapToThree = function(x, z) {
+		var origin = -(parseInt(this.viewer.map.getWidth() /2) * this.MAP_RATIO);
+
+		resultX = origin + (x * this.MAP_RATIO);
+		resultZ = origin + (z * this.MAP_RATIO);
+
+		return { x: resultX, z: resultZ };
 	};
 
 	/**
@@ -292,90 +276,12 @@
 		console.log('in move');
 		console.log('direction = ' + data.direction);
 		
-		var z = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
-		var d = 0.75 * this.viewer.map.getWidth() - (0.75 * this.viewer.map.getWidth()*2);
-		var ratio = 3.08;
+		var y = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
+		var newCoord = this.mapToThree(data.newX, data.newY);
 
-		// this.targetRotation = (-this.PI*6);
-		// this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-		// this.targetPositionY = z; // Up - Down
-		// this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-		this.targetPositionX = d + (data.newX + ratio); // Frontward - Backward
-		this.targetPositionY  = z; // Up - Down
-	    this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-   //  	switch (direction) {
-			// case nsRover.Rover.DIRECTION.NORTH:
-
-			// 	//this.targetRotationX = 0.06;
-			// 	// this.camera.position.x = d + data.newX ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.NORTH_EAST:
-
-			// 	// ok
-	  //       	//this.targetRotation = -2.403318379996192;
-			// 	this.targetPositionX = d + (data.newX + ratio); // Frontward - Backward
-			// 	this.targetPositionY  = z; // Up - Down
-	  //       	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.NORTH_WEST:
-
-			// 	this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.SOUTH:
-
-			// 	//this.camera.position.x = d + data.newX ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.SOUTH_EAST:
-
-			// 	this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.SOUTH_WEST:
-
-			// 	//this.targetRotation = 2.403318379996192;
-			// 	this.targetPositionX = d + (data.newX + ratio); // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-	  //       	this.targetPositionZ = d + (data.newY + ratio); // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.EAST:
-
-			// 	// ok
-			// 	//this.targetRotation = -1.403318379996192 ;
-			// 	this.targetPositionX = d + (data.newX + ratio) ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	this.targetPositionZ = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// case nsRover.Rover.DIRECTION.WEST:
-
-			// 	//this.targetRotation = (-PI*2);
-			// 	this.targetPositionX = d + data.newX ; // Frontward - Backward
-			// 	this.targetPositionY = z; // Up - Down
-			// 	//this.camera.position.z = d + (data.newY + ratio) ; // Right - Left
-
-			//     break;
-			// }
-
-		
-
-		//this.camera.setRotateX( getRandomInt(1, 10) + 89 );
-		//this.camera.setRotateY( this.positionMemory[data.newX][data.newY].y + 89 );
-
+		this.targetPositionX = newCoord.x;
+		this.targetPositionZ = newCoord.z;
+		this.targetPositionY = y;
 	}
 
   /**
