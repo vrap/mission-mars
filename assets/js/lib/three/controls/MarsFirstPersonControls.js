@@ -18,7 +18,7 @@ THREE.MarsFirstPersonControls = function ( object, domElement ) {
 	this.autoForward = false;
 	this.invertVertical = false;
 
-  this.control = false;
+  	this.control = false;
 	this.activeLook = true;
 
 	this.heightSpeed = false;
