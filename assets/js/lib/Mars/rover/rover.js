@@ -43,7 +43,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 1000;
+	this.roundTime = 15;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -388,7 +388,6 @@
 				    // The distance cost plus the tank cost from the elevation
 				    var elevationCost = moveCost * (1 + slope);
 				    var finalCost = elevationCost + moveCost;
-
 
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;

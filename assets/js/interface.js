@@ -101,6 +101,13 @@ var scripts = [
   /**
    * Viewer
    */
+
+  // TMP
+  document.querySelector('#explorer-energy').value = 999999;
+  document.querySelector('#map-size').value = 20;
+  document.querySelector('#explorer-startX').value = 15;
+  document.querySelector('#explorer-startY').value = 15;
+
   document.querySelector('#view').onclick = function () {
     if(document.querySelector('#explorer').checked) {
       // Explorer settings verifications

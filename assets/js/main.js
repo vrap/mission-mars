@@ -24,6 +24,7 @@
 	} else {
 		// Map generation otherwise.
     var mapSize = document.querySelector('#map-size').value;
+
     /* Loading materials. */
     var materialRock = new nsMaterial.Rock();
     var materialIce = new nsMaterial.Ice();
