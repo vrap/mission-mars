@@ -127,7 +127,6 @@
 	}
     };
 
-
     /**
      * Execute an action of the rover.
      * When you try to run a method of the Rover, this one is redirected to
@@ -230,6 +229,16 @@
 		this.waitingStatus = false;
 	    }
 	}
+    };
+
+    /**
+     * Disable the buffered actions and remove all waiting actions.
+     *
+     * @this {Rover}
+     */
+    nsRover.Rover.prototype.removeBufferedActions = function() {
+	this.waitingActions = [];
+	this.waitingStatus  = false;
     };
 
     /**
