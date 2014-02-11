@@ -85,9 +85,16 @@
 
     /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
-	BELOW: 0.1,
-	NEIGHBOR: 0.2,
-	REMOTE: 0.4
+	MATERIALS: {
+	    BELOW: 0.1,
+	    NEIGHBOR: 0.2,
+	    REMOTE: 0.4
+	},
+	ELEVATION: {
+	    BELOW: 0,
+	    NEIGHBOR: 0,
+	    REMOTE: 0.1
+	}
     };
 
     /* Messages constants. */
@@ -97,6 +104,27 @@
 	E_MAP_UNDISCOVERED: 2,
 	E_INVALID_DISTANCE: 3,
 	E_INVALID_MAP: 4
+    };
+
+    /**
+     * Get distance as a string.
+     *
+     * @this {Rover}
+     * @param {integer} distance The distance to convert.
+     * @return {string} The distance as a string.
+     */
+    nsRover.Rover.prototype.getDistanceAsString = function(distance) {
+	switch (distance) {
+	    case 0:
+	    return 'BELOW';
+	    break;
+	    case 1:
+	    return 'NEIGHBOR';
+	    break;
+	    default:
+	    return 'REMOTE';
+	    break;
+	}
     };
 
     /**
@@ -492,18 +520,19 @@
 		    return this.memory.get(square.x, square.y);
 		}
 		else {
-		    if (distance == 2) {
-			var scanCost = 0.1 * distance;
+		    var sensorCost = nsRover.Rover.SENSOR_COST.ELEVATION[this.getDistanceAsString(distance)];
 
-			if (scanCost <= this.tank) {
-			    this.tank -= scanCost;
+		    if (sensorCost <= this.tank) {
+			this.tank -= sensorCost;
+
+			return {
+			    direction: direction,
+			    distance: distance,
+			    elevation: square.z
 			}
 		    }
-
-		    return {
-			direction: direction,
-			distance: distance,
-			elevation: square.z
+		    else {
+			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 		    }
 		}
 	    }
@@ -549,20 +578,19 @@
 		    return this.memory.get(square.x, square.y);
 		}
 		else {
-		    if (distance == 0 && this.tank >= 0.1) {
-			this.tank -= 0.1;
-		    }
-		    else if (distance == 1 && this.tank >= 0.2) {
-			this.tank -= 0.2;
-		    }
-		    else if (distance == 2 && this.tank >= 0.4) {
-			this.tank -= 0.4;
-		    }
+		    var sensorCost = nsRover.Rover.SENSOR_COST.MATERIALS[this.getDistanceAsString(distance)];
 
-		    return {
-			direction: direction,
-			distance: distance,
-			type: square.type
+		    if (sensorCost <= this.tank) {
+			this.tank -= sensorCost;
+
+			return {
+			    direction: direction,
+			    distance: distance,
+			    type: square.type
+			}
+		    }
+		    else {
+			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 		    }
 		}
 	    }
