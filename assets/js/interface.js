@@ -113,13 +113,11 @@ var scripts = [
         alert("Invalid energy value !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#explorer-startX').value)
-          || parseInt(document.querySelector('#explorer-startX').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#explorer-startX').value)) {
         alert("Invalid starting position X !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#explorer-startY').value)
-          || parseInt(document.querySelector('#explorer-startY').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#explorer-startY').value)) {
         alert("Invalid starting position Y !");
 
         return false;
