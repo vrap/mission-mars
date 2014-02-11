@@ -113,9 +113,9 @@
 			1000
 		);
 
-		this.camera.position.x = 0;
+		/*this.camera.position.x = 0;
 		this.camera.position.y = 0;
-		this.camera.position.z = 0;
+		this.camera.position.z = 0;*/
 		this.camera.setLens( 12 );
 
 		this.scene.add(this.camera);
@@ -243,13 +243,17 @@
 	 * Renders the scene
 	 */
   nsViewer.Viewer3D.prototype.render = function() {
-    this.camera.position.x = this.targetPositionX;
-    this.camera.position.z = this.targetPositionZ;
-    this.camera.position.y = this.targetPositionY;
-    this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY, this.newtargetPositionZ));
 
-    this.controls.update(1);
+  	this.controls.update(1);
+  	if(this.options.cameraControl == false){
+  		this.camera.position.x = this.targetPositionX;
+    	this.camera.position.z = this.targetPositionZ;
+    	this.camera.position.y = this.targetPositionY;
+    	this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY, this.newtargetPositionZ));
+  	}
+
     this.renderer.render(this.scene, this.camera);
+
   };
 
 
