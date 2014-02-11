@@ -55,7 +55,19 @@
 		}.bind(this));
 	};
 
-	nsExplorer.Explorer.prototype.explore = function() {
+	nsExplorer.Explorer.prototype.explore = function() { alert('explore');
+		// Condition d'arrêt
+		if (this.x == xStartPosition && (
+			this.y == yStartPosition ||
+			this.y - yStartPosition == 1 ||
+			this.y - yStartPosition == 2 || 
+			this.y - yStartPosition == - 1 ||
+			this.y - yStartPosition == - 2)) { alert('arret');
+            this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+
+	    	return;
+		}
+
 		this.verticalMove().then(function() {
 			this.horizontalMove().then(function() {
 				this.explore();
@@ -65,7 +77,7 @@
 	
 	// Initialisation de la position
 	// Impair => doit partir vers la gauche
-	nsExplorer.Explorer.prototype.moveToNearestSide = function() {
+	nsExplorer.Explorer.prototype.moveToNearestSide = function() { alert('moveToNearestSide');
 		var rover     = this.speculator.rover;
 		var direction = null;
 		// true = gauche, false = droite
@@ -105,10 +117,18 @@
 					}
 				}
 			}.bind(this),
-			function() {
+			function() { 
 	    		rover.setDirection(direction);
 
-				return this.speculator.moveAndScan();
+				return this.speculator.moveAndScan().then(function(data) {
+					/*console.log(data);
+					
+					if (data.error.message == this.speculator.rover.constructor.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT) {
+						alert('PAS BON');
+					}*/
+
+					alert('!!!!!ERROR');
+				}.bind(this));
 	    	}.bind(this)
 		);
 	};
@@ -120,11 +140,6 @@
 		// true = gauche, false = droite
 		var spawnSide = (xStartPosition < Math.round(rover.map.getWidth() / 2)) ? true : false;
 		var roverSide = (rover.x < Math.round(rover.map.getWidth() / 2)) ? true : false;
-
-		// Condition d'arrêt
-		if (xStartPosition == rover.x) {
-			
-		}
 
 		// Rover est sur spawnSide
 		if (spawnSide && roverSide || spawnSide == false && roverSide == false) {
@@ -172,7 +187,7 @@
 		var rover = this.speculator.rover;
 
 		// Haut côté gauche => go opposé droite
-		if (rover.y == TOP && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { //alert('1 Haut cote gauche => go oppose droite');
+		if (rover.y == TOP && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { alert('1 Haut cote gauche => go oppose droite');
 			return promiseWhile(
 				function() {
 					if (rover.x < RIGHT) {
@@ -187,7 +202,7 @@
 			);
 		}
 		// Haut côté droite => go opposé gauche
-		else if (rover.y == TOP && (rover.x == RIGHT || rover.x == RIGHTMIDDLE) && firstSideExplored == false) { //alert('2 Haut cote droite => go oppose gauche');
+		else if (rover.y == TOP && (rover.x == RIGHT || rover.x == RIGHTMIDDLE) && firstSideExplored == false) { alert('2 Haut cote droite => go oppose gauche');
 			firstSideExplored = true;
 
 			return promiseWhile(
@@ -204,7 +219,7 @@
 			);
 		}
 		// Bas côté gauche => go opposé droite
-		else if (rover.y == BOTTOM && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { //alert('3 Bas cote gauche => go oppose droite');
+		else if (rover.y == BOTTOM && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { alert('3 Bas cote gauche => go oppose droite');
 			return promiseWhile(
 				function() {
 					if (rover.x < RIGHT) {
@@ -219,7 +234,7 @@
 			);
 		}
 		// Bas côté droite => go opposé gauche
-		else if (rover.y == BOTTOM && (rover.x == RIGHT || rover.y == RIGHTMIDDLE)) { //alert('4 Bas cote droite => go oppose gauche');
+		else if (rover.y == BOTTOM && (rover.x == RIGHT || rover.y == RIGHTMIDDLE)) { alert('4 Bas cote droite => go oppose gauche');
 			return promiseWhile(
 				function() {
 					if (rover.x > LEFT) {
@@ -234,7 +249,7 @@
 			);
 		}
 		// Milieu côté gauche => go coté gauche
-		else if (rover.x == LEFTMIDDLE) { //alert('5 Milieu cote gauche => go cote gauche');
+		else if (rover.x == LEFTMIDDLE) { alert('5 Milieu cote gauche => go cote gauche');
 			return promiseWhile(
 				function() {
 					if (rover.x > LEFT) {
@@ -249,7 +264,7 @@
 			);
 		}
 		// Milieu côté droite => go coté droite
-		else if (rover.x == RIGHTMIDDLE) { //alert('6 Milieu cote droite => go cote droite');
+		else if (rover.x == RIGHTMIDDLE) { alert('6 Milieu cote droite => go cote droite');
 			return promiseWhile(
 				function() {
 					if (rover.x < RIGHT) {
@@ -264,7 +279,7 @@
 			);
 		}
 		// Côté gauche => go milieu coté gauche
-		else if (rover.x == LEFT) { //alert('7 Cote gauche => go milieu cote gauche');
+		else if (rover.x == LEFT) { alert('7 Cote gauche => go milieu cote gauche');
 			return promiseWhile(
 				function() {
 					if (rover.x < LEFTMIDDLE) {
@@ -279,7 +294,7 @@
 			);
 		}
 		// Côté droite => go milieu coté droite
-		else if (rover.x == RIGHT) { //alert('8 Cote droite => go milieu cote droite');
+		else if (rover.x == RIGHT) { alert('8 Cote droite => go milieu cote droite');
 			return promiseWhile(
 				function() {
 					if (rover.x > RIGHTMIDDLE) {
@@ -293,7 +308,7 @@
 				}.bind(this)
 			);
 		}
-		else { //alert('else');
+		else { alert('else');
 			var defer = Q.defer();
 
 			return defer.promise;

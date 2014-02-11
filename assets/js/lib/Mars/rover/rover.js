@@ -331,19 +331,20 @@
      * @param  {integer} distance      Distance in meters between current and destination square.
      * @return {integer}      		   The slope (in %).
      */
-    nsRover.Rover.prototype.calculateSlop = function(currentZ, destinationZ, distance) {
-	if (!distance) {
-	    distance = 1;
-	}
+    nsRover.Rover.prototype.calculateSlope = function(currentZ, destinationZ) {
+		var slope = (destinationZ - currentZ) / 5;
 
-	distance = distance * 5;
-	current = currentZ * 5;
-	destination = destinationZ * 5;
+		return slope;
 
-	var slope = (destination - current) / distance;
-	slope = Math.round(Math.abs(slope));
+		/*distance = distance * 5;
+		current = currentZ * 5;
+		destination = destinationZ * 5;
 
-	return slope;
+		var slope = (destination - current) / distance;
+	
+		slope = Math.round(Math.abs(slope));
+
+		return slope;*/
     };
 
     /**
@@ -440,42 +441,42 @@
 		    var directionCode = this.constructor.DIRECTION[directionName];
 
 		    if (directionCode == direction) {
-			for (var moveCostName in this.constructor.MOVE_COST) {
-			    var moveCost = this.constructor.MOVE_COST[directionName];
-			    var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
+				for (var moveCostName in this.constructor.MOVE_COST) {
+				    var moveCost = this.constructor.MOVE_COST[directionName];
+				    var slope = this.calculateSlope(lastZ, destinationSquare.z);
 
-			    var elevationCost = moveCost * (1 + slope);
-			    var finalCost = elevationCost + moveCost;
+				    var elevationCost = moveCost * (1 + slope);
+				    var finalCost = elevationCost + moveCost;
 
-			    /* Calculate the cost of travel and removes from tank. */
-			    if (finalCost <= this.tank) {
-				if (slope <= 1.5) {
-				    /* Move the rover to the destination square. */
-				    this.x = destinationSquare.x;
-				    this.y = destinationSquare.y;
+				    /* Calculate the cost of travel and removes from tank. */
+				    if (finalCost <= this.tank) {
+						if (slope <= 0.5) {
+						    /* Move the rover to the destination square. */
+						    this.x = destinationSquare.x;
+						    this.y = destinationSquare.y;
 
-				    /* Increase movements and decrease the energy. */
-				    this.moves++;
-				    this.tank -= finalCost;
+						    /* Increase movements and decrease the energy. */
+						    this.moves++;
+						    this.tank -= finalCost;
 
-				    return {
-					direction: direction,
-					lastX: lastX,
-					lastY: lastY,
-					newX: this.x,
-					newY: this.y
-				    };
+						    return {
+								direction: direction,
+								lastX: lastX,
+								lastY: lastY,
+								newX: this.x,
+								newY: this.y
+						    };
+						}
+						else {
+						    throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
+						}
+
+						break;
+				    }
+				    else {
+						throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
+				    }
 				}
-				else {
-				    throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
-				}
-
-				break;
-			    }
-			    else {
-				throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
-			    }
-			}
 		    }
 		}
 	    }
@@ -640,32 +641,32 @@
      * @todo Manage a scan material of 2 square which let us knowing the first square.
      */
     nsRover.Rover.prototype.fullScan = function(elevations, materials) {
-	elevations = (elevations == false) ? false : true;
-	materials  = (materials == false) ? false : true;
+		elevations = (elevations == false) ? false : true;
+		materials  = (materials == false) ? false : true;
 
-	if (elevations || materials) {
-	    var deferreds = []
+		if (elevations || materials) {
+		    var deferreds = []
 
-            for (var directionName in this.constructor.DIRECTION) {
-		var direction = this.constructor.DIRECTION[directionName];
+	            for (var directionName in this.constructor.DIRECTION) {
+			var direction = this.constructor.DIRECTION[directionName];
 
-		if (elevations) {
-		    deferreds.push(this.scanElevation(direction, 1));
+			if (elevations) {
+			    deferreds.push(this.scanElevation(direction, 1));
+			}
+
+			if (materials) {
+			    deferreds.push(this.scanMaterial(direction, 2));
+			}
+	            }
+
+		    return Q.all(deferreds);
 		}
+		else {
+		    var defer = Q.defer();
 
-		if (materials) {
-		    deferreds.push(this.scanMaterial(direction, 2));
+		    defer.resolve();
+
+		    return defer.promise;
 		}
-            }
-
-	    return Q.all(deferreds);
-	}
-	else {
-	    var defer = Q.defer();
-
-	    defer.resolve();
-
-	    return defer.promise;
-	}
     };
 })();
