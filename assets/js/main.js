@@ -74,7 +74,7 @@
 	 elementMiniMap = document.querySelector('#bloc-panel-minimap-hover'),
 	 elementControl = document.querySelector('#display-control'),
 	 wireframeOn = document.querySelector('#w1'),
-   wireframeOff = document.querySelector('#w2'),
+   	wireframeOff = document.querySelector('#w2'),
 	 moreFog = document.querySelector('#more'),
 	 lessFog = document.querySelector('#less'),
 	 cameraOn = document.querySelector('#c1'),

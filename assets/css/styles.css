@@ -855,6 +855,18 @@ input[type="text"]{
   padding-right: 10px;
   margin-left: 20px;
   margin-bottom: 20px;
+  margin-top: 20px;
+  background-color: #C4C4C4;
+  -moz-box-shadow: 0px 7px 0px 0px #A5A4A4;
+  -webkit-box-shadow: 0px 7px 0px 0px #A5A4A4;
+  -o-box-shadow: 0px 7px 0px 0px #A5A4A4;
+  box-shadow: 0px 7px 0px 0px #A5A4A4;
+  border: 1px solid #E0E0E0;
+  color: #898888;
+  text-shadow:2px 2px 2px 2px white;
+}
+#display-control.btn-link.btn-round:hover {
+  background-color: #b5b5b5;
 }
 
 }
@@ -864,7 +876,7 @@ input[type="text"]{
 }
 
 .btn-panel:hover{
-	background-color: #653739;
+	background-color: #afaeae;
 	
 }
 .btn-panel:hover .glyphicon-seetings{
