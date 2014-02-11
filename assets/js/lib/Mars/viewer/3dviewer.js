@@ -21,7 +21,8 @@
 	 */
 	nsViewer.Viewer3D = function(viewer, element, options) {
 		this.viewer = viewer;
-    	this.MAP_RATIO = 1.5;
+    	this.MAP_RATIO = 1;
+      this.RATIO_Z = 5;
 
     	this.positionMemory = new Array();
 
@@ -141,13 +142,8 @@
 
 			this.positionMemory[i] = new Array();
 
-			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
-				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
-
-				if(index < 20){
-					console.log(this.geometry.vertices[index]);
-				}
-				
+			for (var j = 0; j < this.viewer.map.getHeight(); j++) {	
+				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z / this.RATIO_Z;
 				this.positionMemory[i][j] = {
 					x : this.geometry.vertices[index].x,
 					y : this.geometry.vertices[index].y,
@@ -156,8 +152,6 @@
 				index++;
 			}
 		}
-
-		console.log(this.positionMemory);
 	}
 
 	/**
@@ -274,9 +268,7 @@
 	};
 
 	nsViewer.Viewer3D.prototype.move = function(data){
-		console.log('in move');
-		console.log('direction = ' + data.direction);
-		
+	    if (!data.error) {
 		var y = data.rover.map._terrain.map[data.lastX][data.lastY].z + 10;
 		var lastCoord = this.mapToThree(data.lastX, data.lastY);
 		var newCoord = this.mapToThree(data.newX, data.newY);
@@ -287,69 +279,6 @@
 
 		this.newtargetPositionX = newCoord.x;
 		this.newtargetPositionZ = newCoord.z;
-
+	    }
 	}
-
-  /**
-   * Change camera's position in the direction wanted.
-   */
- /* nsViewer.Viewer3D.prototype.move_old = function(direction) {
-    	if(false === this.options.cameraControl) {
-	      switch(direction){
-	        case nsRover.Rover.DIRECTION.NORTH:
-	          this.controls.moveForward = true;
-	          this.controls.moveBackward = false;
-	          this.controls.moveRight = false;
-	          this.controls.moveLeft = false;
-	          break;
-	        case nsRover.Rover.DIRECTION.SOUTH:
-	          this.controls.moveForward = false;
-	          this.controls.moveBackward = true;
-	          this.controls.moveRight = false;
-	          this.controls.moveLeft = false;
-	          break;
-	        case nsRover.Rover.DIRECTION.WEST:
-	          this.controls.moveForward = false;
-	          this.controls.moveBackward = false;
-	          this.controls.moveRight = false;
-	          this.controls.moveLeft = true;
-	          break;
-	        case nsRover.Rover.DIRECTION.EAST:
-	          this.controls.moveForward = false;
-	          this.controls.moveBackward = false;
-	          this.controls.moveRight = true;
-	          this.controls.moveLeft = false;
-	          break;
-	        case nsRover.Rover.DIRECTION.NORTH_EAST:
-	          this.controls.moveForward = true;
-	          this.controls.moveBackward = false;
-	          this.controls.moveRight = true;
-	          this.controls.moveLeft = false;
-	          break;
-	        case nsRover.Rover.DIRECTION.NORTH_WEST:
-	          this.controls.moveForward = true;
-	          this.controls.moveBackward = false;
-	          this.controls.moveRight = false;
-	          this.controls.moveLeft = true;
-	          break;
-	        case nsRover.Rover.DIRECTION.SOUTH_EAST:
-	          this.controls.moveForward = false;
-	          this.controls.moveBackward = true;
-	          this.controls.moveRight = true;
-	          this.controls.moveLeft = false;
-	          break;
-	        case nsRover.Rover.DIRECTION.SOUTH_WEST:
-	          this.controls.moveForward = false;
-	          this.controls.moveBackward = true;
-	          this.controls.moveRight = false;
-	          this.controls.moveLeft = true;
-	          break;
-	        default :
-	          this.controls.moveForward = false;
-	          this.controls.moveBackward = false;
-	          this.controls.moveRight = false;
-	          this.controls.moveLeft = false;
-      		}
-    	}
-	};*/
 })();

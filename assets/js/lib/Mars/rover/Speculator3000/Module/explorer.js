@@ -4,12 +4,23 @@
     var nsRover = using('mars.rover');
     var nsCommon = using('mars.common');
 
+    var xStartPosition = 0;
+    var yStartPosition = 0;
+    var firstSideExplored = false;
+
     /**
      * Class constructor of explorer module.
      * The explorer module must explore the largest poosible area with the least possible movement.
      */
     nsExplorer.Explorer = function(s3000) {
         this.speculator = s3000;
+
+		TOP = 2;
+		RIGHT = parseInt(this.speculator.rover.map.getWidth() - 3);
+		BOTTOM = parseInt(this.speculator.rover.map.getHeight() - 3);
+		LEFT = 2;
+		LEFTMIDDLE = parseInt(Math.round(this.speculator.rover.map.getWidth() / 2) - 3);
+		RIGHTMIDDLE = parseInt(Math.round(this.speculator.rover.map.getWidth() / 2) + 2);
     };
 
     /**
@@ -28,14 +39,271 @@
     /**
      * Example of onDisabled event triggered when explorer mode is disabled by S3000 on the rover.
      */
-    nsExplorer.Explorer.prototype.onDisabled = function() {
-        console.log('Explorer mode disabled');
-    };
+	nsExplorer.Explorer.prototype.onDisabled = function() {
+		console.log('Explorer mode disabled');
+	};
 
-    /**
+	/**
      * Start the explorer scenario.
      */
-    nsExplorer.Explorer.prototype.start = function() {
+	nsExplorer.Explorer.prototype.start = function() {
+		xStartPosition = this.speculator.rover.x;
+		yStartPosition = this.speculator.rover.y;
+
+		this.moveToNearestSide().then(function() {
+			this.explore();
+		}.bind(this));
+	};
+
+	nsExplorer.Explorer.prototype.explore = function() {
+		this.verticalMove().then(function() {
+			this.horizontalMove().then(function() {
+				this.explore();
+			}.bind(this));
+		}.bind(this));
+	};
+	
+	// Initialisation de la position
+	// Impair => doit partir vers la gauche
+	nsExplorer.Explorer.prototype.moveToNearestSide = function() {
+		var rover     = this.speculator.rover;
+		var direction = null;
+		// true = gauche, false = droite
+		var spawnSide = (xStartPosition < Math.round(rover.map.getWidth() / 2)) ? true : false;
+
+		if (((rover.map.getHeight() - rover.y) % 2) == 0) {
+			direction = nsRover.Rover.DIRECTION.WEST;
+		}
+		else {
+			direction = nsRover.Rover.DIRECTION.EAST;
+		}
+
+		return promiseWhile(
+			function() {
+				if (direction == nsRover.Rover.DIRECTION.WEST) {
+					if (spawnSide) {
+						if (rover.x > LEFT) {
+							return true;
+						}
+					}
+					else {
+						if (rover.x > RIGHTMIDDLE) {
+							return true;
+						}
+					}
+				}
+				else if (direction == nsRover.Rover.DIRECTION.EAST) {
+					if (spawnSide) {
+						if (rover.x < LEFTMIDDLE) {
+							return true;
+						}
+					}
+					else {
+						if (rover.x < RIGHT) {
+							return true;
+						}
+					}
+				}
+			}.bind(this),
+			function() {
+	    		rover.setDirection(direction);
+
+				return this.speculator.moveAndScan();
+	    	}.bind(this)
+		);
+	};
+
+	nsExplorer.Explorer.prototype.verticalMove = function() {
+		var defer = Q.defer();
+		var rover = this.speculator.rover;
+
+		// true = gauche, false = droite
+		var spawnSide = (xStartPosition < Math.round(rover.map.getWidth() / 2)) ? true : false;
+		var roverSide = (rover.x < Math.round(rover.map.getWidth() / 2)) ? true : false;
+
+		// Condition d'arrêt
+		if (xStartPosition == rover.x) {
+			
+		}
+
+		// Rover est sur spawnSide
+		if (spawnSide && roverSide || spawnSide == false && roverSide == false) {
+			// Mettre à NORTH quand axes bon
+			rover.setDirection(nsRover.Rover.DIRECTION.SOUTH).then(function() {
+				var moves = [];
+				
+				for (var i = 0; i < 5; i++) {
+					var tmp = rover.y - i;
+
+					if (tmp > 2) {
+						moves.push(rover.move());
+					}
+				}
+			
+				Q.all(moves).then(function() {
+					defer.resolve();
+				}.bind(this));
+			}.bind(this));
+		}
+		// Rover n'est pas sur spawnSide
+		else {
+			// Mettre à SOUTH quand axes bon
+			rover.setDirection(nsRover.Rover.DIRECTION.NORTH).then(function() {
+				var moves = [];
+				
+				for (var i = 0; i < 5; i++) {
+					var tmp = rover.y + i;
+
+					if (tmp < rover.map.getHeight() - 2) {
+						moves.push(rover.move());
+					}
+				}
+			
+				Q.all(moves).then(function() {
+					defer.resolve();
+				}.bind(this));
+			}.bind(this));
+		}
+
+		return defer.promise;
+	};
+
+	nsExplorer.Explorer.prototype.horizontalMove = function() {
+		var rover = this.speculator.rover;
+
+		// Haut côté gauche => go opposé droite
+		if (rover.y == TOP && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { //alert('1 Haut cote gauche => go oppose droite');
+			return promiseWhile(
+				function() {
+					if (rover.x < RIGHT) {
+						rover.setDirection(nsRover.Rover.DIRECTION.EAST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Haut côté droite => go opposé gauche
+		else if (rover.y == TOP && (rover.x == RIGHT || rover.x == RIGHTMIDDLE) && firstSideExplored == false) { //alert('2 Haut cote droite => go oppose gauche');
+			firstSideExplored = true;
+
+			return promiseWhile(
+				function() {
+					if (rover.x > LEFT) {
+						rover.setDirection(nsRover.Rover.DIRECTION.WEST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Bas côté gauche => go opposé droite
+		else if (rover.y == BOTTOM && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { //alert('3 Bas cote gauche => go oppose droite');
+			return promiseWhile(
+				function() {
+					if (rover.x < RIGHT) {
+						rover.setDirection(nsRover.Rover.DIRECTION.EAST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Bas côté droite => go opposé gauche
+		else if (rover.y == BOTTOM && (rover.x == RIGHT || rover.y == RIGHTMIDDLE)) { //alert('4 Bas cote droite => go oppose gauche');
+			return promiseWhile(
+				function() {
+					if (rover.x > LEFT) {
+						rover.setDirection(nsRover.Rover.DIRECTION.WEST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Milieu côté gauche => go coté gauche
+		else if (rover.x == LEFTMIDDLE) { //alert('5 Milieu cote gauche => go cote gauche');
+			return promiseWhile(
+				function() {
+					if (rover.x > LEFT) {
+						rover.setDirection(nsRover.Rover.DIRECTION.WEST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Milieu côté droite => go coté droite
+		else if (rover.x == RIGHTMIDDLE) { //alert('6 Milieu cote droite => go cote droite');
+			return promiseWhile(
+				function() {
+					if (rover.x < RIGHT) {
+						rover.setDirection(nsRover.Rover.DIRECTION.EAST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Côté gauche => go milieu coté gauche
+		else if (rover.x == LEFT) { //alert('7 Cote gauche => go milieu cote gauche');
+			return promiseWhile(
+				function() {
+					if (rover.x < LEFTMIDDLE) {
+						rover.setDirection(nsRover.Rover.DIRECTION.EAST);
+						
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		// Côté droite => go milieu coté droite
+		else if (rover.x == RIGHT) { //alert('8 Cote droite => go milieu cote droite');
+			return promiseWhile(
+				function() {
+					if (rover.x > RIGHTMIDDLE) {
+						rover.setDirection(nsRover.Rover.DIRECTION.WEST);
+
+						return true;
+					}
+				}.bind(this),
+				function() {
+					return this.speculator.moveAndScan();
+				}.bind(this)
+			);
+		}
+		else { //alert('else');
+			var defer = Q.defer();
+
+			return defer.promise;
+		}
+	};
+
+
+
+
+   /* nsExplorer.Explorer.prototype.start = function() {
 		this.speculator.rover.setDirection(this.getNearestSide()).then(function() {
             this.moveToNearestSide().then(function() {
 				this.explore();
@@ -173,12 +441,12 @@
 	    	}.bind(this));
 		}*/
 		// Rover coté est
-		if (rover.x > parseInt(rover.map.getWidth() / 2)) {
+		/*if (rover.x > parseInt(rover.map.getWidth() / 2)) {
 			rover.setDirection(nsRover.Rover.DIRECTION.WEST).then(function() {
 				promiseWhile(
 		    		function() {
-						if (/*rover.x > 2 && */rover.x != parseInt(rover.map.getWidth() / 2) + 2) {
-			    			return true;
+						if (/*rover.x > 2 && *///rover.x != parseInt(rover.map.getWidth() / 2) + 2) {
+			    			/*return true;
 						}
 						else {
 							alert('Moitie, bord le plus proche : ' + this.getNearestSide());
@@ -216,8 +484,8 @@
 			rover.setDirection(nsRover.Rover.DIRECTION.EAST).then(function() {
 				promiseWhile(
 		    		function() {
-						if (/*rover.x < rover.map.getWidth() - 3 && */rover.x != parseInt(rover.map.getWidth() / 2) - 2) {
-			    			return true;
+						if (/*rover.x < rover.map.getWidth() - 3 && *///rover.x != parseInt(rover.map.getWidth() / 2) - 2) {
+			    			/*return true;
 						}
 						else {
 							alert('Moitie, bord le plus proche : ' + this.getNearestSide());
@@ -289,7 +557,7 @@
 	    	}.bind(this));
 		}*/
 
-		return defer.promise;
+		/*return defer.promise;
     };
 
     nsExplorer.Explorer.prototype.speculatedMovements = function() {
