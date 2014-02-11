@@ -125,7 +125,6 @@
 	    return 'REMOTE';
 	    break;
 	}
->>>>>>> 380a5015af293d3f332ad5604dc01001a3308469
     };
 
 
