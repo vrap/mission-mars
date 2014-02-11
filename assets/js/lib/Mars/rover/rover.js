@@ -238,6 +238,25 @@
      * @return {object}            Return an object containing informations about the square if exist; null otherwise.
      */
     nsRover.Rover.prototype.getSquare = function(direction, distance) {
+	var square = this.getSquareFromDirection(direction, distance);
+	var data = this.map.getSquare(square.x, square.y);
+
+	if (data) {
+	    /* Add square to memory. */
+	    this.memory.createOrUpdate(data.x, data.y, data.z, data.type, 0);
+
+	    return {
+		x: square.x,
+		y: square.y,
+		z: data.z,
+		type: data.type
+	    };
+	}
+
+	return null;
+    };
+
+    nsRover.Rover.prototype.getSquareFromDirection = function(direction, distance) {
 	var x = this.x;
 	var y = this.y;
 
@@ -272,21 +291,7 @@
 	    break;
 	}
 
-	var square = this.map.getSquare(x, y);
-
-	if (square) {
-	    /* Add square to memory. */
-	    this.memory.createOrUpdate(x, y, square.z, square.type, 0);
-
-	    return {
-		x: x,
-		y: y,
-		z: square.z,
-		type: square.type
-	    };
-	}
-
-	return null;
+	return {x: x, y: y};
     };
 
     /**
