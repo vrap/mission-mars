@@ -19,8 +19,6 @@
 		this.observable = new nsCommon.Observable();
 		
 		this.init();
-	
-
 	};
 
 	/**

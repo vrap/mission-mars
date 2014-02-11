@@ -11,7 +11,11 @@ var scripts = [
 ];
 
 (function () {
-
+  // TMP
+  document.querySelector('#explorer-energy').value = 9999999999999;
+  document.querySelector('#map-size').value = 20;
+  document.querySelector('#explorer-startX').value = 15; // 20
+  document.querySelector('#explorer-startY').value = 15; // 20
 
 	/**
 	 * Home page gestion

@@ -43,7 +43,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 200;
+	this.roundTime = 5;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -414,22 +414,21 @@
 	}
     };
 
-    /**
-     * Move the rover to a distance and direction relatively to the current position.
-     * 
-     * @this {Rover}
-     * @return {object} Return an object with the last position and the new one.
-     */
-    nsRover.Rover.prototype.move = function() {
+	/**
+	 * Move the rover to a distance and direction relatively to the current position.
+	 * 
+	 * @this {Rover}
+	 * @return {object} Return an object with the last position and the new one.
+	 */
+	nsRover.Rover.prototype.move = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
-	    /* Retrieve the current direction of the rover to move on. */
-	    var direction = this.direction;
+		/* Retrieve the current direction of the rover to move on. */
+		var direction = this.direction;
+		var currentSquare = this.getSquare(direction, 0);
+		var destinationSquare = this.getSquare(direction, 1);
 
-	    var currentSquare = this.getSquare(direction, 0);
-	    var destinationSquare = this.getSquare(direction, 1);
-
-	    /* If the rover is still within the limits of the map. */
-	    if (destinationSquare !== null) {
+		/* If the rover is still within the limits of the map. */
+		if (destinationSquare !== null) {
 			var lastX = currentSquare.x;
 			var lastY = currentSquare.y;
 			var lastZ = currentSquare.z;
@@ -439,26 +438,26 @@
 
 			    if (directionCode == direction) {
 					for (var moveCostName in this.constructor.MOVE_COST) {
-					    var moveCost = this.constructor.MOVE_COST[directionName];
-					    var slope = this.calculateSlope(lastZ, destinationSquare.z);
+						var moveCost = this.constructor.MOVE_COST[directionName];
+						var slope = this.calculateSlope(lastZ, destinationSquare.z);
 
-					    var elevationCost = moveCost * (1 + slope);
-					    var finalCost = elevationCost + moveCost;
+						var elevationCost = moveCost * (1 + slope);
+						var finalCost = elevationCost + moveCost;
 
-					    /* Calculate the cost of travel and removes from tank. */
-					    if (finalCost <= this.tank) {
-							// Final value. Please do not touch, even for tests!
+						/* Calculate the cost of travel and removes from tank. */
+						if (finalCost <= this.tank) {
+							// Final value (0.5) Please do not touch, even for tests!
 							if (slope <= 0.5) {
-							    /* Move the rover to the destination square. */
-							    this.x = destinationSquare.x;
-							    this.y = destinationSquare.y;
+								/* Move the rover to the destination square. */
+								this.x = destinationSquare.x;
+								this.y = destinationSquare.y;
 
-							    /* Increase movements and decrease the energy. */
-							    this.moves++;
-							    this.tank -= finalCost;
+								/* Increase movements and decrease the energy. */
+								this.moves++;
+								this.tank -= finalCost;
 
-							    /* Add to memory. */
-							    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
+								/* Add to memory. */
+								this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
 
 							    return {
 									direction: direction,
@@ -468,14 +467,20 @@
 									newY: this.y
 							    };
 							}
+							else {
+								throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
+							}
 			    		}
+			    		else {
+							throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
+						}
 					}
 				}
 			}
 	    }
-	    else {
+		else {
 			throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
-	    }
+		}
 	}
 	else {
 	    return this.executeAction('move', arguments, 1).progress(function(data) {
@@ -485,7 +490,7 @@
 		else if (data.progress == 100) {
 		    this.publishEvent('move.end', data.data);
 		}
-	    }.bind(this));
+		}.bind(this));
 	}
     };
 
@@ -637,33 +642,33 @@
      * @this {Rover}
      * @todo Manage a scan material of 2 square which let us knowing the first square.
      */
-    nsRover.Rover.prototype.fullScan = function(elevations, materials) {
+	nsRover.Rover.prototype.fullScan = function(elevations, materials) {
 		elevations = (elevations == false) ? false : true;
 		materials  = (materials == false) ? false : true;
 
 		if (elevations || materials) {
-		    var deferreds = []
+			var deferreds = []
 
-	            for (var directionName in this.constructor.DIRECTION) {
-			var direction = this.constructor.DIRECTION[directionName];
+			for (var directionName in this.constructor.DIRECTION) {
+				var direction = this.constructor.DIRECTION[directionName];
 
-			if (elevations) {
-			    deferreds.push(this.scanElevation(direction, 1));
+				if (elevations) {
+					deferreds.push(this.scanElevation(direction, 1));
+				}
+
+				if (materials) {
+					deferreds.push(this.scanMaterial(direction, 2));
+				}
 			}
 
-			if (materials) {
-			    deferreds.push(this.scanMaterial(direction, 2));
-			}
-	            }
-
-		    return Q.all(deferreds);
+			return Q.all(deferreds);
 		}
 		else {
-		    var defer = Q.defer();
+			var defer = Q.defer();
 
-		    defer.resolve();
+			defer.resolve();
 
-		    return defer.promise;
+			return defer.promise;
 		}
-    };
+	};
 })();

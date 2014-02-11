@@ -7,6 +7,7 @@
     var xStartPosition = 0;
     var yStartPosition = 0;
     var firstSideExplored = false;
+    var firstSide = true;
 
     /**
      * Class constructor of explorer module.
@@ -46,7 +47,7 @@
 	/**
      * Start the explorer scenario.
      */
-	nsExplorer.Explorer.prototype.start = function() {
+	nsExplorer.Explorer.prototype.start = function() { console.log('START');
 		xStartPosition = this.speculator.rover.x;
 		yStartPosition = this.speculator.rover.y;
 
@@ -55,17 +56,21 @@
 		}.bind(this));
 	};
 
-	nsExplorer.Explorer.prototype.explore = function() { alert('explore');
-		// Condition d'arrêt
-		if (this.x == xStartPosition && (
-			this.y == yStartPosition ||
-			this.y - yStartPosition == 1 ||
-			this.y - yStartPosition == 2 || 
-			this.y - yStartPosition == - 1 ||
-			this.y - yStartPosition == - 2)) { alert('arret');
-            this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+	nsExplorer.Explorer.prototype.explore = function() { console.log('EXPLORE');
+		var rover = this.speculator.rover;
 
+		// Condition d'arrêt
+		if (rover.x == xStartPosition && (
+			rover.y == yStartPosition ||
+			rover.y - yStartPosition == 1 ||
+			rover.y - yStartPosition == 2 || 
+			rover.y - yStartPosition == - 1 ||
+			rover.y - yStartPosition == - 2) && firstSide == false) { alert('arret');
 	    	return;
+		}
+
+		if (rover.x == xStartPosition && rover.y == yStartPosition && firstSide) {
+			firstSide = false;
 		}
 
 		this.verticalMove().then(function() {
@@ -77,7 +82,7 @@
 	
 	// Initialisation de la position
 	// Impair => doit partir vers la gauche
-	nsExplorer.Explorer.prototype.moveToNearestSide = function() { alert('moveToNearestSide');
+	nsExplorer.Explorer.prototype.moveToNearestSide = function() { console.log('MOVETONEARESTSIDE');
 		var rover     = this.speculator.rover;
 		var direction = null;
 		// true = gauche, false = droite
@@ -120,20 +125,24 @@
 			function() { 
 	    		rover.setDirection(direction);
 
-				return this.speculator.moveAndScan().then(function(data) {
-					/*console.log(data);
-					
-					if (data.error.message == this.speculator.rover.constructor.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT) {
-						alert('PAS BON');
-					}*/
+	    		// return this.speculator.moveAndScan();
 
-					alert('!!!!!ERROR');
-				}.bind(this));
+				return this.speculator.moveAndScan().fail(
+					function(data) { console.log('MOVEANDSCAN FAIL');
+						this.onError(data).then(
+							function() {
+								this.explore();
+							}.bind(this)).fail(
+							function(data) {
+								defer.reject(data);
+							})
+					}.bind(this)
+				);
 	    	}.bind(this)
 		);
 	};
 
-	nsExplorer.Explorer.prototype.verticalMove = function() {
+	nsExplorer.Explorer.prototype.verticalMove = function() { console.log('VERTICALMOVE');
 		var defer = Q.defer();
 		var rover = this.speculator.rover;
 
@@ -187,7 +196,7 @@
 		var rover = this.speculator.rover;
 
 		// Haut côté gauche => go opposé droite
-		if (rover.y == TOP && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { alert('1 Haut cote gauche => go oppose droite');
+		if (rover.y == TOP && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { //alert('1 Haut cote gauche => go oppose droite');
 			return promiseWhile(
 				function() {
 					if (rover.x < RIGHT) {
@@ -202,7 +211,7 @@
 			);
 		}
 		// Haut côté droite => go opposé gauche
-		else if (rover.y == TOP && (rover.x == RIGHT || rover.x == RIGHTMIDDLE) && firstSideExplored == false) { alert('2 Haut cote droite => go oppose gauche');
+		else if (rover.y == TOP && (rover.x == RIGHT || rover.x == RIGHTMIDDLE) && firstSideExplored == false) { //alert('2 Haut cote droite => go oppose gauche');
 			firstSideExplored = true;
 
 			return promiseWhile(
@@ -219,7 +228,7 @@
 			);
 		}
 		// Bas côté gauche => go opposé droite
-		else if (rover.y == BOTTOM && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { alert('3 Bas cote gauche => go oppose droite');
+		else if (rover.y == BOTTOM && (rover.x == LEFT || rover.x == LEFTMIDDLE)) { //alert('3 Bas cote gauche => go oppose droite');
 			return promiseWhile(
 				function() {
 					if (rover.x < RIGHT) {
@@ -234,7 +243,7 @@
 			);
 		}
 		// Bas côté droite => go opposé gauche
-		else if (rover.y == BOTTOM && (rover.x == RIGHT || rover.y == RIGHTMIDDLE)) { alert('4 Bas cote droite => go oppose gauche');
+		else if (rover.y == BOTTOM && (rover.x == RIGHT || rover.y == RIGHTMIDDLE)) { //alert('4 Bas cote droite => go oppose gauche');
 			return promiseWhile(
 				function() {
 					if (rover.x > LEFT) {
@@ -249,7 +258,7 @@
 			);
 		}
 		// Milieu côté gauche => go coté gauche
-		else if (rover.x == LEFTMIDDLE) { alert('5 Milieu cote gauche => go cote gauche');
+		else if (rover.x == LEFTMIDDLE) { //alert('5 Milieu cote gauche => go cote gauche');
 			return promiseWhile(
 				function() {
 					if (rover.x > LEFT) {
@@ -264,7 +273,7 @@
 			);
 		}
 		// Milieu côté droite => go coté droite
-		else if (rover.x == RIGHTMIDDLE) { alert('6 Milieu cote droite => go cote droite');
+		else if (rover.x == RIGHTMIDDLE) {// alert('6 Milieu cote droite => go cote droite');
 			return promiseWhile(
 				function() {
 					if (rover.x < RIGHT) {
@@ -279,7 +288,7 @@
 			);
 		}
 		// Côté gauche => go milieu coté gauche
-		else if (rover.x == LEFT) { alert('7 Cote gauche => go milieu cote gauche');
+		else if (rover.x == LEFT) { //alert('7 Cote gauche => go milieu cote gauche');
 			return promiseWhile(
 				function() {
 					if (rover.x < LEFTMIDDLE) {
@@ -294,7 +303,7 @@
 			);
 		}
 		// Côté droite => go milieu coté droite
-		else if (rover.x == RIGHT) { alert('8 Cote droite => go milieu cote droite');
+		else if (rover.x == RIGHT) { //alert('8 Cote droite => go milieu cote droite');
 			return promiseWhile(
 				function() {
 					if (rover.x > RIGHTMIDDLE) {
@@ -308,14 +317,35 @@
 				}.bind(this)
 			);
 		}
-		else { alert('else');
+		else { //alert('else');
 			var defer = Q.defer();
 
 			return defer.promise;
 		}
 	};
 
+	nsExplorer.Explorer.prototype.onError = function(data) {
+		var defer = Q.defer();
+		var rover = this.speculator.rover;
 
+		if (data.error.message == rover.constructor.MESSAGE.E_NEED_MORE_TANK) {
+			rover.deploySolarPanels().then(
+				function() {
+					defer.resolve();
+				}.bind(this)
+			);
+		}
+		else if (data.error.message == rover.constructor.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT) {
+			console.log('SLOPE');
+
+			defer.reject();
+		}
+		else {
+			defer.reject(data);
+		}
+
+		return defer.promise;
+	};
 
 
    /* nsExplorer.Explorer.prototype.start = function() {
