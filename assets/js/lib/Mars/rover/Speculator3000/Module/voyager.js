@@ -129,7 +129,6 @@
 						)
 						.fail(
 						    function(data) {
-							console.log('onError2');
 							defer.reject(data);
 						    }
 						);
@@ -156,7 +155,6 @@
 		);
 	}
 	else {
-	    console.log('onError', data.error.message);
 	    defer.reject(data);
 	}
 
