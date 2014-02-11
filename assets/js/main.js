@@ -112,7 +112,7 @@
 		document.querySelector('#bloc-over-full').className = 'show';
 	}
 	document.querySelector('#bloc-fullMap .glyphicon-close').onclick = function (){
-		document.querySelector('#bloc-over-full').className = 'hidde';
+		document.querySelector('#bloc-over-full').className = 'hidden';
 	}
 
 	/* Listen to rover events. */
@@ -126,6 +126,13 @@
 		viewer.viewers[renderDiv].camera.position.y += data.elevation;
 	});
 	observable.subscribe('rover.spawn', function(data) {
+    document.querySelector('#bloc-panel-minimap').style.display = 'block';
+    document.querySelector('#bloc-panel-minimap-hover').style.display = 'block';
+    document.querySelector('#panel-minimap').style.display = 'block';
+    document.querySelector('#panel-infos').style.display = 'block';
+    document.querySelector('#bloc-pop').style.display = 'block';
+    document.querySelector('.loader').style.display = 'none';
+
     var ratio = viewer.viewers[renderDiv].MAP_RATIO,
         init_x = (-ratio/2)*map.getWidth(),
         init_z = (-ratio/2)*map.getHeight();
