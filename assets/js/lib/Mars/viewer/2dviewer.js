@@ -12,7 +12,7 @@
 		this.options = (options) ? options : {};
 		this.context = element.getContext('2d');
 		this.position = {x:0, y:0};
-		this.valPixel = 2;
+		this.valPixel = 10;
 
 		this.stepX = 0;
 		this.stepY = 0;
@@ -39,6 +39,11 @@
 			
 		}
 
+
+		var width = this.element.width;
+		var height = this.element.height;
+		var i = 0;
+		 
 		this.initRover();
 
 		//dessin de la grille
@@ -56,21 +61,39 @@
 			}
 		}
 
+		var opacity = 1;
+		var valPixel = 3;
+		var y = valPixel;
+		for (var i = 0; i < 10; i++) {
+			shade = 'rgba(68, 68, 68, '+ opacity +')';
+			this.context.fillStyle = shade;
+			if(i==0){
+				this.context.fillRect(0, i, width, y); // top
+				this.context.fillRect(0, height - i + 1, width, y); // bottom
+				this.context.fillRect(i, 0, y, height) // left
+				this.context.fillRect(width - i + 1, 0, y, height) // right
+			}else{
+				this.context.fillRect(0, y, width, valPixel); // top
+				this.context.fillRect(0, height - y + 1, width, valPixel); // bottom
+				this.context.fillRect(y, 0, valPixel, height) // left
+				this.context.fillRect(width - y + 1, 0, valPixel, height) // right
+				y += valPixel;	
+			}		
+			opacity -= 0.1;
+
+		};
+
 		this.listenRover();
 		
 	}
 
 	nsViewer.Viewer2D.prototype.drawRover = function(data){
-		var square = this.viewer.map.getSquare(data.lastX, data.lastY);
 
-		if (square) {
-			var elevevation =  square.z;
+		this.context.fillStyle = 'rgba(48, 244, 255, 0.6)';
+		this.context.fillRect(data.newX * this.valPixel, data.newY * this.valPixel, this.valPixel, this.valPixel);
+		this.context.fillStyle = 'rgba(198, 240, 242, 0.2)';
+		this.context.fillRect(data.lastX * this.valPixel, data.lastY * this.valPixel, this.valPixel, this.valPixel);
 		
-			this.context.fillStyle = 'rgba(48, 244, 255, 0.6)';
-			this.context.fillRect(data.newX * this.valPixel, data.newY * this.valPixel, this.valPixel, this.valPixel);
-			this.context.fillStyle = 'rgba(198, 240, 242, 0.2)';
-			this.context.fillRect(data.lastX * this.valPixel, data.lastY * this.valPixel, this.valPixel, this.valPixel);
-		}
 	}
 
 	nsViewer.Viewer2D.prototype.initRover = function(){

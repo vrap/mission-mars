@@ -148,7 +148,6 @@
 					console.log(this.geometry.vertices[index]);
 				}
 				
-
 				this.positionMemory[i][j] = {
 					x : this.geometry.vertices[index].x,
 					y : this.geometry.vertices[index].y,
