@@ -611,16 +611,33 @@
      * @this {Rover}
      * @todo Manage a scan material of 2 square which let us knowing the first square.
      */
-    nsRover.Rover.prototype.fullScan = function() {
-	var deferreds = []
+    nsRover.Rover.prototype.fullScan = function(elevations, materials) {
+	elevations = (elevations == false) ? false : true;
+	materials  = (materials == false) ? false : true;
 
-        for (var directionName in this.constructor.DIRECTION) {
-	    var direction = this.constructor.DIRECTION[directionName];
+	if (elevations || materials) {
+	    var deferreds = []
 
-	    deferreds.push(this.scanElevation(direction, 1));
-	    deferreds.push(this.scanMaterial(direction, 2));
-        }
+            for (var directionName in this.constructor.DIRECTION) {
+		var direction = this.constructor.DIRECTION[directionName];
 
-	return Q.all(deferreds);
+		if (elevations) {
+		    deferreds.push(this.scanElevation(direction, 1));
+		}
+
+		if (materials) {
+		    deferreds.push(this.scanMaterial(direction, 2));
+		}
+            }
+
+	    return Q.all(deferreds);
+	}
+	else {
+	    var defer = Q.defer();
+
+	    defer.resolve();
+
+	    return defer.promise;
+	}
     };
 })();
