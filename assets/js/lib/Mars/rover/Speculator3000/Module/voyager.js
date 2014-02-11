@@ -40,10 +40,21 @@
 
         this.speculator.observer.publish('s3000.module.start.begin');
 
-	this.voyage(destination).then(function() {
-	    console.log(this.speculator.rover.memory.readAll());
-	    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
-	}.bind(this));
+	this.voyage(destination)
+	    .then(
+		function() {
+		    this.speculator.rover.removeBufferedActions();
+		    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+
+		    console.log(this.speculator.rover.memory.readAll());
+		}.bind(this)
+	    )
+	    .fail(
+		function() {
+		    this.speculator.rover.removeBufferedActions();
+		    this.speculator.observer.publish('s3000.module.start.end', [{status: false}]);
+		}.bind(this)
+	    );
     };
 
     nsVoyager.Voyager.prototype.voyage = function(destination, options, defer) {
