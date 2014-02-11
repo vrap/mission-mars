@@ -14,7 +14,7 @@
     nsRover.Rover = function(map, x, y, tankSize) {
 	/* Check if the map is in the good format. */
 	if (! (map instanceof nsCommon.Map)) {
-	    throw new Error('Map need to be an instance of Map.');
+	    throw new Error(nsRover.Rover.MESSAGE.E_INVALID_MAP);
 	}
 
 	this.map = map;
@@ -58,7 +58,7 @@
 	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, 0);
 	}
     };
-
+    
     /* Constant that represent the list of possible directions. */
     nsRover.Rover.DIRECTION = {
 	NORTH: 0,
@@ -72,39 +72,60 @@
     };
 
     /* Energy cost for each movements (direction). */
-    /*nsRover.Rover.MOVE_COST = {
-	NORTH: 1,
-	NORTH_EAST: 1.4,
-	EAST: 1,
-	SOUTH_EAST: 1.4,
-	SOUTH: 1,
-	SOUTH_WEST: 1.4,
-	WEST: 1,
-	NORTH_WEST: 1.4
-    };*/
-
     nsRover.Rover.MOVE_COST = {
-	NORTH: 0,
-	NORTH_EAST: 0,
-	EAST: 0,
-	SOUTH_EAST: 0,
-	SOUTH: 0,
-	SOUTH_WEST: 0,
-	WEST: 0,
-	NORTH_WEST: 0
+		NORTH: 1,
+		NORTH_EAST: 1.4,
+		EAST: 1,
+		SOUTH_EAST: 1.4,
+		SOUTH: 1,
+		SOUTH_WEST: 1.4,
+		WEST: 1,
+		NORTH_WEST: 1.4
     };
 
     /* Energy cost for each distance of sensor. */
-    /*nsRover.Rover.SENSOR_COST = {
-	BELOW: 0.1,
-	NEIGHBOR: 0.2,
-	REMOTE: 0.4
-    };*/
-
     nsRover.Rover.SENSOR_COST = {
-	BELOW: 0,
-	NEIGHBOR: 0,
-	REMOTE: 0
+		MATERIALS: {
+		    BELOW: 0.1,
+		    NEIGHBOR: 0.2,
+		    REMOTE: 0.4
+		},
+		ELEVATION: {
+		    BELOW: 0,
+		    NEIGHBOR: 0,
+		    REMOTE: 0.1
+		}
+    };
+
+    /* Messages constants. */
+    nsRover.Rover.MESSAGE = {
+		E_NEED_MORE_TANK: 0,
+		E_SLOPE_IS_TOO_IMPORTANT: 1,
+		E_MAP_UNDISCOVERED: 2,
+		E_INVALID_DISTANCE: 3,
+		E_INVALID_MAP: 4
+    };
+
+    /**
+     * Get distance as a string.
+     *
+     * @this {Rover}
+     * @param {integer} distance The distance to convert.
+     * @return {string} The distance as a string.
+     */
+    nsRover.Rover.prototype.getDistanceAsString = function(distance) {
+	switch (distance) {
+	    case 0:
+	    return 'BELOW';
+	    break;
+	    case 1:
+	    return 'NEIGHBOR';
+	    break;
+	    default:
+	    return 'REMOTE';
+	    break;
+	}
+>>>>>>> 380a5015af293d3f332ad5604dc01001a3308469
     };
 
 
@@ -247,6 +268,25 @@
      * @return {object}            Return an object containing informations about the square if exist; null otherwise.
      */
     nsRover.Rover.prototype.getSquare = function(direction, distance) {
+	var square = this.getSquareFromDirection(direction, distance);
+	var data = this.map.getSquare(square.x, square.y);
+
+	if (data) {
+	    /* Add square to memory. */
+	    this.memory.createOrUpdate(data.x, data.y, data.z, data.type, 0);
+
+	    return {
+		x: square.x,
+		y: square.y,
+		z: data.z,
+		type: data.type
+	    };
+	}
+
+	return null;
+    };
+
+    nsRover.Rover.prototype.getSquareFromDirection = function(direction, distance) {
 	var x = this.x;
 	var y = this.y;
 
@@ -281,21 +321,7 @@
 	    break;
 	}
 
-	var square = this.map.getSquare(x, y);
-
-	if (square) {
-	    /* Add square to memory. */
-	    this.memory.createOrUpdate(x, y, square.z, square.type, 0);
-
-	    return {
-		x: x,
-		y: y,
-		z: square.z,
-		type: square.type
-	    };
-	}
-
-	return null;
+	return {x: x, y: y};
     };
 
     /**
@@ -357,7 +383,7 @@
 	else {
 	    return this.executeAction('getPosition', null, 0);
 	}
-    }
+    };
 
     /**
      * Change rover direction.
@@ -400,7 +426,7 @@
     nsRover.Rover.prototype.move = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    /* Retrieve the current direction of the rover to move on. */
-            var direction = this.direction;
+	    var direction = this.direction;
 
 	    var currentSquare = this.getSquare(direction, 0);
 	    var destinationSquare = this.getSquare(direction, 1);
@@ -417,16 +443,14 @@
 		    if (directionCode == direction) {
 			for (var moveCostName in this.constructor.MOVE_COST) {
 			    var moveCost = this.constructor.MOVE_COST[directionName];
+			    var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
+
+			    var elevationCost = moveCost * (1 + slope);
+			    var finalCost = elevationCost + moveCost;
 
 			    /* Calculate the cost of travel and removes from tank. */
-			    if (moveCost <= this.tank) {
-				var slope = this.calculateSlop(lastZ, destinationSquare.z, 1);
-
-				if (slope <= 150) {
-				    // The distance cost plus the tank cost from the elevation
-				    var elevationCost = moveCost * (1 + slope);
-				    var finalCost = elevationCost + moveCost;
-
+			    if (finalCost <= this.tank) {
+				if (slope <= 1.5) {
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
@@ -444,20 +468,20 @@
 				    };
 				}
 				else {
-				    throw new Error('Slope is too important.');
+				    throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
 				}
 
 				break;
 			    }
 			    else {
-				throw new Error('You need more tank.');
+				throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 			    }
 			}
 		    }
 		}
 	    }
 	    else {
-		throw new Error('The map is undiscovered here.');
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	}
 	else {
@@ -484,31 +508,32 @@
     nsRover.Rover.prototype.scanElevation = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    if (distance < 0 || distance > 2) {
-		throw new Error('Distance can only be set to 0 or 2.');
+		throw new Error(nsRover.Rover.MESSAGE.E_INVALID_DISTANCE);
 	    }
 
 	    var square = this.getSquare(direction, distance);
 
 	    if (square === null) {
-		throw new Error('The map is undiscovered here.');
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	    else {
 		if (this.memory.has(square.x, square.y, 'z')) {
 		    return this.memory.get(square.x, square.y);
 		}
 		else {
-		    if (distance == 2) {
-			var scanCost = 0.1 * distance;
+		    var sensorCost = nsRover.Rover.SENSOR_COST.ELEVATION[this.getDistanceAsString(distance)];
 
-			if (scanCost <= this.tank) {
-			    this.tank -= scanCost;
+		    if (sensorCost <= this.tank) {
+			this.tank -= sensorCost;
+
+			return {
+			    direction: direction,
+			    distance: distance,
+			    elevation: square.z
 			}
 		    }
-
-		    return {
-			direction: direction,
-			distance: distance,
-			elevation: square.z
+		    else {
+			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 		    }
 		}
 	    }
@@ -537,13 +562,13 @@
     nsRover.Rover.prototype.scanMaterial = function(direction, distance) {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    if (distance < 0 || distance > 2) {
-		throw new Error('Distance can only be set to 0 or 2.');
+		throw new Error(nsRover.Rover.MESSAGE.E_INVALID_DISTANCE);
 	    }
 
 	    var square = this.getSquare(direction, distance);
 
 	    if (square === null) {
-		throw new Error('The map is undiscovered here.');
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	    else {
 		if (square.type == 4) {
@@ -554,20 +579,19 @@
 		    return this.memory.get(square.x, square.y);
 		}
 		else {
-		    if (distance == 0 && this.tank >= 0.1) {
-			this.tank -= 0.1;
-		    }
-		    else if (distance == 1 && this.tank >= 0.2) {
-			this.tank -= 0.2;
-		    }
-		    else if (distance == 2 && this.tank >= 0.4) {
-			this.tank -= 0.4;
-		    }
+		    var sensorCost = nsRover.Rover.SENSOR_COST.MATERIALS[this.getDistanceAsString(distance)];
 
-		    return {
-			direction: direction,
-			distance: distance,
-			type: square.type
+		    if (sensorCost <= this.tank) {
+			this.tank -= sensorCost;
+
+			return {
+			    direction: direction,
+			    distance: distance,
+			    type: square.type
+			}
+		    }
+		    else {
+			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 		    }
 		}
 	    }
@@ -616,16 +640,33 @@
      * @this {Rover}
      * @todo Manage a scan material of 2 square which let us knowing the first square.
      */
-    nsRover.Rover.prototype.fullScan = function() {
-	var deferreds = []
+    nsRover.Rover.prototype.fullScan = function(elevations, materials) {
+	elevations = (elevations == false) ? false : true;
+	materials  = (materials == false) ? false : true;
 
-        for (var directionName in this.constructor.DIRECTION) {
-	    var direction = this.constructor.DIRECTION[directionName];
+	if (elevations || materials) {
+	    var deferreds = []
 
-            deferreds.push(this.scanElevation(direction, 1));
-            deferreds.push(this.scanMaterial(direction, 2));
-        }
+            for (var directionName in this.constructor.DIRECTION) {
+		var direction = this.constructor.DIRECTION[directionName];
 
-	return Q.all(deferreds);
+		if (elevations) {
+		    deferreds.push(this.scanElevation(direction, 1));
+		}
+
+		if (materials) {
+		    deferreds.push(this.scanMaterial(direction, 2));
+		}
+            }
+
+	    return Q.all(deferreds);
+	}
+	else {
+	    var defer = Q.defer();
+
+	    defer.resolve();
+
+	    return defer.promise;
+	}
     };
 })();
