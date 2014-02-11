@@ -241,8 +241,8 @@
   	if(this.options.cameraControl == false){
   		this.camera.position.x = this.targetPositionX;
     	this.camera.position.z = this.targetPositionZ;
-    	this.camera.position.y = this.targetPositionY;
-    	this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY, this.newtargetPositionZ));
+    	this.camera.position.y = this.targetPositionY / this.RATIO_Z;
+    	this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY / this.RATIO_Z, this.newtargetPositionZ));
   	}
 
     this.renderer.render(this.scene, this.camera);
