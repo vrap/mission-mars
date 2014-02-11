@@ -55,7 +55,7 @@
 
 	if (spawnSquare) {
 	    /* Add square to memory. */
-	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, 0);
+	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, true);
 	}
     };
     
@@ -271,9 +271,6 @@
 	var data = this.map.getSquare(square.x, square.y);
 
 	if (data) {
-	    /* Add square to memory. */
-	    this.memory.createOrUpdate(data.x, data.y, data.z, data.type, 0);
-
 	    return {
 		x: square.x,
 		y: square.y,
@@ -433,55 +430,51 @@
 
 	    /* If the rover is still within the limits of the map. */
 	    if (destinationSquare !== null) {
-		var lastX = currentSquare.x;
-		var lastY = currentSquare.y;
-		var lastZ = currentSquare.z;
+			var lastX = currentSquare.x;
+			var lastY = currentSquare.y;
+			var lastZ = currentSquare.z;
 
-		for (var directionName in this.constructor.DIRECTION) {
-		    var directionCode = this.constructor.DIRECTION[directionName];
+			for (var directionName in this.constructor.DIRECTION) {
+		    	var directionCode = this.constructor.DIRECTION[directionName];
 
-		    if (directionCode == direction) {
-				for (var moveCostName in this.constructor.MOVE_COST) {
-				    var moveCost = this.constructor.MOVE_COST[directionName];
-				    var slope = this.calculateSlope(lastZ, destinationSquare.z);
+			    if (directionCode == direction) {
+					for (var moveCostName in this.constructor.MOVE_COST) {
+					    var moveCost = this.constructor.MOVE_COST[directionName];
+					    var slope = this.calculateSlope(lastZ, destinationSquare.z);
 
-				    var elevationCost = moveCost * (1 + slope);
-				    var finalCost = elevationCost + moveCost;
+					    var elevationCost = moveCost * (1 + slope);
+					    var finalCost = elevationCost + moveCost;
 
-				    /* Calculate the cost of travel and removes from tank. */
-				    if (finalCost <= this.tank) {
-						if (slope <= 0.5) {
-						    /* Move the rover to the destination square. */
-						    this.x = destinationSquare.x;
-						    this.y = destinationSquare.y;
+					    /* Calculate the cost of travel and removes from tank. */
+					    if (finalCost <= this.tank) {
+							// Final value. Please do not touch, even for tests!
+							if (slope <= 0.5) {
+							    /* Move the rover to the destination square. */
+							    this.x = destinationSquare.x;
+							    this.y = destinationSquare.y;
 
-						    /* Increase movements and decrease the energy. */
-						    this.moves++;
-						    this.tank -= finalCost;
+							    /* Increase movements and decrease the energy. */
+							    this.moves++;
+							    this.tank -= finalCost;
 
-						    return {
-								direction: direction,
-								lastX: lastX,
-								lastY: lastY,
-								newX: this.x,
-								newY: this.y
-						    };
-						}
-						else {
-						    throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
-						}
+							    /* Add to memory. */
+							    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
 
-						break;
-				    }
-				    else {
-						throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
-				    }
+							    return {
+									direction: direction,
+									lastX: lastX,
+									lastY: lastY,
+									newX: this.x,
+									newY: this.y
+							    };
+							}
+			    		}
+					}
 				}
-		    }
-		}
+			}
 	    }
 	    else {
-		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
+			throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	}
 	else {
@@ -524,6 +517,8 @@
 		    var sensorCost = nsRover.Rover.SENSOR_COST.ELEVATION[this.getDistanceAsString(distance)];
 
 		    if (sensorCost <= this.tank) {
+			this.memory.createOrUpdate(square.x, square.y, square.z);
+
 			this.tank -= sensorCost;
 
 			return {
@@ -582,6 +577,8 @@
 		    var sensorCost = nsRover.Rover.SENSOR_COST.MATERIALS[this.getDistanceAsString(distance)];
 
 		    if (sensorCost <= this.tank) {
+			this.memory.createOrUpdate(square.x, square.y, null, square.type);
+
 			this.tank -= sensorCost;
 
 			return {

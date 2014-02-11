@@ -39,16 +39,34 @@
 	var destination = arguments[0][0];
 
         this.speculator.observer.publish('s3000.module.start.begin');
-	this.voyage(destination);
+
+	this.voyage(destination).then(function() {
+	    console.log(this.speculator.rover.memory.readAll());
+	    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+	}.bind(this));
     };
 
-    nsVoyager.Voyager.prototype.voyage = function(destination) {
+    nsVoyager.Voyager.prototype.voyage = function(destination, options, defer) {
+	if (typeof options != 'object') {
+	    options = {
+		autoLoadTank: true,
+		escapeObstacle: true
+	    };
+	}
+	else {
+	    options.autoLoadTank = (options.autoLoadTank === false) ? false : true;
+	    options.escapeObstacle = (options.escapeObstacle === false) ? false : true;
+	}
+	if (!defer) {
+	    defer = Q.defer();
+	}
+
 	var currentPosition, invertedDirection, randPosition;
 	var rover = this.speculator.rover;
 	var position = { x: rover.x, y: rover.y };
 
 	if (rover.x == destination.x && rover.y == destination.y) {
-            this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+	    defer.resolve();
 
 	    return;
 	}
@@ -82,28 +100,42 @@
 	    this.speculator.rover.setDirection(data).then(function(data) {
 		var rover = this.speculator.rover;
 
-		rover.move().then(function() {
-		    this.voyage(destination);
-		}.bind(this), function(data) {
-		    if (data.error.message == this.speculator.rover.constructor.MESSAGE.E_NEED_MORE_TANK) {
-			this.speculator.rover.deploySolarPanels().then(function() {
-			    this.voyage(destination);
-			}.bind(this));
-		    }
-		    else {
-			this.speculator.getSideDirection().done(function(directions) {
-			    var direction = directions[Math.floor(Math.random() * directions.length)];
+		this.speculator.moveAndScan(true, false).then(
+		    function() {
+			this.voyage(destination, options, defer);
+		    }.bind(this),
+		    function(data) {
+			if (data.error.message == this.speculator.rover.constructor.MESSAGE.E_NEED_MORE_TANK) {
+			    this.speculator.rover.deploySolarPanels().then(function() {
+				this.voyage(destination, options, defer);
+			    }.bind(this));
+			}
+			else {
+			    this.speculator.getSideDirection().done(function(directions) {
+				var rover = this.speculator.rover;
+				var squares = [];
 
-			    this.speculator.rover.setDirection(direction).then(function() {
-				this.speculator.rover.move().then(function() {
-				    this.voyage(destination);
+				for (directionKey in directions) {
+				    var dir = directions[directionKey];
+				    var pos = rover.getSquareFromDirection(dir, 1);
+				    var square = rover.memory.get(pos.x, pos.y);
+				    squares.push(square);
+				}
+				console.log(squares);
+
+				var direction = directions[Math.floor(Math.random() * directions.length)];
+				this.speculator.rover.setDirection(direction).then(function() {
+				    this.speculator.rover.move().then(function() {
+					this.voyage(destination, options, defer);
+				    }.bind(this));
 				}.bind(this));
 			    }.bind(this));
-			}.bind(this));
-		    }
-		}.bind(this));
+			}
+		    }.bind(this));
 	    }.bind(this));
 	}.bind(this));
+
+	return defer.promise;
     };
 
     /* Add the voyager module to Speculator3000. */

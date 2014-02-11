@@ -253,15 +253,11 @@
 		return defer.promise;
 	};
 
-	nsSpeculator.S3000.prototype.fullScan = function() {
-		return this.rover.fullScan();
-	};
-
-	nsSpeculator.S3000.prototype.moveAndScan = function() {
+	nsSpeculator.S3000.prototype.moveAndScan = function(elevations, materials) {
 		var deferreds = []
 
 		deferreds.push(this.rover.move());
-		deferreds.push(this.fullScan());
+		deferreds.push(this.rover.fullScan(elevations, materials));
 
 		return Q.all(deferreds).fail(function(data) {
 			alert('ERROR!!!!');
