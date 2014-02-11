@@ -70,8 +70,32 @@
 		return square[0];
 	    }
 	}
+    };
 
-	return null;
+    /**
+     * Read a range of squares stored in memory.
+     *
+     * @this {Memory}
+     * @param {integer}  x1 position of the first square of the range.
+     * @param {integer}  x2 position of the first square of the range.
+     * @param {integer}  y1 position of the first square of the range.
+     * @param {integer}  y2 position of the first square of the range.
+     * @return {array} An array of squares.
+     */
+    nsMemory.Memory.prototype.getRange = function(x1, y1, x2, y2) {
+	var squares = [];
+
+	for (var i = x1; i <= x2; i++) {
+	    for (var j = y1; j <= y2; j++) {
+		var square = this.get(i, j);
+
+		if (square) {
+		    squares.push(this.get(i, j));
+		}
+	    }
+	}
+
+	return squares;
     };
 
     /**
