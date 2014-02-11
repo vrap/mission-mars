@@ -34,18 +34,18 @@
     var materialOther = new nsMaterial.Other();
 
     /* Loading elements. */
-    var elementCrater = new nsElements.CraterModel([materialSand], -20, 40, 2);
-    var elementHill   = new nsElements.HillModel([materialSand], 0, 200, 2);
+    var elementCrater = new nsElements.CraterModel([materialSand], -40, 100, 2);
+    var elementHill   = new nsElements.HillModel([materialSand], 20, 200, 2);
     var elementRavine = new nsElements.RavineModel([materialRock], -60, 20, 2);
 
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
 			[{
 				"model": elementCrater,
-				"number": 1
+				"number": 2
 			},
 			{
 				"model": elementHill,
-				"number": 0
+				"number": 2
 			},
 			{
 				"model": elementRavine,
