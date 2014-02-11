@@ -73,37 +73,37 @@
 
     /* Energy cost for each movements (direction). */
     nsRover.Rover.MOVE_COST = {
-		NORTH: 1,
-		NORTH_EAST: 1.4,
-		EAST: 1,
-		SOUTH_EAST: 1.4,
-		SOUTH: 1,
-		SOUTH_WEST: 1.4,
-		WEST: 1,
-		NORTH_WEST: 1.4
+	NORTH: 1,
+	NORTH_EAST: 1.4,
+	EAST: 1,
+	SOUTH_EAST: 1.4,
+	SOUTH: 1,
+	SOUTH_WEST: 1.4,
+	WEST: 1,
+	NORTH_WEST: 1.4
     };
 
     /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
-		MATERIALS: {
-		    BELOW: 0,
-		    NEIGHBOR: 0,
-		    REMOTE: 0
-		},
-		ELEVATION: {
-		    BELOW: 0,
-		    NEIGHBOR: 0,
-		    REMOTE: 0
-		}
+	MATERIALS: {
+	    BELOW: 0,
+	    NEIGHBOR: 0,
+	    REMOTE: 0
+	},
+	ELEVATION: {
+	    BELOW: 0,
+	    NEIGHBOR: 0,
+	    REMOTE: 0
+	}
     };
 
     /* Messages constants. */
     nsRover.Rover.MESSAGE = {
-		E_NEED_MORE_TANK: 0,
-		E_SLOPE_IS_TOO_IMPORTANT: 1,
-		E_MAP_UNDISCOVERED: 2,
-		E_INVALID_DISTANCE: 3,
-		E_INVALID_MAP: 4
+	E_NEED_MORE_TANK: 0,
+	E_SLOPE_IS_TOO_IMPORTANT: 1,
+	E_MAP_UNDISCOVERED: 2,
+	E_INVALID_DISTANCE: 3,
+	E_INVALID_MAP: 4
     };
 
     /**
@@ -115,13 +115,13 @@
      */
     nsRover.Rover.prototype.getDistanceAsString = function(distance) {
 	switch (distance) {
-	    case 0:
+	case 0:
 	    return 'BELOW';
 	    break;
-	    case 1:
+	case 1:
 	    return 'NEIGHBOR';
 	    break;
-	    default:
+	default:
 	    return 'REMOTE';
 	    break;
 	}
@@ -341,19 +341,19 @@
      * @return {integer}      		   The slope (in %).
      */
     nsRover.Rover.prototype.calculateSlope = function(currentZ, destinationZ) {
-		var slope = (destinationZ - currentZ) / 5;
+	var slope = (destinationZ - currentZ) / 5;
 
-		return slope;
+	return slope;
 
-		/*distance = distance * 5;
-		current = currentZ * 5;
-		destination = destinationZ * 5;
+	/*distance = distance * 5;
+	  current = currentZ * 5;
+	  destination = destinationZ * 5;
 
-		var slope = (destination - current) / distance;
-	
-		slope = Math.round(Math.abs(slope));
+	  var slope = (destination - current) / distance;
+	  
+	  slope = Math.round(Math.abs(slope));
 
-		return slope;*/
+	  return slope;*/
     };
 
     /**
@@ -442,51 +442,57 @@
 
 	    /* If the rover is still within the limits of the map. */
 	    if (destinationSquare !== null) {
-			var lastX = currentSquare.x;
-			var lastY = currentSquare.y;
-			var lastZ = currentSquare.z;
+		var lastX = currentSquare.x;
+		var lastY = currentSquare.y;
+		var lastZ = currentSquare.z;
 
-			for (var directionName in this.constructor.DIRECTION) {
-		    	var directionCode = this.constructor.DIRECTION[directionName];
+		for (var directionName in this.constructor.DIRECTION) {
+		    var directionCode = this.constructor.DIRECTION[directionName];
 
-			    if (directionCode == direction) {
-					for (var moveCostName in this.constructor.MOVE_COST) {
-					    var moveCost = this.constructor.MOVE_COST[directionName];
-					    var slope = this.calculateSlope(lastZ, destinationSquare.z);
+		    if (directionCode == direction) {
+			for (var moveCostName in this.constructor.MOVE_COST) {
+			    var moveCost = this.constructor.MOVE_COST[directionName];
+			    var slope = this.calculateSlope(lastZ, destinationSquare.z);
 
-					    var elevationCost = moveCost * (1 + slope);
-					    var finalCost = elevationCost + moveCost;
+			    var elevationCost = moveCost * (1 + slope);
+			    var finalCost = elevationCost + moveCost;
 
-					    /* Calculate the cost of travel and removes from tank. */
-					    if (finalCost <= this.tank) {
-							// Final value. Please do not touch, even for tests!
-							if (slope <= 0.5) {
-							    /* Move the rover to the destination square. */
-							    this.x = destinationSquare.x;
-							    this.y = destinationSquare.y;
+			    /* Calculate the cost of travel and removes from tank. */
+			    if (finalCost <= this.tank) {
+				// Final value. Please do not touch, even for tests!
+				if (slope <= 0.5) {
+				    /* Move the rover to the destination square. */
+				    this.x = destinationSquare.x;
+				    this.y = destinationSquare.y;
 
-							    /* Increase movements and decrease the energy. */
-							    this.moves++;
-							    this.tank -= finalCost;
+				    /* Increase movements and decrease the energy. */
+				    this.moves++;
+				    this.tank -= finalCost;
 
-							    /* Add to memory. */
-							    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
+				    /* Add to memory. */
+				    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
 
-							    return {
-									direction: direction,
-									lastX: lastX,
-									lastY: lastY,
-									newX: this.x,
-									newY: this.y
-							    };
-							}
-			    		}
-					}
+				    return {
+					direction: direction,
+					lastX: lastX,
+					lastY: lastY,
+					newX: this.x,
+					newY: this.y
+				    };
 				}
+				else {
+				    throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
+				}
+			    }
+			    else {
+				throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
+			    }
 			}
+		    }
+		}
 	    }
 	    else {
-			throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 	    }
 	}
 	else {
@@ -650,32 +656,32 @@
      * @todo Manage a scan material of 2 square which let us knowing the first square.
      */
     nsRover.Rover.prototype.fullScan = function(elevations, materials) {
-		elevations = (elevations == false) ? false : true;
-		materials  = (materials == false) ? false : true;
+	elevations = (elevations == false) ? false : true;
+	materials  = (materials == false) ? false : true;
 
-		if (elevations || materials) {
-		    var deferreds = []
+	if (elevations || materials) {
+	    var deferreds = []
 
-	            for (var directionName in this.constructor.DIRECTION) {
-			var direction = this.constructor.DIRECTION[directionName];
+	    for (var directionName in this.constructor.DIRECTION) {
+		var direction = this.constructor.DIRECTION[directionName];
 
-			if (elevations) {
-			    deferreds.push(this.scanElevation(direction, 1));
-			}
-
-			if (materials) {
-			    deferreds.push(this.scanMaterial(direction, 2));
-			}
-	            }
-
-		    return Q.all(deferreds);
+		if (elevations) {
+		    deferreds.push(this.scanElevation(direction, 1));
 		}
-		else {
-		    var defer = Q.defer();
 
-		    defer.resolve();
-
-		    return defer.promise;
+		if (materials) {
+		    deferreds.push(this.scanMaterial(direction, 2));
 		}
+	    }
+
+	    return Q.all(deferreds);
+	}
+	else {
+	    var defer = Q.defer();
+
+	    defer.resolve();
+
+	    return defer.promise;
+	}
     };
 })();
