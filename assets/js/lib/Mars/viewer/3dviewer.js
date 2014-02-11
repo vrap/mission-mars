@@ -21,7 +21,8 @@
 	 */
 	nsViewer.Viewer3D = function(viewer, element, options) {
 		this.viewer = viewer;
-    	this.MAP_RATIO = 1.5;
+    	this.MAP_RATIO = 1;
+      this.RATIO_Z = 5;
 
     	this.positionMemory = new Array();
 
@@ -142,7 +143,7 @@
 			this.positionMemory[i] = new Array();
 
 			for (var j = 0; j < this.viewer.map.getHeight(); j++) {
-				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z;
+				this.geometry.vertices[index].z = this.viewer.map._squares[i][j].z / this.RATIO_Z;
 
 				this.positionMemory[i][j] = {
 					x : this.geometry.vertices[index].x,
