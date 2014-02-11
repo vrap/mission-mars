@@ -55,7 +55,7 @@
 
 	if (spawnSquare) {
 	    /* Add square to memory. */
-	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, 0);
+	    this.memory.createOrUpdate(x, y, spawnSquare.z, spawnSquare.type, true);
 	}
     };
     
@@ -271,9 +271,6 @@
 	var data = this.map.getSquare(square.x, square.y);
 
 	if (data) {
-	    /* Add square to memory. */
-	    this.memory.createOrUpdate(data.x, data.y, data.z, data.type, 0);
-
 	    return {
 		x: square.x,
 		y: square.y,
@@ -449,7 +446,7 @@
 
 			    /* Calculate the cost of travel and removes from tank. */
 			    if (finalCost <= this.tank) {
-				if (slope <= 1.5) {
+				if (slope <= 150) {
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
@@ -457,6 +454,9 @@
 				    /* Increase movements and decrease the energy. */
 				    this.moves++;
 				    this.tank -= finalCost;
+
+				    /* Add to memory. */
+				    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
 
 				    return {
 					direction: direction,
@@ -523,6 +523,8 @@
 		    var sensorCost = nsRover.Rover.SENSOR_COST.ELEVATION[this.getDistanceAsString(distance)];
 
 		    if (sensorCost <= this.tank) {
+			this.memory.createOrUpdate(square.x, square.y, square.z);
+
 			this.tank -= sensorCost;
 
 			return {
@@ -581,6 +583,8 @@
 		    var sensorCost = nsRover.Rover.SENSOR_COST.MATERIALS[this.getDistanceAsString(distance)];
 
 		    if (sensorCost <= this.tank) {
+			this.memory.createOrUpdate(square.x, square.y, null, square.type);
+
 			this.tank -= sensorCost;
 
 			return {
