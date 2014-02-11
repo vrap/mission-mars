@@ -157,3 +157,18 @@ function promiseWhile(condition, body) {
     // The promise
     return done.promise;
 }
+
+/**
+ * Copy an object.
+ *
+ * Found at : http://jsperf.com/cloning-an-object/2
+ */
+function clone(obj) {
+    var target = {};
+    for (var i in obj) {
+	if (obj.hasOwnProperty(i)) {
+	    target[i] = obj[i];
+	}
+    }
+    return target;
+}

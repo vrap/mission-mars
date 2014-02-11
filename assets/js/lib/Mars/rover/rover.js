@@ -250,6 +250,9 @@
      * @param  {object} options An object containing the params to sends when publishing the event.
      */
     nsRover.Rover.prototype.publishEvent = function(channel, options) {
+	/* Clone options, we don't want to modify the reference. */
+	options = clone(options);
+
 	/* Initialize default options. */
 	options = (options && Object.keys(options).length > 0) ? options : {};
 	channel = 'rover.' + channel;
