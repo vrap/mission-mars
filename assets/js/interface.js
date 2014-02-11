@@ -133,23 +133,19 @@ var scripts = [
         alert("Invalid energy value !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-startX').value)
-          || parseInt(document.querySelector('#voyager-startX').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-startX').value)) {
         alert("Invalid starting position X !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-startY').value)
-          || parseInt(document.querySelector('#voyager-startY').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-startY').value)) {
         alert("Invalid starting position Y !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-endX').value)
-          || parseInt(document.querySelector('#voyager-endX').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-endX').value)) {
         alert("Invalid ending position X !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-endY').value)
-          || parseInt(document.querySelector('#voyager-endY').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-endY').value)) {
         alert("Invalid ending position Y !");
 
         return false;
