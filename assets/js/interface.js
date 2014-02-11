@@ -17,8 +17,11 @@ var scripts = [
 	 * Home page gestion
 	 */
 	document.querySelector('.view').style.display = 'none';
-
-
+  document.querySelector('#bloc-panel-minimap').style.display = 'none';
+  document.querySelector('#bloc-panel-minimap-hover').style.display = 'none';
+  document.querySelector('#panel-minimap').style.display = 'none';
+  document.querySelector('#bloc-pop').style.display = 'none';
+  document.querySelector('#panel-infos').style.display = 'none';
   document.querySelector('#voyager-settings').style.display = 'none';
   document.querySelector('#explorer-settings').style.display = 'none';
 
