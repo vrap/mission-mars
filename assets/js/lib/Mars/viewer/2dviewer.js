@@ -12,7 +12,7 @@
 		this.options = (options) ? options : {};
 		this.context = element.getContext('2d');
 		this.position = {x:0, y:0};
-		this.valPixel = 2;
+		this.valPixel = 7;
 
 		this.stepX = 0;
 		this.stepY = 0;

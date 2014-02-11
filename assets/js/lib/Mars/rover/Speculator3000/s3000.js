@@ -259,6 +259,9 @@
 		deferreds.push(this.rover.move());
 		deferreds.push(this.rover.fullScan(elevations, materials));
 
-		return Q.all(deferreds);
+		return Q.all(deferreds).fail(function(data) {
+			alert('ERROR!!!!');
+			console.log(data);
+		});
 	};
 })();
