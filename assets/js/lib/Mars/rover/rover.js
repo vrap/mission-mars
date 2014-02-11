@@ -43,7 +43,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 15;
+	this.roundTime = 0.01;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -72,7 +72,7 @@
     };
 
     /* Energy cost for each movements (direction). */
-    nsRover.Rover.MOVE_COST = {
+    /*nsRover.Rover.MOVE_COST = {
 	NORTH: 1,
 	NORTH_EAST: 1.4,
 	EAST: 1,
@@ -81,14 +81,32 @@
 	SOUTH_WEST: 1.4,
 	WEST: 1,
 	NORTH_WEST: 1.4
+    };*/
+
+    nsRover.Rover.MOVE_COST = {
+	NORTH: 0,
+	NORTH_EAST: 0,
+	EAST: 0,
+	SOUTH_EAST: 0,
+	SOUTH: 0,
+	SOUTH_WEST: 0,
+	WEST: 0,
+	NORTH_WEST: 0
     };
 
     /* Energy cost for each distance of sensor. */
-    nsRover.Rover.SENSOR_COST = {
+    /*nsRover.Rover.SENSOR_COST = {
 	BELOW: 0.1,
 	NEIGHBOR: 0.2,
 	REMOTE: 0.4
+    };*/
+
+    nsRover.Rover.SENSOR_COST = {
+	BELOW: 0,
+	NEIGHBOR: 0,
+	REMOTE: 0
     };
+
 
     /**
      * Execute an action of the rover.

@@ -291,7 +291,7 @@
 	nsViewer.Viewer3D.prototype.move = function(data){
 		console.log('in move');
 		console.log('direction = ' + data.direction);
-		
+
 		var z = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
 		var d = 0.75 * this.viewer.map.getWidth() - (0.75 * this.viewer.map.getWidth()*2);
 		var ratio = 3.08;

@@ -143,7 +143,7 @@
   });
   observable.subscribe('rover.move.end', function(data) {
 
-  });
+  });	
 
 	/* Rover tests. */
   var module,
