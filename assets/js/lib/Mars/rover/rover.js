@@ -43,7 +43,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 0.01;
+	this.roundTime = 200;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -86,14 +86,14 @@
     /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
 		MATERIALS: {
-		    BELOW: 0.1,
-		    NEIGHBOR: 0.2,
-		    REMOTE: 0.4
+		    BELOW: 0,
+		    NEIGHBOR: 0,
+		    REMOTE: 0
 		},
 		ELEVATION: {
 		    BELOW: 0,
 		    NEIGHBOR: 0,
-		    REMOTE: 0.1
+		    REMOTE: 0
 		}
     };
 

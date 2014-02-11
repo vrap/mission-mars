@@ -28,7 +28,7 @@
 		this.element = element;
 		this.options = (options) ? options : {};
 		this.options.wireframe = this.options.wireframe || false;
-		this.options.axis = this.options.axis || false;
+		this.options.axis = this.options.axis || true;
 		this.options.cameraControl = this.options.cameraControl || false;
 		this.init();
 	};
@@ -47,7 +47,7 @@
 		this._loadSkyBox();
 		this._loadMap();
 		this._loadMaterials();
-		this._loadControls();
+    this._loadControls();
 		this._loadFog();
 
 		// Run the refresh animation while.
@@ -56,12 +56,11 @@
 		if (this.options.axis == true) {
 			looker = new THREE.AxisHelper(5);
 			this.scene.add(looker);
-
 			looker.material.linewidth = 3;
-
 			looker.position.x = -(parseInt(this.viewer.map.getWidth() /2) * this.MAP_RATIO);
-			looker.position.y = 0;
+			looker.position.y = 10;
 			looker.position.z = -(parseInt(this.viewer.map.getHeight() /2) * this.MAP_RATIO);
+
 		}
 	};
 
@@ -90,10 +89,9 @@
 	nsViewer.Viewer3D.prototype._loadControls = function() {
 		this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
 		this.controls.movementSpeed = 0.001;
-	    this.controls.lookSpeed = 0.001;
-	    //this.controls.lookVertical = false;
-	    this.controls.activeLook = false;
-	    this.controls.control = this.options.cameraControl;
+    this.controls.lookSpeed = 0.001;
+    this.controls.lookVertical = this.options.cameraControl;
+    this.controls.activeLook = this.options.cameraControl;
 	};
 
 	/**
@@ -118,7 +116,7 @@
 		this.camera.position.x = 0;
 		this.camera.position.y = 0;
 		this.camera.position.z = 0;
-		this.camera.setLens( 50 );
+		this.camera.setLens( 12 );
 
 		this.scene.add(this.camera);
 	};
@@ -237,16 +235,16 @@
 	/**
 	 * Renders the scene
 	 */
-	nsViewer.Viewer3D.prototype.render = function() {
-		this.controls.update(1);
+  nsViewer.Viewer3D.prototype.render = function() {
+    this.camera.position.x = this.targetPositionX;
+    this.camera.position.z = this.targetPositionZ;
+    this.camera.position.y = this.targetPositionY;
+    this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY, this.newtargetPositionZ));
 
-		this.camera.position.x = this.targetPositionX;
-		this.camera.position.z = this.targetPositionZ;
-		this.camera.position.y = this.targetPositionY;
-		this.camera.lookAt(new THREE.Vector3(this.targetPositionX, this.targetPositionY, this.targetPositionZ));
+    this.controls.update(1);
+    this.renderer.render(this.scene, this.camera);
+  };
 
-		this.renderer.render(this.scene, this.camera);
-	};
 
 	nsViewer.Viewer3D.prototype.mapToThree = function(x, z) {
 		var origin = -(parseInt(this.viewer.map.getWidth() /2) * this.MAP_RATIO);
@@ -262,24 +260,28 @@
 	 */
 	nsViewer.Viewer3D.prototype.animate = function() {
 		requestAnimationFrame(function() { this.animate(); }.bind(this));
-		this.render();
+    this.render();
 	};
 
-	nsViewer.Viewer3D.prototype.move = function(data) {
+	nsViewer.Viewer3D.prototype.move = function(data){
 	    if (!data.error) {
-		var y = data.rover.map._terrain.map[data.newX][data.newY].z + 10;
+		var y = data.rover.map._terrain.map[data.lastX][data.lastY].z + 10;
+		var lastCoord = this.mapToThree(data.lastX, data.lastY);
 		var newCoord = this.mapToThree(data.newX, data.newY);
 
-		this.targetPositionX = newCoord.x;
-		this.targetPositionZ = newCoord.z;
+		this.targetPositionX = lastCoord.x;
+		this.targetPositionZ = lastCoord.z;
 		this.targetPositionY = y;
+
+		this.newtargetPositionX = newCoord.x;
+		this.newtargetPositionZ = newCoord.z;
 	    }
 	}
 
   /**
    * Change camera's position in the direction wanted.
    */
-  nsViewer.Viewer3D.prototype.move_old = function(direction) {
+ /* nsViewer.Viewer3D.prototype.move_old = function(direction) {
     	if(false === this.options.cameraControl) {
 	      switch(direction){
 	        case nsRover.Rover.DIRECTION.NORTH:
@@ -337,5 +339,5 @@
 	          this.controls.moveLeft = false;
       		}
     	}
-	};
+	};*/
 })();

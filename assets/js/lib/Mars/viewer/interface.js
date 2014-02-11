@@ -168,6 +168,8 @@
 		viewer = this.viewer;
 		cameraOn = this.elements.control.cameraOn;
 		cameraOff = this.elements.control.cameraOff;
+    viewer.options.cameraControl = false;
+
 		this.elements.control.cameraOn.onclick = function (){
 			viewer.options.cameraControl = true;
 			viewer._loadControls();
@@ -178,7 +180,6 @@
 		this.elements.control.cameraOff.onclick = function (){
 			viewer.options.cameraControl = false;
 			viewer._loadControls();
-			console.log(wireframeOn);
 			addClass(this, ' active');
 			removeClass(cameraOn, 'active');
 		};

@@ -45,13 +45,13 @@
 			},
 			{
 				"model": elementHill,
-				"number": 20
+				"number": 0
 			},
 			{
 				"model": elementRavine,
 				"number": 0
 			}],
-			mapSize, mapSize, -10, 10);
+			mapSize, mapSize, -5, 5);
 		map = new nsCommon.Map(terrain);
 	}
 	
