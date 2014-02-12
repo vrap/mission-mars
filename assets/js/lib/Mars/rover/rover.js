@@ -485,7 +485,7 @@
 				}
 			    }
 			    else {
-				throw new Error(nsRover.Rover.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT);
+				throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 			    }
 			}
 		    }
