@@ -344,16 +344,6 @@
 	var slope = (destinationZ - currentZ) / 5;
 
 	return slope;
-
-	/*distance = distance * 5;
-	  current = currentZ * 5;
-	  destination = destinationZ * 5;
-
-	  var slope = (destination - current) / distance;
-	  
-	  slope = Math.round(Math.abs(slope));
-
-	  return slope;*/
     };
 
     /**
