@@ -172,3 +172,10 @@ function clone(obj) {
     }
     return target;
 }
+
+/**
+ * Check if a number is an int.
+ */
+function isInt(n) {
+   return typeof n === 'number' && parseFloat(n) == parseInt(n, 10) && !isNaN(n);
+}
