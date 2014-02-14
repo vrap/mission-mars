@@ -27,6 +27,8 @@
 
 
 	nsViewer.Viewer2D.prototype.init = function(){
+		/* 2D viewer initialization */
+		this.viewer._observer.publish('viewer.2d.init', [{'progress': 0}]);
 
 		// Taille du canvas
 		this.element.width = this.viewer.map.getWidth() * this.valPixel;
@@ -45,6 +47,7 @@
 		var i = 0;
 		 
 		this.initRover();
+		this.viewer._observer.publish('viewer.2d.init', [{'progress': 25}]);
 
 		//dessin de la grille
 		for(var x = 0; x < this.viewer.map.getWidth(); x++){
@@ -60,6 +63,7 @@
 				this.context.fillRect(x * this.valPixel, y * this.valPixel, this.valPixel, this.valPixel);
 			}
 		}
+		this.viewer._observer.publish('viewer.2d.init', [{'progress': 50}]);
 
 		var opacity = 1;
 		var valPixel = 3;
@@ -82,9 +86,10 @@
 			opacity -= 0.1;
 
 		};
+		this.viewer._observer.publish('viewer.2d.init', [{'progress': 75}]);
 
 		this.listenRover();
-		
+		this.viewer._observer.publish('viewer.2d.init', [{'progress': 100}]);
 	}
 
 	nsViewer.Viewer2D.prototype.drawRover = function(data){
