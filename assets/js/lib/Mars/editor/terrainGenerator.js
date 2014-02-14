@@ -1,14 +1,14 @@
 (function() {
     var nsEditor = using('mars.editor'),
-    nsMaterials = using('mars.common.material'),
-    nsElements = using('mars.editor.elements');
+    var nsMaterials = using('mars.common.material'),
+    var nsElements = using('mars.editor.elements');
 
     var rock = new nsMaterials.Rock (),
-    iron = new nsMaterials.Iron (),
-    ice = new nsMaterials.Ice (),
-    ore = new nsMaterials.Ore (),
-    sand = new nsMaterials.Sand (),
-    other = new nsMaterials.Other ();
+    var iron = new nsMaterials.Iron (),
+    var ice = new nsMaterials.Ice (),
+    var ore = new nsMaterials.Ore (),
+    var sand = new nsMaterials.Sand (),
+    var other = new nsMaterials.Other ();
 
     /**
      * TerrainGenerator
