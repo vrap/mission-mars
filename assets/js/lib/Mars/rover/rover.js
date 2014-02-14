@@ -265,9 +265,6 @@
 
 	/* Publish the event. */
 	this.observer.publish(channel, [options]);
-
-	/* Debug. */
-	console.debug('Publish event : ', channel, options);
     };
 
     /**
