@@ -1,12 +1,13 @@
 (function() {
     var nsViewer = using('mars.viewer');
-    
+    var nsCommon = using('mars.common');
 
     /**
      * Constructor
      */
     nsViewer.Viewer = function(map) {
 	this.map = map;
+	this._observer = new nsCommon.Observable();
 	this.viewers = {};
 	this._allowedType = {
 	    '2d': 'Viewer2D',
