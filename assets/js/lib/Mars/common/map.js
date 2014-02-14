@@ -61,4 +61,39 @@
 	    return this._squares[x][y];
 	}
     };
+
+    /**
+     * Check the validity of a map.
+     * @return {boolean}
+     */
+    nsCommon.Map.prototype.checkValidity = function() {
+	if (this.getWidth() == this.getHeight()) {
+	    for (var rowKey in this._squares) {
+		var row = this._squares[rowKey];
+
+		for (var columnKey in row) {
+		    var column = row[columnKey];
+
+		    if (column.hasOwnProperty('z') && column.hasOwnProperty('type')) {
+			if (!isInt(column.z)) {
+			    return false;
+			}
+
+			if (!isInt(column.type) || column.type < 0 || column.type > 5) {
+			    return false;
+			}
+		    }
+		    else {
+			return false;
+		    }
+		}
+	    }
+	}
+	else {
+
+	    return false;
+	}
+
+	return true;
+    };
 })();
