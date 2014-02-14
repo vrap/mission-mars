@@ -50,18 +50,28 @@
 	this._loadMaterials();
 	this._loadControls();
 	this._loadFog();
+	this._loadAxis();
 
 	// Run the refresh animation while.
 	this.animate();
+    };
 
+    /**
+     * If the option is enabled, add an axis helper at the origin of the map.
+     */
+    nsViewer.Viewer3D.prototype._loadAxis = function() {
 	if (this.options.axis == true) {
+	    /* Create an axis and add it to the scene. */
 	    looker = new THREE.AxisHelper(5);
 	    this.scene.add(looker);
+	    
+	    /* Define the line width of the axis. */
 	    looker.material.linewidth = 3;
+	    
+	    /* Position the axis helper at the map origin. */
 	    looker.position.x = -(parseInt(this.viewer.map.getWidth() /2) * this.MAP_RATIO);
 	    looker.position.y = 10;
 	    looker.position.z = -(parseInt(this.viewer.map.getHeight() /2) * this.MAP_RATIO);
-
 	}
     };
 
