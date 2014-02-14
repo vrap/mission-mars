@@ -38,22 +38,43 @@
      * Intialization
      */
     nsViewer.Viewer3D.prototype.init = function() {
+	/* 3D viewer initialization */
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 0}]);
+
 	// Initialize the scene.
 	this.scene = new THREE.Scene();
 
 	// Load every parts of the viewer
 	this._loadLight();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 10}]);
+
 	this._loadCamera();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 20}]);
+
 	this._loadRenderer();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 30}]);
+
 	this._loadSkyBox();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 40}]);
+
 	this._loadMap();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 50}]);
+
 	this._loadMaterials();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 60}]);
+
 	this._loadControls();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 70}]);
+
 	this._loadFog();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 80}]);
+
 	this._loadAxis();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 90}]);
 
 	// Run the refresh animation while.
 	this.animate();
+	this.viewer._observer.publish('viewer.3d.init', [{'progress': 100}]);
     };
 
     /**
