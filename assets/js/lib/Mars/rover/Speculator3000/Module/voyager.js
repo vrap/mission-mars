@@ -38,21 +38,36 @@
     nsVoyager.Voyager.prototype.start = function() {
 	var destination = arguments[0][0];
 
-        this.speculator.observer.publish('s3000.module.start.begin');
+        this.speculator.observer.publish(
+	    's3000.module.start.begin',
+	    [{
+		s3000: this.speculator
+	    }]
+	);
 
 	this.voyage(destination, { mission: true })
 	    .then(
 		function() {
 		    this.speculator.rover.removeBufferedActions();
-		    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
-
-		    console.log(this.speculator.rover.memory.readAll());
+		    this.speculator.observer.publish(
+			's3000.module.start.end',
+			[{
+			    s3000: this.speculator,
+			    status: true
+			}]
+		    );
 		}.bind(this)
 	    )
 	    .fail(
 		function() {
 		    this.speculator.rover.removeBufferedActions();
-		    this.speculator.observer.publish('s3000.module.start.end', [{status: false}]);
+		    this.speculator.observer.publish(
+			's3000.module.start.end',
+			[{
+			    s3000: this.speculator,
+			    status: false
+			}]
+		    );
 		}.bind(this)
 	    );
     };
