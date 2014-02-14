@@ -70,8 +70,32 @@
 		return square[0];
 	    }
 	}
+    };
 
-	return null;
+    /**
+     * Read a range of squares stored in memory.
+     *
+     * @this {Memory}
+     * @param {integer}  x1 position of the first square of the range.
+     * @param {integer}  x2 position of the first square of the range.
+     * @param {integer}  y1 position of the first square of the range.
+     * @param {integer}  y2 position of the first square of the range.
+     * @return {array} An array of squares.
+     */
+    nsMemory.Memory.prototype.getRange = function(x1, y1, x2, y2) {
+	var squares = [];
+
+	for (var i = x1; i <= x2; i++) {
+	    for (var j = y1; j <= y2; j++) {
+		var square = this.get(i, j);
+
+		if (square) {
+		    squares.push(this.get(i, j));
+		}
+	    }
+	}
+
+	return squares;
     };
 
     /**
@@ -83,38 +107,59 @@
      * @param  {integer}     y         position of the square.
      * @param  {integer}     z         elevation of the square.
      * @param  {integer}     type      nature of the square.
-     * @param  {integer}     status    state of the squre (0 (visited), 1 (inaccessible), -1 (yet unknown)).
-     * @return {boolean}               Return the new/updated square.
+     * @param  {boolean}     visited   how much time the square has been visited.
+     * @return {object}                Return the new/updated square.
      */
-    nsMemory.Memory.prototype.createOrUpdate = function(x, y, z, type, status) {
+    nsMemory.Memory.prototype.createOrUpdate = function(x, y, z, type, visited) {
 	if (x < 0 || y < 0) {
 	    throw new Error('X and Y can only be set superior to 0.');
 	}
 
-	if (type < 0 || type > 6) {
-	    throw new Error('Type can only be set between 1 and 6.');
-	}
-
-	if (status != 0 && status != 1 && status != -1) {
-	    throw new Error('Status can only be set between -1 and 1.');
-	}
-
-	var square = {};
+	var square = {
+	    x: x,
+	    y: y,
+	    z: null,
+	    visited: 0
+	};
 
 	if (this.has(x, y)) {
 	    square = this.get(x, y);
+	}
+
+	if (z != null) {
+	    if (isNaN(parseInt(z))) {
+		throw new Error('Z need to be an integer.');
+	    }
 
 	    square.z = z;
-	    square.type = type;
-	    square.status = status;
 	}
 	else {
-	    square.x = x;
-	    square.y = y;
-	    square.z = z;
-	    square.type = type;
-	    square.status = status;
+	    square.z = square.z;
+	}
 
+	if (type != null) {
+	    if (type < 0 || type > 6) {
+		throw new Error('Type can only be set between 1 and 6.');
+	    }
+
+	    square.type = type;
+	}
+	else {
+	   square.type = square.type;
+	}
+
+	if (visited != null) {
+	    if (typeof visited != 'boolean') {
+		throw new Error('Visited need to be a boolean.');
+	    }
+
+	    square.visited++;
+	}
+	else {
+	    square.visited = square.visited;
+	}
+
+	if (!this.has(x, y)) {
 	    this.memory.push(square);
 	}
 
@@ -138,7 +183,7 @@
 	    var square = this.get(x, y);
 	    square.z = null;
 	    square.type = null;
-	    square.status = null;
+	    square.visited = null;
 
 	    return true;
 	}
