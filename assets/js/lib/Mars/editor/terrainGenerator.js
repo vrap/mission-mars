@@ -531,6 +531,12 @@
      * @return {object} Return a map in json format.
      */
     nsEditor.TerrainGenerator.generate = function(materials, elements, width, height, zMin, zMax) {
+	/* Initialize observer. */
+	this._observer  = new nsCommon.Observable();
+
+	/* Terrain generator initialization */
+	this._observer.publish('editor.terrain.generator.generate', [{'progress': 0}]);
+
 	this._materials = materials;
 	this._elements  = elements;
 	this._width     = width;
@@ -540,12 +546,23 @@
 
 	this._map       = new Array();
 
+	/* Creating base of the terrain. */
 	this._createBase();
+	this._observer.publish('editor.terrain.generator.generate', [{'progress': 25}]);
+
+	/* Add some slope with diamond square algorithm. */
 	this._diamondSquare();
+	this._observer.publish('editor.terrain.generator.generate', [{'progress': 50}]);
+
+	/* Create elements. */
 	this._createElements();
+	this._observer.publish('editor.terrain.generator.generate', [{'progress': 75}]);
 
+	/* Smooth the terrain. */
 	this._smoothing();
+	this._observer.publish('editor.terrain.generator.generate', [{'progress': 100}]);
 
+	/* Return the generated terrrain as JSON. */
 	return this._toJSON();
     };
 })();
