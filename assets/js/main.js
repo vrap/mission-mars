@@ -17,7 +17,6 @@
     /* If user upload map load it; otherwize generate it. */
     if (document.getElementById('json').value != '') {
 	terrain = document.getElementById('json').value;
-	map = new nsCommon.Map(terrain);
     }
     else {
 	/* Retrieve defined map size. */
@@ -65,10 +64,10 @@
             -10,
 	    10
 	);
-
-	/* Load map from the generated terrain. */
-	map = new nsCommon.Map(terrain);
     }
+
+    /* Load map from terrain. */
+    map = new nsCommon.Map(terrain);
 
     /* Define viewers container. */
     var renderDiv = document.querySelector('#render');
