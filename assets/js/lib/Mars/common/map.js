@@ -23,7 +23,13 @@
      * Hydrates map from values of a JSon.
      */
     nsCommon.Map.prototype._fromJSON = function(terrain) {
-	this._terrain = JSON.parse(terrain);
+	try {
+	    this._terrain = JSON.parse(terrain);
+	}
+	catch(e) {
+	    throw new Error('Invalid JSON format');
+	}
+
 	this._squares = this._terrain.map;
     };
 
