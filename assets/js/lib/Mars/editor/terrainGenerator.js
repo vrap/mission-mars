@@ -1,24 +1,3 @@
-TerrainGeneration = function(width, height, _segments, _smoothingFactor) {
-  this.width = width;
-  this.height = height;
-  this._segments = _segments;
-  this._smoothingFactor = _smoothingFactor;
-  
-  this.terrain = new Array();
-  
-  // internal functions
-  this._init = function() {
-    this.terrain = new Array();
-    for(var i = 0; i <= this._segments; i++) {
-      this.terrain[i] = new Array();
-      for(var j = 0; j <= this._segments; j++) {
-        this.terrain[i][j] = 0;
-      }
-    }
-  };
-};
-
-
 (function() {
 	var nsEditor   = using('mars.editor'),
 		nsMaterials = using('mars.common.material'),
