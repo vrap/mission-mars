@@ -244,14 +244,18 @@
 				removeClass(panelControl, 'hide');
 				addClass(panelControl, 'show');
 
-				var elem = this;
-				var top = getElementTop(elem);
-				var left = getElementLeft(elem);
-
-				panelControl.style.top = (top - 330) + 'px';
-				panelControl.style.left = (left - 60) + 'px';
+				this.style.display = 'none';
 
 			}
 		};
+
+		this.elements.control.closePanel.onclick = function(e){
+			
+			var panelControl = document.querySelector('#panel-control');
+			removeClass(panelControl, 'show');
+			addClass(panelControl, 'hide');
+			this.elementControl.style.display = 'block';
+
+		}.bind(this);
 	}
 })();

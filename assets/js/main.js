@@ -41,7 +41,7 @@
 		terrain = nsEditor.TerrainGenerator.generate([materialRock, materialIce, materialIron, materialOre, materialSand, materialOther], 
 			[{
 				"model": elementCrater,
-				"number": 2
+				"number": 10
 			},
 			{
 				"model": elementHill,
@@ -81,6 +81,7 @@
 	 cameraOff = document.querySelector('#c2'),
 	 downloadMap = document.querySelector('#download'),
 	 blocPop = document.querySelector('#bloc-pop');
+	 closePanel = document.querySelector('#to-close-panel');
 
 	var elemements = {
 		'elementBattery' : elementBattery,
@@ -97,6 +98,7 @@
 			'cameraOn' : cameraOn,
 			'cameraOff' : cameraOff,
 			'downloadMap' : downloadMap,
+			'closePanel' : closePanel,
 			'terrain' : [terrain]
 			},
 		pop : {'blocPop' : blocPop, 'classPop' : 'pop'}
