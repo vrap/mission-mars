@@ -5,9 +5,10 @@
 	/**
 	 * Constructor
 	 */
-	nsViewer.Interface = function(elements, viewer) {
+	nsViewer.Interface = function(elements, viewer, rover) {
 		
 		this.viewer = viewer;
+		this.rover  = rover;
 		this.elements = elements;
 
 		this.elementBattery = elements.elementBattery;
@@ -34,6 +35,7 @@
 		this._displayWireframe();
 		this._displayFog();
 		this._displayCamera();
+		this._displayRoundTime();
 		this._downloadMap();
 		this._pop();
 	};
@@ -168,6 +170,41 @@
 		};
 	};
 
+	/**
+	* Round time management
+	*/
+	nsViewer.Interface.prototype._displayRoundTime = function(){
+		this.elements.control.moreTime.onclick = function(){
+			if (this.rover.roundTime < 3000) {
+				this.rover.roundTime += 100;
+			}
+			else if (this.rover.roundTime < 500) {
+				this.rover.roundTime += 50
+			}
+			else {
+				this.rover.roundTime = 3000;
+			}
+
+			this.elements.control.roundTime.innerText = (this.rover.roundTime / 1000);
+		}.bind(this);
+
+		this.elements.control.lessTime.onclick = function(){
+			if (this.rover.roundTime > 50) {
+				this.rover.roundTime -= 50;
+			}
+			else if (this.rover.roundTime > 500) {
+				this.rover.roundTime -= 100;
+			}
+			else {
+				this.rover.roundTime = 50;
+			}
+
+			this.elements.control.roundTime.innerText = (this.rover.roundTime / 1000);
+		}.bind(this);
+
+		this.elements.control.roundTime.innerText = (this.rover.roundTime / 1000);
+	};
+
   /**
    * Camera control gestion
    */
@@ -191,7 +228,6 @@
 			addClass(this, ' active');
 			removeClass(cameraOn, 'active');
 		};
-
 	};
 
   /**

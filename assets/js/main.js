@@ -110,6 +110,35 @@
     /* Load map from terrain. */
     map = new nsCommon.Map(terrain);
 
+    /* Initialize rover related variables. */
+    var module,
+    startX,
+    startY,
+    endX,
+    endY;
+
+    /* Get mission arguments. */
+    if(document.querySelector('#explorer').checked) {
+	module = 'explorer';
+	startX = parseInt(document.querySelector('#explorer-startX').value);
+	startY = parseInt(document.querySelector('#explorer-startY').value);
+    } else {
+	module = 'voyager';
+	startX = parseInt(document.querySelector('#voyager-startX').value);
+	startY = parseInt(document.querySelector('#voyager-startY').value);
+	endX = parseInt(document.querySelector('#voyager-endX').value);
+	endY = parseInt(document.querySelector('#voyager-endY').value);
+    }
+
+    /* Define energy. */
+    var energy = parseInt(document.querySelector('#voyager-energy').value);
+
+    /* Instanciate rover at defined position on the map. */
+    var rover = new nsRover.Rover(map, startX, startY, energy);
+
+    /* Instanciate speculator and attach it to the rover. */
+    var speculator = new nsSpeculator.S3000(rover);
+
     /* Define viewers container. */
     var renderDiv = document.querySelector('#render');
     var render2dDiv = document.querySelector('#minimap');
@@ -126,7 +155,7 @@
     viewerFull.load2D(renderFull2dDiv, '', false);
 
     /* Load 3D viewer. */
-    viewer.load3D(renderDiv, {fog: 0.002, wireframe: false, axis: true});
+    viewer.load3D(renderDiv, {fog: 0.005, wireframe: false, axis: false});
 
     /* Load infos of robot */
     var elementBattery = document.querySelector('#battery'),
@@ -139,6 +168,9 @@
     wireframeOff = document.querySelector('#w2'),
     moreFog = document.querySelector('#more'),
     lessFog = document.querySelector('#less'),
+    moreTime = document.querySelector('#roundTime-more'),
+    lessTime = document.querySelector('#roundTime-less'),
+    roundTime = document.querySelector('#roundTime-current'),
     cameraOn = document.querySelector('#c1'),
     cameraOff = document.querySelector('#c2'),
     downloadMap = document.querySelector('#download'),
@@ -161,6 +193,9 @@
 	    'cameraOff': cameraOff,
 	    'downloadMap': downloadMap,
 	    'closePanel': closePanel,
+	    'moreTime': moreTime,
+	    'lessTime': lessTime,
+	    'roundTime': roundTime,
 	    'terrain': [terrain]
 	},
 	'pop' : {
@@ -170,7 +205,7 @@
     }
     
     var elementViewer = viewer.viewers[renderDiv],
-    interfaces = new nsViewer.Interface(elements, elementViewer);
+    interfaces = new nsViewer.Interface(elements, elementViewer, rover);
 
     var drag = new nsViewer.Drag();
     drag.dragable('fullmap', 'fullmap');
@@ -206,36 +241,7 @@
 	viewer.viewers[renderDiv].camera.position.z = init_z + ratio*data.rover.y;
     });
 
-    /* Initialize rover mission related variables. */
-    var module,
-    startX,
-    startY,
-    endX,
-    endY;
-
-    /* Get mission arguments. */
-    if(document.querySelector('#explorer').checked) {
-	module = 'explorer';
-	startX = parseInt(document.querySelector('#explorer-startX').value);
-	startY = parseInt(document.querySelector('#explorer-startY').value);
-    } else {
-	module = 'voyager';
-	startX = parseInt(document.querySelector('#voyager-startX').value);
-	startY = parseInt(document.querySelector('#voyager-startY').value);
-	endX = parseInt(document.querySelector('#voyager-endX').value);
-	endY = parseInt(document.querySelector('#voyager-endY').value);
-    }
-
-    /* Define energy. */
-    var energy = parseInt(document.querySelector('#voyager-energy').value);
-
-    /* Instanciate rover at defined position on the map. */
-    var rover = new nsRover.Rover(map, startX, startY, energy);
-
-    /* Instanciate speculator and attach it to the rover. */
-    var speculator = new nsSpeculator.S3000(rover);
-
-    /* Enable the choosen module and start it with selected parameters. */
+    /* Enable the choosen s3000 module and start it with selected parameters. */
     speculator.enableModule(module);
 
     if (module == 'voyager') {
