@@ -486,7 +486,7 @@ input[type="text"]{
   width: 200px;
   height: 200px;
   position: absolute;
-  top: 15px;
+  top: 0;
   left: 50%;
   margin-left: -100px;
   background: #8e3236;
@@ -506,8 +506,8 @@ input[type="text"]{
   line-height: 200px;
   text-align: center;
   font-size: 90px;
-  top: 50%;
-  left: 50%;
+  top: 63%;
+  left: 63%;
   margin: -100px 0 0 -100px;
   -webkit-transform: rotate(-45deg) translateY(25%);
   -moz-transform: rotate(-45deg) translateY(25%);
@@ -527,7 +527,7 @@ input[type="text"]{
   line-height: 50px;
   margin: -70px 0 0 0;
   padding: 0;
-  top: 40%;
+  top: 35%;
   -webkit-backface-visibility: hidden;
 }
 
@@ -556,7 +556,7 @@ input[type="text"]{
   padding: 0;
   width: 80%;
   left: 10%;
-  top: 40%;
+  top: 35%;
   margin: 10px 0 0 0;
   -webkit-backface-visibility: hidden;
 }
@@ -566,7 +566,7 @@ input[type="text"]{
 	-moz-box-sizing:border-box; 
 	display: inline-block;
 	background-color: rgba(255, 255, 255, 0.5);
-	border: 10px solid #8e3236;
+  border: 1px solid #3BE9F2;
 	padding: 25px;
 }
 
@@ -653,9 +653,18 @@ input[type="text"]{
 	left: 0px;
 	z-index: -1000;
 }
-#render.solar{
-  -webkit-filter: sepia(90%);
+
+#render:after{
+  opacity: 0.8;
+  content: '';
+  top: 0px;
+  left: 0px;
+  z-index: -1999;
+  width: 100%;
+  height: 100%;
+  -webkit-filter: sepia(20%);
 }
+
 
 /********
 * Loading

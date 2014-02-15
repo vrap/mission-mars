@@ -64,9 +64,6 @@
 			
 			if(!solar){
 
-				var render = document.querySelector('#render');
-				addClass(render, 'solar');
-
 				var bloc = '<div class="'+ this.elements.pop.classPop +'" id="popSloar">';
 			 	bloc += 'I\'m deploying my solar panels !';
 			 	bloc += '</div>';

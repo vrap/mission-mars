@@ -77,6 +77,9 @@
 	this.viewer._observer.publish('viewer.3d.init', [{'progress': 100}]);
     };
 
+    window.addEventListener( 'resize', this.onWindowResize, false );
+
+
     /**
      * If the option is enabled, add an axis helper at the origin of the map.
      */
@@ -151,6 +154,7 @@
 	this.camera.setLens( 12 );
 
 	this.scene.add(this.camera);
+
     };
 
     /**
@@ -271,14 +275,24 @@
   	this.controls.update(1);
   	if(this.options.cameraControl == false){
   	    this.camera.position.x = this.targetPositionX;
-    	    this.camera.position.z = this.targetPositionZ;
-    	    this.camera.position.y = this.targetPositionY / this.RATIO_Z;
-    	    this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY / this.RATIO_Z, this.newtargetPositionZ));
+    	this.camera.position.z = this.targetPositionZ;
+    	this.camera.position.y = this.targetPositionY / this.RATIO_Z;
+    	this.camera.lookAt(new THREE.Vector3(this.newtargetPositionX, this.targetPositionY / this.RATIO_Z, this.newtargetPositionZ));
   	}
 
 	this.renderer.render(this.scene, this.camera);
 
     };
+
+
+    nsViewer.Viewer3D.prototypeonWindowResize = function() {
+
+		this.camera.aspect = window.innerWidth / window.innerHeight;
+		this.camera.updateProjectionMatrix();
+
+		this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+	}
 
 
     nsViewer.Viewer3D.prototype.mapToThree = function(x, z) {
@@ -299,17 +313,17 @@
     };
 
     nsViewer.Viewer3D.prototype.move = function(data){
-	if (!data.error) {
-	    var y = data.rover.map._terrain.map[data.lastX][data.lastY].z + 10;
-	    var lastCoord = this.mapToThree(data.lastX, data.lastY);
-	    var newCoord = this.mapToThree(data.newX, data.newY);
+		if (!data.error) {
+		    var y = data.rover.map._terrain.map[data.lastX][data.lastY].z + 10;
+		    var lastCoord = this.mapToThree(data.lastX, data.lastY);
+		    var newCoord = this.mapToThree(data.newX, data.newY);
 
-	    this.targetPositionX = lastCoord.x;
-	    this.targetPositionZ = lastCoord.z;
-	    this.targetPositionY = y;
+		    this.targetPositionX = lastCoord.x;
+		    this.targetPositionZ = lastCoord.z;
+		    this.targetPositionY = y;
 
-	    this.newtargetPositionX = newCoord.x;
-	    this.newtargetPositionZ = newCoord.z;
-	}
+		    this.newtargetPositionX = newCoord.x;
+		    this.newtargetPositionZ = newCoord.z;
+		}
     }
 })();
