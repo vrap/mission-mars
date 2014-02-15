@@ -173,9 +173,9 @@
 		};
 	};
 
-  /**
-   * Round time management
-   */
+	/**
+	* Round time management
+	*/
 	nsViewer.Interface.prototype._displayRoundTime = function(){
 		this.elements.control.moreTime.onclick = function(){
 			if (this.rover.roundTime < 3000) {
