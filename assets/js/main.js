@@ -143,6 +143,7 @@
     cameraOff = document.querySelector('#c2'),
     downloadMap = document.querySelector('#download'),
     blocPop = document.querySelector('#bloc-pop');
+    closePanel = document.querySelector('#to-close-panel');
 
     var elements = {
 	'elementBattery': elementBattery,
@@ -159,6 +160,7 @@
 	    'cameraOn': cameraOn,
 	    'cameraOff': cameraOff,
 	    'downloadMap': downloadMap,
+	    'closePanel': closePanel,
 	    'terrain': [terrain]
 	},
 	'pop' : {

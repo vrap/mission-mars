@@ -52,7 +52,7 @@
 		this.observable.subscribe('rover.spawn', function(data){
 
 			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
-			 	bloc += 'Hi Dude! I\'m speculator 3000 and I\'ve just been spawn!';
+			 	bloc += 'I\'m speculator 3000 and I\'ve just been spawn!';
 			 	bloc += '</div>';
 
 			this.elements.pop.blocPop.innerHTML = bloc;
@@ -63,8 +63,12 @@
 		this.observable.subscribe('rover.actions.deploySolarPanels.begin', function(data){
 			
 			if(!solar){
+
+				var render = document.querySelector('#render');
+				addClass(render, 'solar');
+
 				var bloc = '<div class="'+ this.elements.pop.classPop +'" id="popSloar">';
-			 	bloc += 'Wait! I\'m deploying my solar panels, Man!';
+			 	bloc += 'I\'m deploying my solar panels !';
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
@@ -84,8 +88,9 @@
 			if(solar){
 			    document.querySelector('.noise').style.display = 'none';
 			    document.querySelector('.noise').style.opacity = 1;
+
 				var bloc = '<div class="'+ this.elements.pop.classPop +'">';
-			 	bloc += 'What a fucking sunny day ! I\'m ready to continue my exploration on this dumb planet';
+			 	bloc += 'Good sunny day ! I\'m ready to continue my exploration';
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
@@ -250,14 +255,18 @@
 				removeClass(panelControl, 'hide');
 				addClass(panelControl, 'show');
 
-				var elem = this;
-				var top = getElementTop(elem);
-				var left = getElementLeft(elem);
-
-				panelControl.style.top = (top - 330) + 'px';
-				panelControl.style.left = (left - 60) + 'px';
+				this.style.display = 'none';
 
 			}
 		};
+
+		this.elements.control.closePanel.onclick = function(e){
+			
+			var panelControl = document.querySelector('#panel-control');
+			removeClass(panelControl, 'show');
+			addClass(panelControl, 'hide');
+			this.elementControl.style.display = 'block';
+
+		}.bind(this);
 	}
 })();
