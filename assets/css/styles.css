@@ -654,6 +654,10 @@ input[type="text"]{
 	z-index: -1000;
 }
 
+#render.solar{
+  -webkit-filter: sepia(90%);
+}
+
 .loader {
   background: url('../img/home/Home.jpg') no-repeat bottom center;
   background-size: cover;
@@ -867,11 +871,13 @@ input[type="text"]{
 
 }
 
+.info-bloc .warning{ color: #ea1055, font-weight: bold; }
+
 /*.info-bloc:last-child{
 	border-right: 0;
 }*/
 
-#bloc-battery{}
+#bloc-battery 
 #bloc-position{}
 #bloc-material{}
 #bloc-move{}
@@ -1054,3 +1060,6 @@ input[type="text"]{
 	margin-bottom: 0px;
 	margin-top: 30px;
 }
+
+
+

@@ -51,7 +51,7 @@
 		this.observable.subscribe('rover.spawn', function(data){
 
 			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
-			 	bloc += 'Hi Dude! I\'m speculator 3000 and I\'ve just been spawn!';
+			 	bloc += 'I\'m speculator 3000 and I\'ve just been spawn!';
 			 	bloc += '</div>';
 
 			this.elements.pop.blocPop.innerHTML = bloc;
@@ -62,8 +62,12 @@
 		this.observable.subscribe('rover.actions.deploySolarPanels.begin', function(data){
 			
 			if(!solar){
+
+				var render = document.querySelector('#render');
+				addClass(render, 'solar');
+
 				var bloc = '<div class="'+ this.elements.pop.classPop +'" id="popSloar">';
-			 	bloc += 'Wait! I\'m deploying my solar panels, Man!';
+			 	bloc += 'I\'m deploying my solar panels !';
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
@@ -78,8 +82,11 @@
 			
 			if(solar){
 
+				var render = document.querySelector('#render');
+				removeClass(render, 'solar');
+
 				var bloc = '<div class="'+ this.elements.pop.classPop +'">';
-			 	bloc += 'What a fucking sunny day ! I\'m ready to continue my exploration on this dumb planet';
+			 	bloc += 'Good sunny day ! I\'m ready to continue my exploration';
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
