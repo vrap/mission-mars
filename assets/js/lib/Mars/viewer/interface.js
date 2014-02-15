@@ -38,6 +38,7 @@
 		this._pop();
 	};
 
+
   /**
    * Events from rover
    */
@@ -69,6 +70,10 @@
 				this.elements.pop.blocPop.innerHTML = bloc;
         		// this.viewer.move('stop');
 				solar = true;
+
+			    document.querySelector('.noise').style.display = 'block';
+			    document.querySelector('.noise > b').innerText = 'Connection lost, trying to resume...';
+			    document.querySelector('.noise').style.opacity = '0.9';
 			}
 
 		}.bind(this));
@@ -77,7 +82,8 @@
 		this.observable.subscribe('rover.move.end', function(data){
 			
 			if(solar){
-
+			    document.querySelector('.noise').style.display = 'none';
+			    document.querySelector('.noise').style.opacity = 1;
 				var bloc = '<div class="'+ this.elements.pop.classPop +'">';
 			 	bloc += 'What a fucking sunny day ! I\'m ready to continue my exploration on this dumb planet';
 			 	bloc += '</div>';

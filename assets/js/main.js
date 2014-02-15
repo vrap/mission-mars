@@ -11,6 +11,47 @@
     /* Loading observer. */
     var observable = new nsCommon.Observable();
 
+    /* Subscribing to load events. */
+    observable.subscribe('editor.terrain.generator.generate', function(data) {
+	switch (data.progress) {
+	case 0:
+	    message = 'Sends the rocket.';
+	    break;
+	case 25:
+	    message = 'Satellite is currently analysing surface.';
+	    break;
+	case 50:
+	    message = 'Looking for a landing area.';
+	    break;
+	case 75:
+	    message = 'Sending the rover.';
+	    break;
+	}
+
+	document.querySelector('.loader > p').innerText = message;
+    });
+    observable.subscribe('viewer.3d.init', function(data) {
+	switch (data.progress) {
+	case 0:
+	    message = 'Trying to connect to S3000';
+	    break;
+	case 20:
+	    message = 'Authorization required, sending credentials';
+	    break;
+	case 50:
+	    message = 'Authentification successfull.';
+	    break;
+	case 70:
+	    message = 'Connection established';
+	    break;
+	case 90:
+	    message = 'Sending commands to S3000';
+	    break;
+	}
+
+	document.querySelector('.loader > p').innerText = message;
+    });
+
     /* Initializing map related var. */
     var terrain, map, mapSize;
 
@@ -152,6 +193,7 @@
 	document.querySelector('#panel-infos').style.display = 'block';
 	document.querySelector('#bloc-pop').style.display = 'block';
 	document.querySelector('.loader').style.display = 'none';
+	document.querySelector('.loader > p').innerText = '';
 
 	/* Define camera position. */
 	var ratio = viewer.viewers[renderDiv].MAP_RATIO,
