@@ -209,6 +209,7 @@
 		    defer.reject();
 		}
 		else {
+		    console.log(square);
 		    this.voyage(square, {debug: true, escapeObstacle: false})
 			.then(
 			    function() {
@@ -277,7 +278,7 @@
 		var score = distanceScore + slopeScore + visitedScore;
 
 		/* Only square with a low slope will be included. */
-		if (slope <= 0.5 && square.visited <= 5) {
+		if (slope <= 0.5 && slope >= -0.5 && square.visited <= 5) {
 		    if (!squareWeight[score]) {
 			squareWeight[score] = [];
 		    }
