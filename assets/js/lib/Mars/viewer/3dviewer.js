@@ -285,7 +285,7 @@
     };
 
 
-    nsViewer.Viewer3D.prototypeonWindowResize = function() {
+    nsViewer.Viewer3D.prototype.onWindowResize = function() {
 
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
