@@ -117,10 +117,6 @@
     }
 
     nsViewer.Viewer2D.prototype.moveMap = function(data){
-
-
-    	console.log(data.direction);
-
 	switch (data.direction) {
 	case 0: //<= NORTH
 	    this.position.y -= 1 * this.valPixel;
