@@ -28,7 +28,7 @@
 	    break;
 	}
 
-	document.querySelector('.loader > p').innerText = message;
+	document.querySelector('.loader > b').innerText = message;
     });
     observable.subscribe('viewer.3d.init', function(data) {
 	switch (data.progress) {
@@ -49,7 +49,7 @@
 	    break;
 	case 100:
 	    document.querySelector('.loader').style.display = 'none';
-	    document.querySelector('.loader > p').innerText = '';
+	    document.querySelector('.loader > b').innerText = '';
 	    document.querySelector('#panel-infos').style.display = 'block';
       document.querySelector('#bloc-panel-minimap').style.display = 'block';
       document.querySelector('#bloc-panel-minimap-hover').style.display = 'block';
@@ -59,7 +59,7 @@
 	    break;
 	}
 
-	document.querySelector('.loader > p').innerText = message;
+	document.querySelector('.loader > b').innerText = message;
     });
 
     /* Initializing map related var. */
@@ -119,6 +119,40 @@
 
     /* Load map from terrain. */
     map = new nsCommon.Map(terrain);
+
+    if(false === map.checkValidity() && document.getElementById('json').value != '') {
+      // Map uploaded not valid
+      var msg = 'Invalid map uploaded ! ';
+      msg += '<a href="#error-map" id="error-upload">Back</a>';
+      document.querySelector('.loader > b').innerHTML = msg;
+
+      document.querySelector('#error-upload').onclick = function () {
+        // Back to upload page
+        document.querySelector('.st-container').style.display = 'block';
+        document.querySelector('.view').style.display = 'none';
+        document.querySelector('#st-control-3').checked = true;
+        // Reset JSON
+        document.getElementById('json').value = '';
+        // Reset message
+        document.querySelector('.loader > b').innerText = 'Pairing with S3000, please wait ...';
+      };
+      throw new Error('The JSON file uploaded is not valid.');
+    } else if (false === map.checkValidity()) {
+      // Internal error
+      var msg = 'Map generation error. ';
+      msg += '<a href="#error-map" id="error-map">Back</a>';
+      document.querySelector('.loader > b').innerHTML = msg;
+
+      document.querySelector('#error-map').onclick = function () {
+        // Back to map choice page
+        document.querySelector('.st-container').style.display = 'block';
+        document.querySelector('.view').style.display = 'none';
+        document.querySelector('#st-control-2').checked = true;
+        // Reset message
+        document.querySelector('.loader > b').innerText = 'Pairing with S3000, please wait ...';
+      };
+      throw new Error('An error during map generation has occurred');
+    }
 
     /* Initialize rover related variables. */
     var module,
