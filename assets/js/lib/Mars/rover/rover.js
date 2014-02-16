@@ -73,37 +73,37 @@
 
     /* Energy cost for each movements (direction). */
     nsRover.Rover.MOVE_COST = {
-		NORTH: 1,
-		NORTH_EAST: 1.4,
-		EAST: 1,
-		SOUTH_EAST: 1.4,
-		SOUTH: 1,
-		SOUTH_WEST: 1.4,
-		WEST: 1,
-		NORTH_WEST: 1.4
+	NORTH: 1,
+	NORTH_EAST: 1.4,
+	EAST: 1,
+	SOUTH_EAST: 1.4,
+	SOUTH: 1,
+	SOUTH_WEST: 1.4,
+	WEST: 1,
+	NORTH_WEST: 1.4
     };
 
     /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
-		MATERIALS: {
-		    BELOW: 0,
-		    NEIGHBOR: 0,
-		    REMOTE: 0
-		},
-		ELEVATION: {
-		    BELOW: 0,
-		    NEIGHBOR: 0,
-		    REMOTE: 0
-		}
+	MATERIALS: {
+	    BELOW: 0,
+	    NEIGHBOR: 0,
+	    REMOTE: 0
+	},
+	ELEVATION: {
+	    BELOW: 0,
+	    NEIGHBOR: 0,
+	    REMOTE: 0
+	}
     };
 
     /* Messages constants. */
     nsRover.Rover.MESSAGE = {
-		E_NEED_MORE_TANK: 0,
-		E_SLOPE_IS_TOO_IMPORTANT: 1,
-		E_MAP_UNDISCOVERED: 2,
-		E_INVALID_DISTANCE: 3,
-		E_INVALID_MAP: 4
+	E_NEED_MORE_TANK: 0,
+	E_SLOPE_IS_TOO_IMPORTANT: 1,
+	E_MAP_UNDISCOVERED: 2,
+	E_INVALID_DISTANCE: 3,
+	E_INVALID_MAP: 4
     };
 
     /**
@@ -115,18 +115,17 @@
      */
     nsRover.Rover.prototype.getDistanceAsString = function(distance) {
 	switch (distance) {
-	    case 0:
+	case 0:
 	    return 'BELOW';
 	    break;
-	    case 1:
+	case 1:
 	    return 'NEIGHBOR';
 	    break;
-	    default:
+	default:
 	    return 'REMOTE';
 	    break;
 	}
     };
-
 
     /**
      * Execute an action of the rover.
@@ -233,6 +232,16 @@
     };
 
     /**
+     * Disable the buffered actions and remove all waiting actions.
+     *
+     * @this {Rover}
+     */
+    nsRover.Rover.prototype.removeBufferedActions = function() { console.log('log REMOVEBUFFEREDACTIONS');
+	this.waitingActions = [];
+	this.waitingStatus  = false;
+    };
+
+    /**
      * Publish an event.
      * The event message will automatically contain an instance of the current rover and broadcaster to the "rover" channel.
      *
@@ -241,6 +250,9 @@
      * @param  {object} options An object containing the params to sends when publishing the event.
      */
     nsRover.Rover.prototype.publishEvent = function(channel, options) {
+	/* Clone options, we don't want to modify the reference. */
+	options = clone(options);
+
 	/* Initialize default options. */
 	options = (options && Object.keys(options).length > 0) ? options : {};
 	channel = 'rover.' + channel;
@@ -329,19 +341,19 @@
      * @return {integer}      		   The slope (in %).
      */
     nsRover.Rover.prototype.calculateSlope = function(currentZ, destinationZ) {
-		var slope = (destinationZ - currentZ) / 5;
+	var slope = (destinationZ - currentZ) / 5;
 
-		return slope;
+	return slope;
 
-		/*distance = distance * 5;
-		current = currentZ * 5;
-		destination = destinationZ * 5;
+	/*distance = distance * 5;
+	  current = currentZ * 5;
+	  destination = destinationZ * 5;
 
-		var slope = (destination - current) / distance;
-	
-		slope = Math.round(Math.abs(slope));
+	  var slope = (destination - current) / distance;
+	  
+	  slope = Math.round(Math.abs(slope));
 
-		return slope;*/
+	  return slope;*/
     };
 
     /**
@@ -475,8 +487,8 @@
 							throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 						}
 					}
-				}
-			}
+			    }
+		    }
 	    }
 		else {
 			throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);

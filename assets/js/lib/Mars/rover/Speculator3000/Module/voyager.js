@@ -40,10 +40,21 @@
 
         this.speculator.observer.publish('s3000.module.start.begin');
 
-	this.voyage(destination).then(function() {
-	    console.log(this.speculator.rover.memory.readAll());
-	    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
-	}.bind(this));
+	this.voyage(destination)
+	    .then(
+		function() {
+		    this.speculator.rover.removeBufferedActions();
+		    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
+
+		    console.log(this.speculator.rover.memory.readAll());
+		}.bind(this)
+	    )
+	    .fail(
+		function() {
+		    this.speculator.rover.removeBufferedActions();
+		    this.speculator.observer.publish('s3000.module.start.end', [{status: false}]);
+		}.bind(this)
+	    );
     };
 
     nsVoyager.Voyager.prototype.voyage = function(destination, options, defer) {
@@ -96,44 +107,56 @@
 	    invertedDirection = xDirection;
 	}
 
-	this.speculator.getDirectionFromPoint(destination.x, destination.y).then(function(data) {
-	    this.speculator.rover.setDirection(data).then(function(data) {
-		var rover = this.speculator.rover;
+	this.speculator.getDirectionFromPoint(destination.x, destination.y)
+	    .then(
+		function(data) {
+		    this.speculator.rover.setDirection(data)
+			.then(
+			    function() {
+				this.speculator.moveAndScan(true, false)
+				    .then(
+					function() {
+					    this.voyage(destination, options, defer);
+					}.bind(this)
+				    )
+				    .fail(
+					function(data) {
+					    this.onError(data)
+						.then(
+						    function() {
+							this.voyage(destination, options, defer);
+						    }.bind(this)
+						)
+						.fail(
+						    function(data) {
+							defer.reject(data);
+						    }
+						);
+					}.bind(this)
+				    );
+			    }.bind(this)
+			);
+		}.bind(this)
+	    );
 
-		this.speculator.moveAndScan(true, false).then(
+	return defer.promise;
+    };
+
+    nsVoyager.Voyager.prototype.onError = function(data) {
+	var defer = Q.defer();
+	var rover = this.speculator.rover;
+
+	if (data.error.message == rover.constructor.MESSAGE.E_NEED_MORE_TANK) {
+	    rover.deploySolarPanels()
+		.then(
 		    function() {
-			this.voyage(destination, options, defer);
-		    }.bind(this),
-		    function(data) {
-			if (data.error.message == this.speculator.rover.constructor.MESSAGE.E_NEED_MORE_TANK) {
-			    this.speculator.rover.deploySolarPanels().then(function() {
-				this.voyage(destination, options, defer);
-			    }.bind(this));
-			}
-			else {
-			    this.speculator.getSideDirection().done(function(directions) {
-				var rover = this.speculator.rover;
-				var squares = [];
-
-				for (directionKey in directions) {
-				    var dir = directions[directionKey];
-				    var pos = rover.getSquareFromDirection(dir, 1);
-				    var square = rover.memory.get(pos.x, pos.y);
-				    squares.push(square);
-				}
-				console.log(squares);
-
-				var direction = directions[Math.floor(Math.random() * directions.length)];
-				this.speculator.rover.setDirection(direction).then(function() {
-				    this.speculator.rover.move().then(function() {
-					this.voyage(destination, options, defer);
-				    }.bind(this));
-				}.bind(this));
-			    }.bind(this));
-			}
-		    }.bind(this));
-	    }.bind(this));
-	}.bind(this));
+			defer.resolve();
+		    }.bind(this)
+		);
+	}
+	else {
+	    defer.reject(data);
+	}
 
 	return defer.promise;
     };
