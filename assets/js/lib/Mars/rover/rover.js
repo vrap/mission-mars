@@ -446,15 +446,15 @@
 
 			    /* Calculate the cost of travel and removes from tank. */
 			    if (finalCost <= this.tank) {
+				/* Increase movements and decrease the energy. */
+				this.moves++;
+				this.tank -= finalCost;
+
 				// Final value. Please do not touch, even for tests!
 				if (slope <= 0.5 && slope >= -0.5) {
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
-
-				    /* Increase movements and decrease the energy. */
-				    this.moves++;
-				    this.tank -= finalCost;
 
 				    /* Add to memory. */
 				    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);
