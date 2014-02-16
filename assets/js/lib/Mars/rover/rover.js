@@ -444,6 +444,16 @@
 			    var elevationCost = moveCost * (1 + slope);
 			    var finalCost = elevationCost + moveCost;
 
+			    /* When moving on sand square. */
+			    if (destinationSquare.type == 1) {
+				if (slope > 0) {
+				    finalCost += 0.1;
+				}
+				else if (slope < 0) {
+				    finalCost -= 0.1;
+				}
+			    }
+
 			    /* Calculate the cost of travel and removes from tank. */
 			    if (finalCost <= this.tank) {
 				/* Increase movements and decrease the energy. */
