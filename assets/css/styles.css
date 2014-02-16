@@ -654,7 +654,11 @@ input[type="text"]{
 	z-index: -1000;
 }
 #render.solar{
-  -webkit-filter: sepia(90%);
+  -webkit-filter: sepia(60%);
+}
+
+.warning {
+    color: #FD3C5E;
 }
 
 /********
