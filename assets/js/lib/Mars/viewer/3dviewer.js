@@ -29,7 +29,7 @@
 	this.element = element;
 	this.options = (options) ? options : {};
 	this.options.wireframe = this.options.wireframe || false;
-	this.options.axis = this.options.axis || true;
+	this.options.axis = this.options.axis || false;
 	this.options.cameraControl = this.options.cameraControl || false;
 	this.init();
     };
