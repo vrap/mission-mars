@@ -123,40 +123,44 @@
     }
 
     /* Load map from terrain. */
-    map = new nsCommon.Map(terrain);
+    try {
+	map = new nsCommon.Map(terrain);
 
-    if(false === map.checkValidity() && document.getElementById('json').value != '') {
-      // Map uploaded not valid
-      var msg = 'Invalid map uploaded ! ';
-      msg += '<a href="#error-map" id="error-upload">Back</a>';
-      document.querySelector('.loader > b').innerHTML = msg;
+	if (map.checkValidity() === false) {
+	    throw new Error('Invalid map');
+	}
+    }
+    catch (e) {
+	console.log(e);
+	if (document.getElementById('json').value != '') {
+	    var msg = 'Invalid map uploaded ! ';
+	    msg += '<a href="#error-map" id="error-upload">Back</a>';
+	}
+	else {
+	    var msg = 'Map generation error. ';
+	    msg += '<a href="#error-map" id="error-map">Back</a>';
+	}
 
-      document.querySelector('#error-upload').onclick = function () {
-        // Back to upload page
-        document.querySelector('.st-container').style.display = 'block';
-        document.querySelector('.view').style.display = 'none';
-        document.querySelector('#st-control-3').checked = true;
-        // Reset JSON
-        document.getElementById('json').value = '';
-        // Reset message
-        document.querySelector('.loader > b').innerText = 'Pairing with S3000, please wait ...';
-      };
-      throw new Error('The JSON file uploaded is not valid.');
-    } else if (false === map.checkValidity()) {
-      // Internal error
-      var msg = 'Map generation error. ';
-      msg += '<a href="#error-map" id="error-map">Back</a>';
-      document.querySelector('.loader > b').innerHTML = msg;
+	document.querySelector('.loader > b').innerHTML = msg;
 
-      document.querySelector('#error-map').onclick = function () {
-        // Back to map choice page
-        document.querySelector('.st-container').style.display = 'block';
-        document.querySelector('.view').style.display = 'none';
-        document.querySelector('#st-control-2').checked = true;
-        // Reset message
-        document.querySelector('.loader > b').innerText = 'Pairing with S3000, please wait ...';
-      };
-      throw new Error('An error during map generation has occurred');
+	document.querySelector('#error-upload').onclick = function () {
+            // Back to upload page
+            document.querySelector('.st-container').style.display = 'block';
+            document.querySelector('.view').style.display = 'none';
+	    document.querySelector('#st-control-2').checked = true;
+
+	    if (document.getElementById('json').value != '') {
+		document.querySelector('#st-control-3').checked = true;
+
+		// Reset JSON
+		document.getElementById('json').value = '';
+	    }
+	    
+            // Reset message
+            document.querySelector('.loader > b').innerText = 'Pairing with S3000, please wait ...';
+	};
+
+	return false;
     }
 
     /* Initialize rover related variables. */
