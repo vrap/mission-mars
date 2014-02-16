@@ -86,14 +86,14 @@
     /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
 	MATERIALS: {
-	    BELOW: 0,
-	    NEIGHBOR: 0,
-	    REMOTE: 0
+	    BELOW: 0.1,
+	    NEIGHBOR: 0.2,
+	    REMOTE: 0.4
 	},
 	ELEVATION: {
 	    BELOW: 0,
 	    NEIGHBOR: 0,
-	    REMOTE: 0
+	    REMOTE: 0.1
 	}
     };
 
@@ -444,17 +444,27 @@
 			    var elevationCost = moveCost * (1 + slope);
 			    var finalCost = elevationCost + moveCost;
 
+			    /* When moving on sand square. */
+			    if (destinationSquare.type == 1) {
+				if (slope > 0) {
+				    finalCost += 0.1;
+				}
+				else if (slope < 0) {
+				    finalCost -= 0.1;
+				}
+			    }
+
 			    /* Calculate the cost of travel and removes from tank. */
 			    if (finalCost <= this.tank) {
+				/* Increase movements and decrease the energy. */
+				this.moves++;
+				this.tank -= finalCost;
+
 				// Final value. Please do not touch, even for tests!
 				if (slope <= 0.5 && slope >= -0.5) {
 				    /* Move the rover to the destination square. */
 				    this.x = destinationSquare.x;
 				    this.y = destinationSquare.y;
-
-				    /* Increase movements and decrease the energy. */
-				    this.moves++;
-				    this.tank -= finalCost;
 
 				    /* Add to memory. */
 				    this.memory.createOrUpdate(destinationSquare.x, destinationSquare.y, null, null, true);

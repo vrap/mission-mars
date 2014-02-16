@@ -665,6 +665,10 @@ input[type="text"]{
   -webkit-filter: sepia(20%);
 }
 
+.warning {
+    color: #FD3C5E;
+}
+
 
 /********
 * Loading

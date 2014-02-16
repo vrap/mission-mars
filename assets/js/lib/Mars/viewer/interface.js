@@ -65,7 +65,6 @@
 		this.observable.subscribe('rover.actions.deploySolarPanels.begin', function(data){
 			
 			if(!solar){
-
 				var bloc = '<div class="'+ this.elements.pop.classPop +'" id="popSloar">';
 			 	bloc += 'I\'m deploying my solar panels !';
 			 	bloc += '</div>';
@@ -236,13 +235,18 @@
 	nsViewer.Interface.prototype._pushBattery = function(){
 
 		this.observable.subscribe('rover.move.end', function(data){
-
+		        var render = document.querySelector('#render');
 			var tank = Math.round(data.rover.tank * 100 / data.rover.tankSize);
 
 			this.elementBattery.innerHTML = tank + '%';
 
-			if(tank < 30){
+			if(tank < 2){
 				addClass(this.elementBattery, 'warning');
+			        addClass(render, 'solar');
+			}
+		        else {
+			        removeClass(this.elementBattery, 'warning');
+			        removeClass(render, 'solar');
 			}
 
 		}.bind(this));

@@ -47,6 +47,12 @@
 	case 90:
 	    message = 'Sending commands to S3000';
 	    break;
+	case 100:
+	    document.querySelector('.loader').style.display = 'none';
+	    document.querySelector('.loader > p').innerText = '';
+	    document.querySelector('#panel-infos').style.display = 'block';
+	    return;
+	    break;
 	}
 
 	document.querySelector('.loader > p').innerText = message;
@@ -229,8 +235,6 @@
 	document.querySelector('#panel-minimap').style.display = 'block';
 	document.querySelector('#panel-infos').style.display = 'block';
 	document.querySelector('#bloc-pop').style.display = 'block';
-	document.querySelector('.loader').style.display = 'none';
-	document.querySelector('.loader > p').innerText = '';
 
 	/* Define camera position. */
 	var ratio = viewer.viewers[renderDiv].MAP_RATIO,
