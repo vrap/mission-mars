@@ -413,13 +413,13 @@
 	}
     };
 
-	/**
-	 * Move the rover to a distance and direction relatively to the current position.
-	 * 
-	 * @this {Rover}
-	 * @return {object} Return an object with the last position and the new one.
-	 */
-	nsRover.Rover.prototype.move = function() {
+    /**
+     * Move the rover to a distance and direction relatively to the current position.
+     * 
+     * @this {Rover}
+     * @return {object} Return an object with the last position and the new one.
+     */
+    nsRover.Rover.prototype.move = function() {
 	if (arguments.callee.caller == this.executeBufferedAction) {
 	    /* Retrieve the current direction of the rover to move on. */
 	    var direction = this.direction;
@@ -485,12 +485,12 @@
 				throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
 			    }
 			}
->>>>>>> 959cde9796f707bb13cbedda92bac258a6f66f30
 		    }
-	    }
-		else {
-			throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
 		}
+	    }
+	    else {
+		throw new Error(nsRover.Rover.MESSAGE.E_MAP_UNDISCOVERED);
+	    }
 	}
 	else {
 	    return this.executeAction('move', arguments, 1).progress(function(data) {
@@ -500,7 +500,7 @@
 		else if (data.progress == 100) {
 		    this.publishEvent('move.end', data.data);
 		}
-		}.bind(this));
+	    }.bind(this));
 	}
     };
 
@@ -540,7 +540,7 @@
 			    direction: direction,
 			    distance: distance,
 			    elevation: square.z
-			}
+			};
 		    }
 		    else {
 			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
@@ -600,7 +600,7 @@
 			    direction: direction,
 			    distance: distance,
 			    type: square.type
-			}
+			};
 		    }
 		    else {
 			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
@@ -652,33 +652,33 @@
      * @this {Rover}
      * @todo Manage a scan material of 2 square which let us knowing the first square.
      */
-	nsRover.Rover.prototype.fullScan = function(elevations, materials) {
-		elevations = (elevations == false) ? false : true;
-		materials  = (materials == false) ? false : true;
+    nsRover.Rover.prototype.fullScan = function(elevations, materials) {
+	elevations = (elevations == false) ? false : true;
+	materials  = (materials == false) ? false : true;
 
-		if (elevations || materials) {
-			var deferreds = []
+	if (elevations || materials) {
+	    var deferreds = []
 
-			for (var directionName in this.constructor.DIRECTION) {
-				var direction = this.constructor.DIRECTION[directionName];
+	    for (var directionName in this.constructor.DIRECTION) {
+		var direction = this.constructor.DIRECTION[directionName];
 
-				if (elevations) {
-					deferreds.push(this.scanElevation(direction, 1));
-				}
-
-				if (materials) {
-					deferreds.push(this.scanMaterial(direction, 2));
-				}
-			}
-
-			return Q.all(deferreds);
+		if (elevations) {
+		    deferreds.push(this.scanElevation(direction, 1));
 		}
-		else {
-			var defer = Q.defer();
 
-			defer.resolve();
-
-			return defer.promise;
+		if (materials) {
+		    deferreds.push(this.scanMaterial(direction, 2));
 		}
-	};
+	    }
+
+	    return Q.all(deferreds);
+	}
+	else {
+	    var defer = Q.defer();
+
+	    defer.resolve();
+
+	    return defer.promise;
+	}
+    };
 })();
