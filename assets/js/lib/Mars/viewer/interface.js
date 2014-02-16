@@ -48,6 +48,25 @@
 		var finishX = '';
 		var finishY = '';
 
+		this.observable.subscribe('s3000.module.start.begin', function(data){
+			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
+			 	bloc += 'Beginning the mission.';
+			 	bloc += '</div>';
+
+			this.elements.pop.blocPop.innerHTML = bloc;
+
+		}.bind(this));
+
+		this.observable.subscribe('s3000.module.start.end', function(data){
+			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
+			 	bloc += 'End of mission.';
+			 	bloc += '</div>';
+
+			this.elements.pop.blocPop.innerHTML = bloc;
+
+		}.bind(this));
+
+
     // On spawn, positioning camera
 		this.observable.subscribe('rover.spawn', function(data){
 
