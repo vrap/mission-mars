@@ -194,12 +194,12 @@
      */
     nsViewer.Viewer3D.prototype._loadSkyBox = function() {
 	var urls = [
-	    './assets/img/sky2/4.jpg',
-	    './assets/img/sky2/2.jpg',
-	    './assets/img/sky2/6.jpg',
-	    './assets/img/sky2/5.jpg',
-	    './assets/img/sky2/1.jpg',
-	    './assets/img/sky2/3.jpg'
+	    './assets/img/sky/4.jpg',
+	    './assets/img/sky/2.jpg',
+	    './assets/img/sky/6.jpg',
+	    './assets/img/sky/5.jpg',
+	    './assets/img/sky/1.jpg',
+	    './assets/img/sky/3.jpg'
 	];
 
 

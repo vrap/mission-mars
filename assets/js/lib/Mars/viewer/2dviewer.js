@@ -40,7 +40,6 @@
 	    
 	}
 
-
 	var width = this.element.width;
 	var height = this.element.height;
 	var i = 0;
