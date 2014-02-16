@@ -197,7 +197,7 @@
     viewerFull.load2D(renderFull2dDiv, '', false);
 
     /* Load 3D viewer. */
-    viewer.load3D(renderDiv, {fog: 0.005, wireframe: false, axis: false});
+    viewer.load3D(renderDiv, {fog: 0.015, wireframe: false, axis: false});
 
     /* Change camera elevation. */
     observable.subscribe('rover.scanElevation.end', function(data) {
