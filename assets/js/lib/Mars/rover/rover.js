@@ -236,7 +236,7 @@
      *
      * @this {Rover}
      */
-    nsRover.Rover.prototype.removeBufferedActions = function() { console.log('log REMOVEBUFFEREDACTIONS');
+    nsRover.Rover.prototype.removeBufferedActions = function() {
 	this.waitingActions = [];
 	this.waitingStatus  = false;
     };
