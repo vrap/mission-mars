@@ -71,6 +71,10 @@
 	    for (var rowKey in this._squares) {
 		var row = this._squares[rowKey];
 
+		if (row.length != this.getWidth()) {
+		    return false;
+		}
+
 		for (var columnKey in row) {
 		    var column = row[columnKey];
 
