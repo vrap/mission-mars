@@ -51,6 +51,10 @@
 	    document.querySelector('.loader').style.display = 'none';
 	    document.querySelector('.loader > p').innerText = '';
 	    document.querySelector('#panel-infos').style.display = 'block';
+      document.querySelector('#bloc-panel-minimap').style.display = 'block';
+      document.querySelector('#bloc-panel-minimap-hover').style.display = 'block';
+      document.querySelector('#panel-minimap').style.display = 'block';
+      document.querySelector('#bloc-pop').style.display = 'block';
 	    return;
 	    break;
 	}
@@ -180,7 +184,7 @@
     cameraOn = document.querySelector('#c1'),
     cameraOff = document.querySelector('#c2'),
     downloadMap = document.querySelector('#download'),
-    blocPop = document.querySelector('#bloc-pop');
+    blocPop = document.querySelector('#bloc-pop'),
     closePanel = document.querySelector('#to-close-panel');
 
     var elements = {
@@ -230,11 +234,6 @@
 
     /* When rover spawn display all informations and move camera. */
     observable.subscribe('rover.spawn', function(data) {
-	document.querySelector('#bloc-panel-minimap').style.display = 'block';
-	document.querySelector('#bloc-panel-minimap-hover').style.display = 'block';
-	document.querySelector('#panel-minimap').style.display = 'block';
-	document.querySelector('#panel-infos').style.display = 'block';
-	document.querySelector('#bloc-pop').style.display = 'block';
 
 	/* Define camera position. */
 	var ratio = viewer.viewers[renderDiv].MAP_RATIO,
