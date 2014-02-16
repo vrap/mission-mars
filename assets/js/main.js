@@ -11,6 +11,11 @@
     /* Loading observer. */
     var observable = new nsCommon.Observable();
 
+    /* Define viewers container. */
+    var renderDiv = document.querySelector('#render');
+    var render2dDiv = document.querySelector('#minimap');
+    var renderFull2dDiv = document.querySelector('#fullmap');
+
     /* Subscribing to load events. */
     observable.subscribe('editor.terrain.generator.generate', function(data) {
 	switch (data.progress) {
@@ -177,17 +182,6 @@
     /* Define energy. */
     var energy = parseInt(document.querySelector('#voyager-energy').value);
 
-    /* Instanciate rover at defined position on the map. */
-    var rover = new nsRover.Rover(map, startX, startY, energy);
-
-    /* Instanciate speculator and attach it to the rover. */
-    var speculator = new nsSpeculator.S3000(rover);
-
-    /* Define viewers container. */
-    var renderDiv = document.querySelector('#render');
-    var render2dDiv = document.querySelector('#minimap');
-    var renderFull2dDiv = document.querySelector('#fullmap');
-    
     /* Init viewer manager. */
     var viewer     = new nsViewer.Viewer(map);
     var viewerFull = new nsViewer.Viewer(map);
@@ -200,6 +194,28 @@
 
     /* Load 3D viewer. */
     viewer.load3D(renderDiv, {fog: 0.005, wireframe: false, axis: false});
+
+    /* Change camera elevation. */
+    observable.subscribe('rover.scanElevation.end', function(data) {
+	viewer.viewers[renderDiv].camera.position.y += data.elevation;
+    });
+
+    /* When rover spawn display all informations and move camera. */
+    observable.subscribe('rover.spawn', function(data) {
+	/* Define camera position. */
+	var ratio = viewer.viewers[renderDiv].MAP_RATIO,
+        init_x = (-ratio/2)*map.getWidth(),
+        init_z = (-ratio/2)*map.getHeight();
+
+	viewer.viewers[renderDiv].camera.position.x = init_x + ratio*data.rover.x;
+	viewer.viewers[renderDiv].camera.position.z = init_z + ratio*data.rover.y;
+    });
+
+    /* Instanciate rover at defined position on the map. */
+    var rover = new nsRover.Rover(map, startX, startY, energy);
+
+    /* Instanciate speculator and attach it to the rover. */
+    var speculator = new nsSpeculator.S3000(rover);
 
     /* Load infos of robot */
     var elementBattery = document.querySelector('#battery'),
@@ -260,23 +276,6 @@
     document.querySelector('#bloc-fullMap .glyphicon-close').onclick = function (){
 	document.querySelector('#bloc-over-full').className = 'hidden';
     }
-
-    /* Change camera elevation. */
-    observable.subscribe('rover.scanElevation.end', function(data) {
-	viewer.viewers[renderDiv].camera.position.y += data.elevation;
-    });
-
-    /* When rover spawn display all informations and move camera. */
-    observable.subscribe('rover.spawn', function(data) {
-
-	/* Define camera position. */
-	var ratio = viewer.viewers[renderDiv].MAP_RATIO,
-        init_x = (-ratio/2)*map.getWidth(),
-        init_z = (-ratio/2)*map.getHeight();
-
-	viewer.viewers[renderDiv].camera.position.x = init_x + ratio*data.rover.x;
-	viewer.viewers[renderDiv].camera.position.z = init_z + ratio*data.rover.y;
-    });
 
     /* Enable the choosen s3000 module and start it with selected parameters. */
     speculator.enableModule(module);
