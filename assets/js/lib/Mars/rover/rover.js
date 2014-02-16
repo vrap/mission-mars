@@ -86,14 +86,14 @@
     /* Energy cost for each distance of sensor. */
     nsRover.Rover.SENSOR_COST = {
 	MATERIALS: {
-	    BELOW: 0,
-	    NEIGHBOR: 0,
-	    REMOTE: 0
+	    BELOW: 0.1,
+	    NEIGHBOR: 0.2,
+	    REMOTE: 0.4
 	},
 	ELEVATION: {
 	    BELOW: 0,
 	    NEIGHBOR: 0,
-	    REMOTE: 0
+	    REMOTE: 0.1
 	}
     };
 
