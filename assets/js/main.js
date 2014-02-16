@@ -50,6 +50,7 @@
 	case 100:
 	    document.querySelector('.loader').style.display = 'none';
 	    document.querySelector('.loader > p').innerText = '';
+	    document.querySelector('#panel-infos').style.display = 'block';
 	    return;
 	    break;
 	}
