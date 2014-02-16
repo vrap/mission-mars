@@ -136,7 +136,6 @@
 		this.elements.control.wireframeOff.onclick = function (){
 			viewer.options.wireframe = false;
 			viewer._loadMaterials();
-			console.log(wireframeOn);
 			addClass(this, ' active');
 			removeClass(wireframeOn, 'active');
 
