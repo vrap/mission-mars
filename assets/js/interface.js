@@ -11,8 +11,6 @@ var scripts = [
 ];
 
 (function () {
-
-
 	/**
 	 * Home page gestion
 	 */

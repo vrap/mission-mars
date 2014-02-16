@@ -1,30 +1,29 @@
 (function() {
-    var nsViewer = using('mars.viewer');
-    var nsCommon = using('mars.common');
+	var nsViewer = using('mars.viewer');
+	var nsCommon = using('mars.common');
 
-    /**
-     * [ description]
-     * @return {[type]}         [description]
-     */
-    nsViewer.Viewer2D = function(viewer, element, options, moved) {
-	this.viewer = viewer;
-	this.element = element;
-	this.options = (options) ? options : {};
-	this.context = element.getContext('2d');
-	this.position = {x:0, y:0};
-	this.valPixel = 10;
+	/**
+	 * [ description]
+	 * @return {[type]}         [description]
+	 */
+	nsViewer.Viewer2D = function(viewer, element, options, moved) {
+		this.viewer = viewer;
+		this.element = element;
+		this.options = (options) ? options : {};
+		this.context = element.getContext('2d');
+		this.position = {x:0, y:0};
+		this.valPixel = 15;
 
-	this.stepX = 0;
-	this.stepY = 0;
+		this.stepX = 0;
+		this.stepY = 0;
 
-	this.roverInitx = 0;
-	this.roverInitY = 0;
+		this.roverInitx = 0;
+		this.roverInitY = 0;
 
-	this.moved = moved;
+		this.moved = moved;
 
-	this.init();
-    };
-
+		this.init();
+	};
 
     nsViewer.Viewer2D.prototype.init = function(){
 	/* 2D viewer initialization */

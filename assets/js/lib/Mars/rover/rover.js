@@ -43,7 +43,7 @@
 	this.panelsCost = 5;
 
 	/* Define the duration of a round. */
-	this.roundTime = 200;
+	this.roundTime = 1000;
 
 	this.waitingStatus = false;
 	this.waitingActions = [];
@@ -540,7 +540,7 @@
 			    direction: direction,
 			    distance: distance,
 			    elevation: square.z
-			}
+			};
 		    }
 		    else {
 			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
@@ -600,7 +600,7 @@
 			    direction: direction,
 			    distance: distance,
 			    type: square.type
-			}
+			};
 		    }
 		    else {
 			throw new Error(nsRover.Rover.MESSAGE.E_NEED_MORE_TANK);
