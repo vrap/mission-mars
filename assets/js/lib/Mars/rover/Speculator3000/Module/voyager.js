@@ -177,7 +177,14 @@
 		);
 	}
 	else if (data.error.message == rover.constructor.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT) {
-	    var square = this.estimateBestMove(data.destination)[0];
+	    var square = this.estimateBestMove(data.destination);
+
+	    if (!square || square.length == 0) {
+		defer.reject();
+	    }
+	    else {
+		square = square[0];
+	    }
 
 	    if (options.escapeObstacle == true) {
 		if (!square) {
@@ -194,32 +201,6 @@
 			    function() {
 				defer.reject();
 			    }
-			);
-		}
-	    }
-	    else {
-		defer.reject();
-	    }
-	}
-	else if (data.error.message == rover.constructor.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT2) {
-	    if (options.escapeObstacle == true) {
-		var square = this.estimateBestMove(data.destination)[0];
-
-		if (!square) {
-		    defer.reject();
-		}
-		else {
-		    console.log(square);
-		    this.voyage(square, {debug: true, escapeObstacle: false})
-			.then(
-			    function() {
-				defer.resolve();
-			    }.bind(this)
-			)
-			.fail(
-			    function() {
-				defer.reject();
-			    }.bind(this)
 			);
 		}
 	    }
