@@ -5,9 +5,10 @@
 	/**
 	 * Constructor
 	 */
-	nsViewer.Interface = function(elements, viewer) {
+	nsViewer.Interface = function(elements, viewer, rover) {
 		
 		this.viewer = viewer;
+		this.rover  = rover;
 		this.elements = elements;
 
 		this.elementBattery = elements.elementBattery;
@@ -32,9 +33,11 @@
 		this._displayWireframe();
 		this._displayFog();
 		this._displayCamera();
+		this._displayRoundTime();
 		this._downloadMap();
 		this._pop();
 	};
+
 
   /**
    * Events from rover
@@ -49,7 +52,7 @@
 		this.observable.subscribe('rover.spawn', function(data){
 
 			var bloc = '<div class="'+ this.elements.pop.classPop +'">';
-			 	bloc += 'Hi Dude! I\'m speculator 3000 and I\'ve just been spawn!';
+			 	bloc += 'I\'m speculator 3000 and I\'ve just been spawn!';
 			 	bloc += '</div>';
 
 			this.elements.pop.blocPop.innerHTML = bloc;
@@ -61,12 +64,16 @@
 			
 			if(!solar){
 				var bloc = '<div class="'+ this.elements.pop.classPop +'" id="popSloar">';
-			 	bloc += 'Wait! I\'m deploying my solar panels, Man!';
+			 	bloc += 'I\'m deploying my solar panels !';
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
         		// this.viewer.move('stop');
 				solar = true;
+
+			    document.querySelector('.noise').style.display = 'block';
+			    document.querySelector('.noise > b').innerText = 'Connection lost, trying to resume...';
+			    document.querySelector('.noise').style.opacity = '0.9';
 			}
 
 		}.bind(this));
@@ -75,9 +82,11 @@
 		this.observable.subscribe('rover.move.end', function(data){
 			
 			if(solar){
+			    document.querySelector('.noise').style.display = 'none';
+			    document.querySelector('.noise').style.opacity = 1;
 
 				var bloc = '<div class="'+ this.elements.pop.classPop +'">';
-			 	bloc += 'What a fucking sunny day ! I\'m ready to continue my exploration on this dumb planet';
+			 	bloc += 'Good sunny day ! I\'m ready to continue my exploration';
 			 	bloc += '</div>';
 
 				this.elements.pop.blocPop.innerHTML = bloc;
@@ -158,6 +167,41 @@
 		};
 	};
 
+	/**
+	* Round time management
+	*/
+	nsViewer.Interface.prototype._displayRoundTime = function(){
+		this.elements.control.moreTime.onclick = function(){
+			if (this.rover.roundTime < 3000) {
+				this.rover.roundTime += 100;
+			}
+			else if (this.rover.roundTime < 500) {
+				this.rover.roundTime += 50
+			}
+			else {
+				this.rover.roundTime = 3000;
+			}
+
+			this.elements.control.roundTime.innerText = (this.rover.roundTime / 1000);
+		}.bind(this);
+
+		this.elements.control.lessTime.onclick = function(){
+			if (this.rover.roundTime > 50) {
+				this.rover.roundTime -= 50;
+			}
+			else if (this.rover.roundTime > 500) {
+				this.rover.roundTime -= 100;
+			}
+			else {
+				this.rover.roundTime = 50;
+			}
+
+			this.elements.control.roundTime.innerText = (this.rover.roundTime / 1000);
+		}.bind(this);
+
+		this.elements.control.roundTime.innerText = (this.rover.roundTime / 1000);
+	};
+
   /**
    * Camera control gestion
    */
@@ -181,7 +225,6 @@
 			addClass(this, ' active');
 			removeClass(cameraOn, 'active');
 		};
-
 	};
 
   /**
@@ -190,13 +233,18 @@
 	nsViewer.Interface.prototype._pushBattery = function(){
 
 		this.observable.subscribe('rover.move.end', function(data){
-
+		        var render = document.querySelector('#render');
 			var tank = Math.round(data.rover.tank * 100 / data.rover.tankSize);
 
 			this.elementBattery.innerHTML = tank + '%';
 
-			if(tank < 30){
+			if(tank < 2){
 				addClass(this.elementBattery, 'warning');
+			        addClass(render, 'solar');
+			}
+		        else {
+			        removeClass(this.elementBattery, 'warning');
+			        removeClass(render, 'solar');
 			}
 
 		}.bind(this));
@@ -242,14 +290,18 @@
 				removeClass(panelControl, 'hide');
 				addClass(panelControl, 'show');
 
-				var elem = this;
-				var top = getElementTop(elem);
-				var left = getElementLeft(elem);
-
-				panelControl.style.top = (top - 330) + 'px';
-				panelControl.style.left = (left - 60) + 'px';
+				this.style.display = 'none';
 
 			}
 		};
+
+		this.elements.control.closePanel.onclick = function(e){
+			
+			var panelControl = document.querySelector('#panel-control');
+			removeClass(panelControl, 'show');
+			addClass(panelControl, 'hide');
+			this.elementControl.style.display = 'block';
+
+		}.bind(this);
 	}
 })();

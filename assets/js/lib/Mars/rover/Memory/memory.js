@@ -107,7 +107,7 @@
      * @param  {integer}     y         position of the square.
      * @param  {integer}     z         elevation of the square.
      * @param  {integer}     type      nature of the square.
-     * @param  {boolean}     visited   the square has (or not) been visited.
+     * @param  {boolean}     visited   how much time the square has been visited.
      * @return {object}                Return the new/updated square.
      */
     nsMemory.Memory.prototype.createOrUpdate = function(x, y, z, type, visited) {
@@ -119,7 +119,7 @@
 	    x: x,
 	    y: y,
 	    z: null,
-	    visited: false
+	    visited: 0
 	};
 
 	if (this.has(x, y)) {
@@ -153,7 +153,7 @@
 		throw new Error('Visited need to be a boolean.');
 	    }
 
-	    square.visited = visited;
+	    square.visited++;
 	}
 	else {
 	    square.visited = square.visited;

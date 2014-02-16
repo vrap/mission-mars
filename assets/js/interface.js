@@ -21,8 +21,11 @@ var scripts = [
 	 * Home page gestion
 	 */
 	document.querySelector('.view').style.display = 'none';
-
-
+  document.querySelector('#bloc-panel-minimap').style.display = 'none';
+  document.querySelector('#bloc-panel-minimap-hover').style.display = 'none';
+  document.querySelector('#panel-minimap').style.display = 'none';
+  document.querySelector('#bloc-pop').style.display = 'none';
+  document.querySelector('#panel-infos').style.display = 'none';
   document.querySelector('#voyager-settings').style.display = 'none';
   document.querySelector('#explorer-settings').style.display = 'none';
 
@@ -114,13 +117,11 @@ var scripts = [
         alert("Invalid energy value !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#explorer-startX').value)
-          || parseInt(document.querySelector('#explorer-startX').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#explorer-startX').value)) {
         alert("Invalid starting position X !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#explorer-startY').value)
-          || parseInt(document.querySelector('#explorer-startY').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#explorer-startY').value)) {
         alert("Invalid starting position Y !");
 
         return false;
@@ -136,23 +137,19 @@ var scripts = [
         alert("Invalid energy value !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-startX').value)
-          || parseInt(document.querySelector('#voyager-startX').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-startX').value)) {
         alert("Invalid starting position X !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-startY').value)
-          || parseInt(document.querySelector('#voyager-startY').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-startY').value)) {
         alert("Invalid starting position Y !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-endX').value)
-          || parseInt(document.querySelector('#voyager-endX').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-endX').value)) {
         alert("Invalid ending position X !");
 
         return false;
-      } else if(!isPositiveInteger(document.querySelector('#voyager-endY').value)
-          || parseInt(document.querySelector('#voyager-endY').value) > parseInt(document.querySelector('#map-size').value)) {
+      } else if(!isPositiveInteger(document.querySelector('#voyager-endY').value)) {
         alert("Invalid ending position Y !");
 
         return false;

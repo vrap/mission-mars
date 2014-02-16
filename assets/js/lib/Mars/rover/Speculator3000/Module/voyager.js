@@ -38,21 +38,36 @@
     nsVoyager.Voyager.prototype.start = function() {
 	var destination = arguments[0][0];
 
-        this.speculator.observer.publish('s3000.module.start.begin');
+        this.speculator.observer.publish(
+	    's3000.module.start.begin',
+	    [{
+		s3000: this.speculator
+	    }]
+	);
 
-	this.voyage(destination)
+	this.voyage(destination, { mission: true })
 	    .then(
 		function() {
 		    this.speculator.rover.removeBufferedActions();
-		    this.speculator.observer.publish('s3000.module.start.end', [{status: true}]);
-
-		    console.log(this.speculator.rover.memory.readAll());
+		    this.speculator.observer.publish(
+			's3000.module.start.end',
+			[{
+			    s3000: this.speculator,
+			    status: true
+			}]
+		    );
 		}.bind(this)
 	    )
 	    .fail(
 		function() {
 		    this.speculator.rover.removeBufferedActions();
-		    this.speculator.observer.publish('s3000.module.start.end', [{status: false}]);
+		    this.speculator.observer.publish(
+			's3000.module.start.end',
+			[{
+			    s3000: this.speculator,
+			    status: false
+			}]
+		    );
 		}.bind(this)
 	    );
     };
@@ -68,8 +83,13 @@
 	    options.autoLoadTank = (options.autoLoadTank === false) ? false : true;
 	    options.escapeObstacle = (options.escapeObstacle === false) ? false : true;
 	}
+
 	if (!defer) {
 	    defer = Q.defer();
+	}
+
+	if (options.mission == true) {
+	    defer.promise.mission = 'mission';
 	}
 
 	var currentPosition, invertedDirection, randPosition;
@@ -79,7 +99,7 @@
 	if (rover.x == destination.x && rover.y == destination.y) {
 	    defer.resolve();
 
-	    return;
+	    return defer.promise;
 	}
 
 	var xDirection = nsRover.Rover.DIRECTION.WEST;
@@ -121,7 +141,9 @@
 				    )
 				    .fail(
 					function(data) {
-					    this.onError(data)
+					    data.destination = destination;
+
+					    this.onError(data, options, defer)
 						.then(
 						    function() {
 							this.voyage(destination, options, defer);
@@ -142,7 +164,7 @@
 	return defer.promise;
     };
 
-    nsVoyager.Voyager.prototype.onError = function(data) {
+    nsVoyager.Voyager.prototype.onError = function(data, options, missionDefer) {
 	var defer = Q.defer();
 	var rover = this.speculator.rover;
 
@@ -154,11 +176,111 @@
 		    }.bind(this)
 		);
 	}
+	else if (data.error.message == rover.constructor.MESSAGE.E_SLOPE_IS_TOO_IMPORTANT) {
+	    var square = this.estimateBestMove(data.destination);
+
+	    if (!square || square.length == 0) {
+		defer.reject();
+	    }
+	    else {
+		square = square[0];
+	    }
+
+	    if (options.escapeObstacle == true) {
+		if (!square) {
+		    defer.reject();
+		}
+		else {
+		    this.voyage(square, {escapeObstacle: false })
+			.then(
+			    function() {
+				defer.resolve();
+			    }
+			)
+			.fail(
+			    function() {
+				defer.reject();
+			    }
+			);
+		}
+	    }
+	    else {
+		defer.reject();
+	    }
+	}
 	else {
 	    defer.reject(data);
 	}
 
 	return defer.promise;
+    };
+
+    nsVoyager.Voyager.prototype.estimateBestMove = function(destination) {
+	var rover = this.speculator.rover;
+	var availableSquares = rover.memory.getRange(
+	    rover.x -1,
+	    rover.y -1,
+	    rover.x +1,
+	    rover.y +1
+	);
+	var squareWeight = {};
+
+	var averageSquare = 0;
+	for (var key in availableSquares) {
+	    var square = availableSquares[key];
+
+	    if (square.x != rover.x && square.y != rover.y) {
+		averageSquare += (destination.x - square.x) + (destination.y - square.y);
+	    }
+	}
+	averageSquare /= (availableSquares.length -1)
+
+	for (var key in availableSquares) {
+	    var square = availableSquares[key];
+
+	    if (square.x != rover.x && square.y != rover.y) {
+		var currentSquare = rover.getSquare(rover.direction, 0);
+		var slope = rover.calculateSlope(currentSquare.z, square.z);
+
+		/* Calcul the distance relatively to the average. */
+		var distance = (destination.x - square.x) + (destination.y - square.y);
+		distance = averageSquare - distance;
+
+		/**
+		 * Calcul the score of the square.
+		 *
+		 * The calcul is based on the distance, the number of visited
+		 * times and the elevation.
+		 */
+		var distanceScore = (-(distance) * 1.2);
+		var slopeScore    = (-square.z);
+		var visitedScore  = (-(square.visited * 10))
+
+		var score = distanceScore + slopeScore + visitedScore;
+
+		/* Only square with a low slope will be included. */
+		if (slope <= 0.5 && slope >= -0.5 && square.visited <= 5) {
+		    if (!squareWeight[score]) {
+			squareWeight[score] = [];
+		    }
+
+		    squareWeight[score].push(square);
+		}
+	    }
+	}
+
+	highSquares = Math.max.apply(null, Object.keys(squareWeight));
+
+	if (highSquares instanceof Array) {
+	    if (highSquares.length >= 1) {
+		return squareWeight[highSquares[Math.floor(Math.random() * highSquares.length)]];
+	    }
+	}
+	else {
+	    return squareWeight[highSquares];
+	}
+
+	return null;
     };
 
     /* Add the voyager module to Speculator3000. */

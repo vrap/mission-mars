@@ -6,6 +6,22 @@
 		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
+	
+	<div class="shadow-top"></div>
+	<div class="shadow-right"></div>
+	<div class="shadow-bottom"></div>
+	<div class="shadow-left"></div>
+
+	<div class="border-top"></div>
+	<div class="border-top-inner"></div>
+	<div class="border-right"></div>
+	<div class="border-right-inner"></div>
+	<div class="border-bottom"></div>
+	<div class="border-bottom-inner"></div>
+	<div class="border-left"></div>
+	<div class="border-left-inner">
+	</div>
+
 
     <div class="st-container">
     <!-- Bottom menu -->
@@ -105,25 +121,31 @@
 
     <!-- Viewer -->
     <div class="view">
+      <div class="loader noise">
+        <b>Pairing with S3000, please wait ...</b>
+	<p></p>
+      </div>
     <!-- viewer Full Map 3D -->
-    		<div id="bloc-over-full">
-				<div id="bloc-fullMap">
-					<i class="glyphicon glyphicon-close flaticon-remove11"></i>
-					<canvas id="fullmap">
-					    Canvas not supported.
-					</canvas>
-				</div>
-			</div>
+      <div id="bloc-over-full">
+        <div id="bloc-fullMap">
+          <i class="glyphicon glyphicon-close close12"></i>
+          <canvas id="fullmap">
+              Canvas not supported.
+          </canvas>
+        </div>
+      </div>
       <!-- viewer 3D -->
-      <div id="render"><div id="video_container"></div></div>
+      <div id="render">
+        <div id="video_container"></div>
+      </div>
       		<!-- viewer 2D -->
 			<div id="bloc-panel-minimap"></div>
 			<div id="bloc-panel-minimap-hover"></div>
 			<div id="panel-minimap">
 				<div id="bloc-minimap">
 					<canvas id="minimap">
-			      Canvas not supported.
-			    </canvas>
+			      	Canvas not supported.
+			    	</canvas>
 				</div>
 			</div>
 			
@@ -136,6 +158,7 @@
 
 			<!-- controls -->
 			<div id="panel-control" class="hide">
+				<i id="to-close-panel" class="glyphicon glyphicon-close close12"></i>
 				<div class="control-bloc">
 					<h3>Wireframe</h3>
 					<a href="#" id="w1" class="btn-link no-shadow">On</a>
@@ -152,21 +175,25 @@
 					<a href="#" id="c2" class="btn-link no-shadow active">Off</a>
 				</div>
 				<div class="control-bloc">
+					<h3>Round time</h3>
+					<a href="#" type="button" class="btn-link no-shadow" id="roundTime-more"> + </a>
+					<b>&nbsp;<span id="roundTime-current">1</span> s&nbsp;</b>
+					<a href="#" type="button" class="btn-link no-shadow" id="roundTime-less"> - </a>
+				</div>
+				<div class="control-bloc">
 					<a id="download" href='#' class="btn-link">Download map</a>
 				</div>
 			</div>
-
-			<div id="panel-infos">
-				
-				<div id="bloc-battery" class="info-bloc"><i class='glyphicon glyphicon-battery'></i><span id="battery"></span></div>
-				<div id="bloc-position" class="info-bloc"><i class='glyphicon glyphicon-position'></i><span id="position"></span></div>
-				<div id="bloc-material" class="info-bloc"><i class='glyphicon glyphicon-material'></i><span id="material"></span></div>
-				<div id="bloc-move" class="info-bloc"><i class='glyphicon glyphicon-move'></i><span id="move"></span></div>
-				
-				<div id="display-control" class="info-bloc btn-panel">
+			
+			<div id="panel-lala">
+				<div id="display-control" class="info-bloc">
 					<i class='flaticon-screwdriver3'></i>
 				</div>
-
+			</div>
+			<div id="panel-infos">
+				<div id="bloc-battery" class="info-bloc"><i class='glyphicon glyphicon-battery'></i><span id="battery"></span></div>
+				<div id="bloc-position" class="info-bloc"><i class='glyphicon glyphicon-position'></i><span id="position"></span></div>
+				<div id="bloc-move" class="info-bloc"><i class='glyphicon glyphicon-move'></i><span id="move"></span></div>
 			</div>
     </div> <!-- view -->
 
