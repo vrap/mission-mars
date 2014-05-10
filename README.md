@@ -1,8 +1,6 @@
 Mission MARS
 ============
 
-Use Map generator with :
-
-``javascript
-t = new Map(); t.generate().done(function() { console.log(t.toJson()); });
-```
+Random generation of field.
+Robot moving autonomously on the generated map.
+3D visualization with [THREE.js](https://github.com/mrdoob/three.js) 
